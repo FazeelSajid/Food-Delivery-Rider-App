@@ -32,7 +32,9 @@ const CInput = props => {
         </Text>
       )}
 
-      <View
+      <TouchableOpacity
+        onPress={props?.onPress}
+        disabled={props?.disabled == false ? false : true}
         style={{
           borderRadius: 25,
           width: props?.width ? props?.width : wp(90),
@@ -60,6 +62,7 @@ const CInput = props => {
           // keyboardType='numeric'
           // secureTextEntry
           // placeholder=''
+          editable={props?.editable == false ? false : true}
           placeholderTextColor={
             props?.placeholderTextColor
               ? props?.placeholderTextColor
@@ -90,7 +93,7 @@ const CInput = props => {
             <FontAwesome5 name="eye" size={hp(2.3)} color="#595959" />
           )}
         </TouchableOpacity> */}
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
