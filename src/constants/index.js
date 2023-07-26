@@ -17,6 +17,7 @@ export const Colors = {
   Black: '#000000',
   Text: '#0A212B',
   AvatarBG: '#FF572233',
+  Border: '#B0B0B0',
 };
 
 export const Fonts = {
@@ -169,6 +170,7 @@ import EditWhite from '../Assets/svg/editWhite.svg';
 import DeleteWhite from '../Assets/svg/deleteWhite.svg';
 import UploadImage from '../Assets/svg/uploadImage.svg';
 import SearchWhite from '../Assets/svg/SearchWhite.svg';
+import Profile1 from '../Assets/svg/profile1.svg';
 
 export const Icons = {
   SearchIcon,
@@ -218,6 +220,7 @@ export const Icons = {
   MarkerOutlineActive,
   WalletActiveBackground,
   Profile,
+  Profile1,
   ProfileActive,
   DashboardBG,
   Menu,

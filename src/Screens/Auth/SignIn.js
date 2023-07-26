@@ -35,8 +35,7 @@ const SignIn = ({navigation, route}) => {
         </View>
         <TouchableOpacity
           style={STYLE.topScreenBTnContainer}
-          //   onPress={() => navigation.navigate('SignUp')}
-        >
+          onPress={() => navigation.navigate('SignUp')}>
           <Text style={STYLE.topScreenBTn}>Sign Up</Text>
         </TouchableOpacity>
         <View style={{alignItems: 'center'}}>
