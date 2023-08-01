@@ -62,6 +62,7 @@ const CInput = props => {
           // keyboardType='numeric'
           // secureTextEntry
           // placeholder=''
+          // keyboardType='email-address'
           editable={props?.editable == false ? false : true}
           placeholderTextColor={
             props?.placeholderTextColor

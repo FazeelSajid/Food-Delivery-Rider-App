@@ -25,6 +25,7 @@ const RBSheetSuccess = ({
   btnText,
   onPress,
   textColor,
+  titleStyle,
 }) => {
   const navigation = useNavigation();
   return (
@@ -65,6 +66,7 @@ const RBSheetSuccess = ({
                 fontSize: RFPercentage(2.5),
                 fontFamily: Fonts.PlusJakartaSans_SemiBold,
                 textAlign: 'center',
+                ...titleStyle,
               }}>
               {title}
             </Text>

@@ -136,16 +136,6 @@ const RegistrationForm = ({navigation, route}) => {
           )}
         </View>
       </ScrollView>
-      <RBSheetSuccess
-        refRBSheet={ref_RBSheet}
-        title={'Your request for registration has been sent to Admin'}
-        textColor={'#68686E'}
-        btnText={'OK'}
-        onPress={() => {
-          ref_RBSheet?.current?.close();
-          navigation.replace('SignIn');
-        }}
-      />
     </View>
   );
 };

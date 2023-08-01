@@ -14,6 +14,9 @@ import OnBoarding from '../Screens/Auth/OnBoarding';
 import SignUp from '../Screens/Auth/SignUp';
 import RegistrationForm from '../Screens/Auth/RegistrationForm';
 import RegistrationDocuments from '../Screens/Auth/RegistrationDocuments';
+import ForgetPassword from '../Screens/Auth/ForgetPassword';
+import Verification from '../Screens/Auth/Verification';
+import ResetPassword from '../Screens/Auth/ResetPassword';
 
 function Router() {
   const Stack = createNativeStackNavigator();
@@ -30,6 +33,9 @@ function Router() {
         name="RegistrationDocuments"
         component={RegistrationDocuments}
       />
+      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+      <Stack.Screen name="Verification" component={Verification} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
     </Stack.Navigator>
   );
 }
