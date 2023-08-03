@@ -104,6 +104,7 @@ import HeartActive from '../Assets/svg/heartActive.svg';
 import Bike from '../Assets/svg/bike.svg';
 import Checkout from '../Assets/svg/checkout.svg';
 import Rating from '../Assets/svg/rating.svg';
+import RatingActive from '../Assets/svg/ratingActive.svg';
 import Marker from '../Assets/svg/marker.svg';
 import MapPin from '../Assets/svg/map_pin.svg';
 import Van from '../Assets/svg/Van.svg';
@@ -152,7 +153,9 @@ import DashboardBG from '../Assets/svg/dashboardBG.svg';
 import Menu from '../Assets/svg/menu.svg';
 import Calender from '../Assets/svg/calender.svg';
 import orderPlaced from '../Assets/svg/orderPlaced.svg';
+import orderPlacedInactive from '../Assets/svg/orderPlacedInactive.svg';
 import orderDelivery from '../Assets/svg/orderDelivery.svg';
+import orderDeliveryWhite from '../Assets/svg/orderDeliveryWhite.svg';
 import orderPreparing from '../Assets/svg/orderPreparing.svg';
 import Lock from '../Assets/svg/lock.svg';
 import Check from '../Assets/svg/check.svg';
@@ -171,6 +174,19 @@ import DeleteWhite from '../Assets/svg/deleteWhite.svg';
 import UploadImage from '../Assets/svg/uploadImage.svg';
 import SearchWhite from '../Assets/svg/SearchWhite.svg';
 import Profile1 from '../Assets/svg/profile1.svg';
+import MenuActive from '../Assets/svg/menuActive.svg';
+import NotificationActive from '../Assets/svg/notificationActive.svg';
+import NotificationWithDot from '../Assets/svg/notificationWithDot.svg';
+
+import DiscoverActive from '../Assets/svg/discoverActive.svg';
+import Discover from '../Assets/svg/discover.svg';
+import Order from '../Assets/svg/orders.svg';
+import OrdersActive from '../Assets/svg/ordersActive.svg';
+import LogoutIcon from '../Assets/svg/logout.svg';
+
+import LockBlack from '../Assets/svg/lockBlack.svg';
+import EditProfile from '../Assets/svg/editProfile.svg';
+import Note from '../Assets/svg/note.svg';
 
 export const Icons = {
   SearchIcon,
@@ -181,6 +197,7 @@ export const Icons = {
   Bike,
   Checkout,
   Rating,
+  RatingActive,
   Marker,
   MapPin,
   Van,
@@ -195,6 +212,7 @@ export const Icons = {
   OrderInProcess,
   OrderOutForDelivery,
   OrderPlaced,
+  orderPlacedInactive,
   WalletActive,
   Wallet,
   MapMarker,
@@ -227,6 +245,7 @@ export const Icons = {
   Calender,
   orderPlaced,
   orderDelivery,
+  orderDeliveryWhite,
   orderPreparing,
   Lock,
   Check,
@@ -241,4 +260,17 @@ export const Icons = {
   EditWhite,
   DeleteWhite,
   UploadImage,
+  MenuActive,
+  NotificationActive,
+  NotificationWithDot,
+
+  Discover,
+  DiscoverActive,
+  Order,
+  OrdersActive,
+  LogoutIcon,
+
+  EditProfile,
+  Note,
+  LockBlack,
 };

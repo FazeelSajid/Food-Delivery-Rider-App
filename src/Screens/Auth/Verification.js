@@ -49,7 +49,7 @@ const Verification = ({navigation, route}) => {
           }}>
           <View style={STYLE.screenTitleContainer}>
             <Text style={STYLE.screenTitle}>Verification</Text>
-            <Text style={STYLE.screenDesc}>
+            <Text style={{...STYLE.screenDesc, lineHeight: 22}}>
               To ensure the security of your account, we require phone number
               verification
             </Text>
