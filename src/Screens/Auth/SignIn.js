@@ -82,8 +82,9 @@ const SignIn = ({navigation, route}) => {
             width={wp(88)}
             onPress={() => {
               setCount(count + 1);
-              if (count > 2) {
-                // navigation?.navigate('Drawer');
+              if (count > 1) {
+                navigation?.navigate('Drawer');
+                // navigation.navigate('Home');
               } else {
                 ref_RBSheet?.current?.open();
               }

@@ -26,6 +26,7 @@ const FoodCardWithRating = ({
   cardStyle,
   showNextButton,
   showRatingOnBottom,
+  showRating,
 }) => {
   const navigation = useNavigation();
   return (
@@ -58,8 +59,8 @@ const FoodCardWithRating = ({
 
       <View style={{flex: 1, marginLeft: 15}}>
         <View style={styles.rowViewSB1}>
-          <Text style={styles.name}>Green Salad</Text>
-          {showRatingOnBottom == true ? null : (
+          <Text style={styles.name}>{title ? title : 'Green Salad'}</Text>
+          {showRatingOnBottom == true || showRating == false ? null : (
             <View style={styles.rowView}>
               <Icons.Rating />
               <Text

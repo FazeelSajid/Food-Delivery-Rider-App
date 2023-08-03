@@ -38,7 +38,7 @@ const ForgetPassword = ({navigation, route}) => {
 
   const handleSendCode = async () => {
     // if (await validate()) {
-    navigation.replace('Verification');
+    navigation.navigate('Verification');
     // }
   };
   return (

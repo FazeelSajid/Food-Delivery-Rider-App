@@ -176,6 +176,7 @@ const ResetPassword = ({navigation, route}) => {
         btnText={'GO TO SIGN IN'}
         onPress={() => {
           ref_RBSheet?.current?.close();
+          navigation?.popToTop();
           navigation.replace('SignIn');
         }}
       />

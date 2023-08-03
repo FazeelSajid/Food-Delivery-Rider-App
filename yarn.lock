@@ -1770,6 +1770,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-masked-view/masked-view@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.npmjs.org/@react-native-masked-view/masked-view/-/masked-view-0.2.9.tgz"
+  integrity sha512-Hs4vKBKj+15VxHZHFtMaFWSBxXoOE5Ea8saoigWhahp8Mepssm0ezU+2pTl7DK9z8Y9s5uOl/aPb4QmBZ3R3Zw==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -6623,10 +6628,10 @@ react-native-raw-bottom-sheet@^2.2.0:
   resolved "https://registry.npmjs.org/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.0.tgz"
   integrity sha512-qL4JKIqvbcVxbkKzeh51hjV7suoJN3ouxzvLmOg0FBUV1yiJAfEbacjQdtRCI6+OU5pyGFBIifLsTXcFDwHggg==
 
-react-native-reanimated@^3.3.0, "react-native-reanimated@>= 1.0.0":
-  version "3.4.0"
-  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.4.0.tgz"
-  integrity sha512-B5cZJseoIkYlZTRBRN0xuU1NBxUza/6GSHhiEBQfbOufWVlUMMcWUecIRVglW49l8d2wXbfCdQlNyVoFqmHkaQ==
+react-native-reanimated@^3.4.1, "react-native-reanimated@>= 1.0.0":
+  version "3.4.1"
+  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.4.1.tgz"
+  integrity sha512-UjEBbWloCoUB/fkehj9GWAhuvfUx2BLYkQ3rP7+nVMJ5K5Ck1K6XFEBGfYdz4ttCBoyTSuzrPxe2XxJl3yRSdA==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
@@ -6735,7 +6740,7 @@ react-native-vector-icons@*, react-native-vector-icons@^9.2.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@>= 0.62", "react-native@>= 0.64.3", react-native@>=0.23.1, react-native@>=0.29, react-native@>=0.35, react-native@>=0.42.0, react-native@>=0.44.1, react-native@>=0.46, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.60, react-native@>=0.60.0, react-native@>=0.61.0, react-native@0.71.10:
+react-native@*, "react-native@>= 0.62", "react-native@>= 0.64.3", react-native@>=0.23.1, react-native@>=0.29, react-native@>=0.35, react-native@>=0.42.0, react-native@>=0.44.1, react-native@>=0.46, react-native@>=0.57, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.60, react-native@>=0.60.0, react-native@>=0.61.0, react-native@0.71.10:
   version "0.71.10"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.71.10.tgz"
   integrity sha512-O+sWH9ln7euxhHdooVL8is2FiVc7CfAp2zsKgIRhbq/8lGbJr5ZyT6QkCQK0M8Sx1zNe9puebr+BE8uBFsartg==
