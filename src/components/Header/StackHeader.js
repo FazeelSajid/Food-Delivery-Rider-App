@@ -26,14 +26,29 @@ const StackHeader = ({
   translucent,
   headerView,
   titleColor,
+  backgroundColor,
+  statusBarBG,
+  statusBarStyle,
 }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.header}>
       {enableStatusBar == false ? null : (
         <StatusBar
-          backgroundColor={translucent == true ? 'transparent' : '#FFFFFF'}
-          barStyle={translucent ? 'light-content' : 'dark-content'}
+          backgroundColor={
+            translucent == true
+              ? 'transparent'
+              : statusBarBG
+              ? statusBarBG
+              : '#FFFFFF'
+          }
+          barStyle={
+            statusBarStyle
+              ? statusBarStyle
+              : translucent
+              ? 'light-content'
+              : 'dark-content'
+          }
           translucent={translucent ? translucent : false}
         />
       )}
@@ -101,7 +116,8 @@ const styles = StyleSheet.create({
   mainText: {
     color: Colors.Orange,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    fontSize: RFPercentage(2.2),
+    // fontFamily: Fonts.PlusJakartaSans_Bold,
+    fontSize: RFPercentage(2.4),
     textAlign: 'center',
   },
 });

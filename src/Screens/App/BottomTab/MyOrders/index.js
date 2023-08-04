@@ -115,16 +115,21 @@ const MyOrders = ({navigation, route}) => {
       }
     }, [route?.params]),
   );
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <MenuHeader title={'My Order'} />
       <View style={{flex: 1}}>
         <CInput
           placeholder={'Search order'}
-          leftContent={<Icons.SearchIconInActive />}
+          leftContent={
+            <View style={{marginLeft: -5}}>
+              <Icons.SearchIconInActive />
+            </View>
+          }
           backgroundColor={'transparent'}
           placeholderTextColor={'#7D8FAB'}
-          containerStyle={{borderWidth: 1, borderColor: '#E8EFF3'}}
+          containerStyle={{borderWidth: 1, borderColor: '#E8EFF3', height: 45}}
         />
         <View style={{flex: 1}}>
           <View style={{marginBottom: 10}}>

@@ -86,8 +86,13 @@ export const Images = {
   user4: require('../Assets/png/Dashboard/user4.png'),
   user5: require('../Assets/png/Dashboard/user5.png'),
   user6: require('../Assets/png/Dashboard/user6.png'),
+  user7: require('../Assets/png/Dashboard/user7.png'),
   dashboardBg: require('../Assets/png/Dashboard/dashboardBg.png'),
   bgIcons: require('../Assets/png/Dashboard/bgIcons.png'),
+
+  idCardFront: require('../Assets/png/Dashboard/idCardFront.png'),
+  idCardBack: require('../Assets/png/Dashboard/idCardBack.png'),
+  drivingLicense: require('../Assets/png/Dashboard/drivingLicense.png'),
 
   //other
   success_check: require('../Assets/other/success_check.json'),

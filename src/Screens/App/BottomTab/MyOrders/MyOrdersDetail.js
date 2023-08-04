@@ -163,6 +163,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   marginVertical: 20,
                   marginTop: 15,
                   justifyContent: 'center',
+                  marginHorizontal: 20,
                 }}>
                 <TouchableOpacity
                   style={{alignItems: 'center'}}
@@ -221,11 +222,14 @@ const MyOrdersDetail = ({navigation, route}) => {
               style={{
                 ...styles.rowViewSB,
                 marginTop: 30,
+                width: wp(85),
+                alignSelf: 'center',
               }}>
               <CButton
                 title="Reject"
                 transparent={true}
-                width={wp(42)}
+                width={wp(40)}
+                height={hp(5.4)}
                 onPress={() => {
                   setModalText('Order Rejected');
                   setVisible(true);
@@ -233,7 +237,8 @@ const MyOrdersDetail = ({navigation, route}) => {
               />
               <CButton
                 title="Accept"
-                width={wp(42)}
+                width={wp(40)}
+                height={hp(5.4)}
                 onPress={() => {
                   setModalText('Order Accepted');
                   setVisible(true);
@@ -311,17 +316,15 @@ const styles = StyleSheet.create({
     borderColor: Colors.Orange,
     backgroundColor: Colors.Orange,
     borderRadius: 15,
-    // padding: 22,
-    // paddingVertical: 20,
-    width: wp(18),
-    height: wp(18),
+    width: wp(15),
+    height: wp(15),
     alignItems: 'center',
     justifyContent: 'center',
   },
   orderCardText: {
     color: Colors.Orange,
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    fontSize: RFPercentage(1.5),
+    fontSize: RFPercentage(1.4),
     marginTop: 10,
   },
   horizontalLine: {
