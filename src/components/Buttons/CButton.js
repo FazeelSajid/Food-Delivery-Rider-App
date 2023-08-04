@@ -30,6 +30,7 @@ const CButton = ({
   disabled,
   iconImage,
   activeOpacity,
+  textStyle,
 }) => {
   let isDarkMode = false;
   return (
@@ -78,6 +79,7 @@ const CButton = ({
               : Colors.White,
             fontSize: txtSize,
             textTransform: 'uppercase',
+            ...textStyle,
           }}>
           {title}
         </Text>

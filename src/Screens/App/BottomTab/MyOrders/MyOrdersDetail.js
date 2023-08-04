@@ -73,7 +73,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             <CustomerCard
               disabled={true}
               onChatPress={() => {
-                // navigation?.navigate('Conversation');
+                navigation?.navigate('Conversation');
               }}
               profile={Images.user6}
               name={'John Doe'}
@@ -104,47 +104,57 @@ const MyOrdersDetail = ({navigation, route}) => {
             Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
             sint. Velit officia consat du veniam
           </Text>
-
-          <View style={styles.location_container}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={styles.circle}>
-                <Icons.MapMarker />
-              </View>
-              <View>
-                <Text style={styles.location_heading}>Pickup Location</Text>
-                <Text style={styles.location_description}>
-                  Amet minim mollit non deserunt ullamco
-                </Text>
-              </View>
-            </View>
-            <View style={styles.verticalDottedLine} />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={styles.circle}>
-                <Icons.MapMarker />
-              </View>
-              <View>
-                <Text style={styles.location_heading}>Pickup Location</Text>
-                <Text style={styles.location_description}>
-                  Amet minim mollit non deserunt ullamco
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={{marginVertical: 10, marginTop: 5}}>
+          {route?.params?.type == 'order_history' ? (
             <View style={styles.rowViewSB}>
-              <Text style={{...styles.sub_heading, marginVertical: 5}}>
-                Time
+              <Text style={{...styles.sub_heading, marginVertical: 15}}>
+                Date of Order:
               </Text>
-              <Text style={styles.description1}>03:00 PM</Text>
+              <Text style={styles.description1}>01/08/2023</Text>
             </View>
-            <View style={styles.rowViewSB}>
-              <Text style={{...styles.sub_heading, marginVertical: 5}}>
-                Rider’s Commission
-              </Text>
-              <Text style={styles.description1}>$ 2.05</Text>
-            </View>
-          </View>
+          ) : (
+            <>
+              <View style={styles.location_container}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={styles.circle}>
+                    <Icons.MapMarker />
+                  </View>
+                  <View>
+                    <Text style={styles.location_heading}>Pickup Location</Text>
+                    <Text style={styles.location_description}>
+                      Amet minim mollit non deserunt ullamco
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.verticalDottedLine} />
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={styles.circle}>
+                    <Icons.MapMarker />
+                  </View>
+                  <View>
+                    <Text style={styles.location_heading}>Pickup Location</Text>
+                    <Text style={styles.location_description}>
+                      Amet minim mollit non deserunt ullamco
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{marginVertical: 10, marginTop: 5}}>
+                <View style={styles.rowViewSB}>
+                  <Text style={{...styles.sub_heading, marginVertical: 5}}>
+                    Time
+                  </Text>
+                  <Text style={styles.description1}>03:00 PM</Text>
+                </View>
+                <View style={styles.rowViewSB}>
+                  <Text style={{...styles.sub_heading, marginVertical: 5}}>
+                    Rider’s Commission
+                  </Text>
+                  <Text style={styles.description1}>$ 2.05</Text>
+                </View>
+              </View>
+            </>
+          )}
 
           {route?.params?.type == 'assigned_orders' && (
             <>
