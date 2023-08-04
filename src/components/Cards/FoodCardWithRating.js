@@ -27,6 +27,9 @@ const FoodCardWithRating = ({
   showNextButton,
   showRatingOnBottom,
   showRating,
+  nextIconWidth,
+  imageContainerStyle,
+  priceContainerStyle,
 }) => {
   const navigation = useNavigation();
   return (
@@ -43,7 +46,8 @@ const FoodCardWithRating = ({
             source={image}
             style={{
               ...styles.imageContainer,
-              height: imageHeight ? imageHeight : hp(8),
+              height: imageHeight ? imageHeight : hp(7.5),
+              ...imageContainerStyle,
             }}
             blurRadius={40}>
             <Image source={image} style={{...styles.image, ...imageStyle}} />
@@ -76,11 +80,11 @@ const FoodCardWithRating = ({
           )}
         </View>
 
-        <View style={styles.rowViewSB}>
+        <View style={{...styles.rowViewSB, ...priceContainerStyle}}>
           <Text style={styles.priceText}>$12.50</Text>
           {showNextButton == false ? null : (
             <TouchableOpacity>
-              <Icons.Next />
+              <Icons.Next width={nextIconWidth ? nextIconWidth : 30} />
             </TouchableOpacity>
           )}
           {showRatingOnBottom == true && (
@@ -120,7 +124,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: 5.5,
+    // backgroundColor: 'red',
   },
   rowView: {
     alignItems: 'center',
@@ -152,9 +157,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   imageContainer: {
-    width: hp(9),
-    height: 30,
-    borderRadius: 15,
+    width: hp(8.5),
+    height: 20,
+    borderRadius: 8,
     overflow: 'hidden',
     alignItems: 'center',
   },

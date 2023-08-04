@@ -112,11 +112,11 @@ const CustomDrawerContent = props => {
       {...props}
       style={{}}
       showsVerticalScrollIndicator={false}>
-      <StatusBar
+      {/* <StatusBar
         translucent={false}
         barStyle={'dark-content'}
         backgroundColor={Colors.White}
-      />
+      /> */}
       <ConfirmationModal visible={visible} setVisible={setVisible} />
       <View
         style={{

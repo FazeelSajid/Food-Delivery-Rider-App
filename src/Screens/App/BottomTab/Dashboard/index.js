@@ -7,7 +7,7 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {
@@ -16,8 +16,18 @@ import {
 } from 'react-native-responsive-screen';
 import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
 import {Colors, Fonts, Images, Icons} from '../../../../constants';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import CustomStatusBar from '../../../../components/CustomStatusBar';
 
 const Dashboard = ({navigation, route}) => {
+  const isFocused = useIsFocused();
+  // useEffect(() => {
+  //   console.log('isFocused : ', isFocused);
+  //   // StatusBar.setTranslucent(false);
+  //   StatusBar.setBackgroundColor(Colors.White);
+  //   StatusBar.setBarStyle('dark-content');
+  // }, [isFocused]);
+
   const [orderRequests, setOrderRequests] = useState([
     {
       id: 0,
@@ -105,11 +115,18 @@ const Dashboard = ({navigation, route}) => {
                     image={item?.image}
                     description={item?.description}
                     price={item?.price}
+                    nextIconWidth={26}
                     // label={item?.status}
                     // type={'all'}
                     cardStyle={{marginHorizontal: 0, marginBottom: 15}}
                     showNextButton={true}
                     showRating={false}
+                    priceContainerStyle={{marginTop: 0}}
+                    imageContainerStyle={{
+                      borderRadius: 5,
+                      height: 55,
+                      width: 58,
+                    }}
                   />
                 );
               }}
@@ -140,11 +157,18 @@ const Dashboard = ({navigation, route}) => {
                     image={item?.image}
                     description={item?.description}
                     price={item?.price}
+                    nextIconWidth={26}
                     // label={item?.status}
                     // type={'all'}
                     cardStyle={{marginHorizontal: 0, marginBottom: 15}}
                     showNextButton={true}
                     showRating={false}
+                    priceContainerStyle={{marginTop: 0}}
+                    imageContainerStyle={{
+                      borderRadius: 5,
+                      height: 55,
+                      width: 58,
+                    }}
                   />
                 );
               }}
@@ -169,9 +193,16 @@ const Dashboard = ({navigation, route}) => {
                     image={item?.image}
                     description={item?.description}
                     price={item?.price}
+                    nextIconWidth={26}
                     // label={item?.status}
                     // type={'all'}
                     cardStyle={{marginHorizontal: 0, marginBottom: 15}}
+                    priceContainerStyle={{marginTop: 0}}
+                    imageContainerStyle={{
+                      borderRadius: 5,
+                      height: 55,
+                      width: 58,
+                    }}
                     showNextButton={true}
                     showRating={false}
                   />

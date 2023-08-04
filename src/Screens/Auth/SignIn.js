@@ -83,6 +83,7 @@ const SignIn = ({navigation, route}) => {
             onPress={() => {
               setCount(count + 1);
               if (count > 1) {
+                // StatusBar.setTranslucent(false);
                 navigation?.navigate('Drawer');
                 // navigation.navigate('Home');
               } else {
