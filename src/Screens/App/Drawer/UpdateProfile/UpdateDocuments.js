@@ -47,7 +47,13 @@ const UpdateDocuments = ({navigation, route}) => {
         keyboardShouldPersistTaps="handled">
         <StackHeader title={'Update Profile'} />
 
-        <View style={{flex: 1, height: hp(90), paddingBottom: 28}}>
+        <View
+          style={{
+            flex: 1,
+            height: hp(90),
+            paddingBottom: 28,
+            marginBottom: 50,
+          }}>
           <TouchableOpacity disabled={true} style={styles.fileContainer}>
             {frontIDCard ? (
               <Image source={{uri: frontIDCard?.path}} style={styles.image} />
@@ -113,7 +119,7 @@ const UpdateDocuments = ({navigation, route}) => {
           <Text style={styles.imageTitle}>Driver’s License</Text>
           <CButton
             title="Continue"
-            marginTop={15}
+            marginTop={40}
             onPress={() => navigation.navigate('UpdateVehicleInfo')}
           />
         </View>

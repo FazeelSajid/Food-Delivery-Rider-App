@@ -39,7 +39,7 @@ const CButton = ({
       disabled={disabled ? disabled : loading}
       style={{
         ...styles.btn,
-        height: height ? height : hp(6),
+        height: height ? height : hp(5.8),
         width: width ? width : wp(90),
         padding: padding ? padding : 0,
         borderWidth: transparent ? 1 : 0,

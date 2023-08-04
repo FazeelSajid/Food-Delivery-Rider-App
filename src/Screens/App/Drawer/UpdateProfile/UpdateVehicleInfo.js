@@ -13,7 +13,7 @@ import RBSheetSuccess from '../../../../components/BottomSheet/RBSheetSuccess';
 
 const UpdateVehicleInfo = ({navigation, route}) => {
   const ref_RBSheet = useRef();
-  const textInput_HEIGHT = 45;
+  const textInput_HEIGHT = 42;
   const [vehicle, setVehicle] = useState({
     owner: '',
     modal: '',
@@ -31,7 +31,7 @@ const UpdateVehicleInfo = ({navigation, route}) => {
           <CInput
             heading={'Vehicle Ownership'}
             headingStyle={styles.headingStyle}
-            placeholder="John Doe"
+            // placeholder="John Doe"
             value={vehicle.owner}
             onChangeText={text => setVehicle({...vehicle, owner: text})}
             height={textInput_HEIGHT}
@@ -39,7 +39,7 @@ const UpdateVehicleInfo = ({navigation, route}) => {
           <CInput
             heading={'Vehicle Model'}
             headingStyle={styles.headingStyle}
-            placeholder="Corolla"
+            // placeholder="Corolla"
             value={vehicle.modal}
             onChangeText={text => setVehicle({...vehicle, modal: text})}
             height={textInput_HEIGHT}
@@ -47,7 +47,7 @@ const UpdateVehicleInfo = ({navigation, route}) => {
           <CInput
             heading={'Vehicle Name'}
             headingStyle={styles.headingStyle}
-            placeholder="Toyota Corolla"
+            // placeholder="Toyota Corolla"
             value={vehicle.name}
             onChangeText={text => setVehicle({...vehicle, name: text})}
             height={textInput_HEIGHT}

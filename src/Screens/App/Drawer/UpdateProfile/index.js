@@ -16,7 +16,7 @@ import {RFPercentage} from 'react-native-responsive-fontsize';
 
 const UpdateProfile = ({navigation, route}) => {
   const ref_RBSheet = useRef();
-  const textInput_HEIGHT = 45;
+  const textInput_HEIGHT = 42;
   const [profileImage, setProfileImage] = useState(null);
   const [userInfo, setUserInfo] = useState({
     image: '',
@@ -76,7 +76,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'Username'}
             headingStyle={styles.headingStyle}
-            placeholder="User Name here"
+            // placeholder="User Name here"
+            placeholder=""
             value={userInfo.username}
             onChangeText={text => setUserInfo({...userInfo, username: text})}
             height={textInput_HEIGHT}
@@ -84,7 +85,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'Phone number'}
             headingStyle={styles.headingStyle}
-            placeholder="0000 0000000"
+            // placeholder="0000 0000000"
+            placeholder=""
             keyboardType="numeric"
             value={userInfo.phoneNumber}
             onChangeText={text => setUserInfo({...userInfo, phoneNumber: text})}
@@ -93,7 +95,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'CNIC Number'}
             headingStyle={styles.headingStyle}
-            placeholder="0000-0000000-0"
+            // placeholder="0000-0000000-0"
+            placeholder=""
             keyboardType="numeric"
             value={userInfo.CNIC}
             onChangeText={text => setUserInfo({...userInfo, CNIC: text})}
@@ -102,7 +105,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'Location'}
             headingStyle={styles.headingStyle}
-            placeholder="lorem ipsum dolo sit"
+            // placeholder="lorem ipsum dolo sit"
+            placeholder=""
             value={userInfo.location}
             onChangeText={text => setUserInfo({...userInfo, location: text})}
             height={textInput_HEIGHT}
@@ -111,7 +115,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'Date of Birth'}
             headingStyle={styles.headingStyle}
-            placeholder="00/00/0000"
+            // placeholder="00/00/0000"
+            placeholder=""
             value={
               userInfo.dob ? moment(userInfo.dob).format('DD/MM/YYYY') : ''
             }
@@ -123,7 +128,8 @@ const UpdateProfile = ({navigation, route}) => {
           <CInput
             heading={'Gender'}
             headingStyle={styles.headingStyle}
-            placeholder="Male"
+            // placeholder="Male"
+            placeholder=""
             value={userInfo.gender}
             onChangeText={text => setUserInfo({...userInfo, gender: text})}
             height={textInput_HEIGHT}
