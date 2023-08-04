@@ -45,6 +45,9 @@ import {
 import Notifications from '../Screens/App/Notifications';
 import MyOrdersDetail from '../Screens/App/BottomTab/MyOrders/MyOrdersDetail';
 import OrderHistory from '../Screens/App/OrderHistory';
+import UpdateDocuments from '../Screens/App/Drawer/UpdateProfile/UpdateDocuments';
+import UpdateVehicleInfo from '../Screens/App/Drawer/UpdateProfile/UpdateVehicleInfo';
+import Conversation from '../Screens/App/Chat/Conversation';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -290,6 +293,9 @@ function Router() {
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="MyOrdersDetail" component={MyOrdersDetail} />
       <Stack.Screen name="OrderHistory" component={OrderHistory} />
+      <Stack.Screen name="UpdateDocuments" component={UpdateDocuments} />
+      <Stack.Screen name="UpdateVehicleInfo" component={UpdateVehicleInfo} />
+      <Stack.Screen name="Conversation" component={Conversation} />
       {/* --------------------- app stack --------------------------------- */}
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Home" component={DashboardTabs} /> */}

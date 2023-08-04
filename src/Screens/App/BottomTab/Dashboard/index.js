@@ -110,7 +110,11 @@ const Dashboard = ({navigation, route}) => {
               renderItem={({item, index}) => {
                 return (
                   <FoodCardWithRating
-                    onPress={() => {}}
+                    onPress={() =>
+                      navigation.navigate('MyOrdersDetail', {
+                        type: 'order_request',
+                      })
+                    }
                     title={item?.title}
                     image={item?.image}
                     description={item?.description}
@@ -152,7 +156,11 @@ const Dashboard = ({navigation, route}) => {
               renderItem={({item, index}) => {
                 return (
                   <FoodCardWithRating
-                    onPress={() => {}}
+                    onPress={() =>
+                      navigation.navigate('MyOrdersDetail', {
+                        type: 'assigned_orders',
+                      })
+                    }
                     title={item?.title}
                     image={item?.image}
                     description={item?.description}
@@ -188,7 +196,11 @@ const Dashboard = ({navigation, route}) => {
               renderItem={({item, index}) => {
                 return (
                   <FoodCardWithRating
-                    onPress={() => {}}
+                    onPress={() => {
+                      navigation.navigate('MyOrdersDetail', {
+                        type: 'order_history',
+                      });
+                    }}
                     title={item?.title}
                     image={item?.image}
                     description={item?.description}

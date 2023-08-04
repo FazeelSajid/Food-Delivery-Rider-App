@@ -29,10 +29,12 @@ const StackHeader = ({
   backgroundColor,
   statusBarBG,
   statusBarStyle,
+  headerStyle,
+  iconContainerStyle,
 }) => {
   const navigation = useNavigation();
   return (
-    <View style={styles.header}>
+    <View style={{...styles.header, ...headerStyle}}>
       {enableStatusBar == false ? null : (
         <StatusBar
           backgroundColor={
@@ -55,7 +57,7 @@ const StackHeader = ({
       <View style={{...styles.headerView, ...headerView}}>
         <TouchableOpacity
           onPress={onBackPress ? onBackPress : () => navigation?.goBack()}
-          style={styles.iconContainer}>
+          style={{...styles.iconContainer, ...iconContainerStyle}}>
           <Ionicons
             name={'chevron-back'}
             size={hp(3)}

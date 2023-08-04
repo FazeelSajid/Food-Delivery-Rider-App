@@ -30,6 +30,7 @@ const FoodCardWithRating = ({
   nextIconWidth,
   imageContainerStyle,
   priceContainerStyle,
+  rating,
 }) => {
   const navigation = useNavigation();
   return (
@@ -74,7 +75,7 @@ const FoodCardWithRating = ({
                   fontFamily: Fonts.PlusJakartaSans_Bold,
                   fontSize: RFPercentage(1.6),
                 }}>
-                4.3
+                {rating ? rating : '4.3'}
               </Text>
             </View>
           )}
@@ -97,7 +98,7 @@ const FoodCardWithRating = ({
                   fontFamily: Fonts.PlusJakartaSans_Bold,
                   fontSize: RFPercentage(1.6),
                 }}>
-                4.3
+                {rating ? rating : '4.3'}
               </Text>
             </View>
           )}
