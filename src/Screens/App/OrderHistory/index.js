@@ -23,6 +23,7 @@ const OrderHistory = ({navigation, route}) => {
   const [isSearch, setIsSearch] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
   const [data, setData] = useState([
     {
       id: 0,

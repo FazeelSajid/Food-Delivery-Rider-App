@@ -11,8 +11,16 @@ import {Colors, Fonts, Icons} from '../../constants';
 import StackHeader from '../../components/Header/StackHeader';
 import CButton from '../../components/Buttons/CButton';
 import STYLE from './STYLE';
+import {useKeyboard} from '../../utils/UseKeyboardHook';
 
 const Verification = ({navigation, route}) => {
+  const keyboardHeight = useKeyboard();
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd();
+  }, [keyboardHeight]);
+
   const refOTP = useRef();
   const [otpCode, setOtpCode] = useState('');
   useEffect(() => {
@@ -39,6 +47,7 @@ const Verification = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <StackHeader title={''} backIconColor={'#1D1D20'} />
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
         <View
@@ -78,13 +87,15 @@ const Verification = ({navigation, route}) => {
           </View>
           <View
             style={{
-              height: hp(47),
+              // height: hp(47),
+              flex: 1,
               justifyContent: 'flex-end',
               paddingBottom: 30,
             }}>
             <CButton
               title="VERIFY"
               height={hp(6)}
+              width={wp(83)}
               onPress={() => handleVerifyCode()}
             />
           </View>

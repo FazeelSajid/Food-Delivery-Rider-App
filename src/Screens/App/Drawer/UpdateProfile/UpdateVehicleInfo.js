@@ -10,8 +10,17 @@ import {
 } from 'react-native-responsive-screen';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import RBSheetSuccess from '../../../../components/BottomSheet/RBSheetSuccess';
+import {useKeyboard} from '../../../../utils/UseKeyboardHook';
 
 const UpdateVehicleInfo = ({navigation, route}) => {
+  const keyboardHeight = useKeyboard();
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd();
+    // scrollViewRef.current?.scrollTo({y: 150});
+  }, [keyboardHeight]);
+
   const ref_RBSheet = useRef();
   const textInput_HEIGHT = 42;
   const [vehicle, setVehicle] = useState({
@@ -21,9 +30,14 @@ const UpdateVehicleInfo = ({navigation, route}) => {
   });
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, height: hp(100), backgroundColor: Colors.White}}>
       <ScrollView
-        contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
+        ref={scrollViewRef}
+        // style={{flex: 1, height: 600, backgroundColor: 'red'}}
+        contentContainerStyle={{
+          flexGrow: 1,
+          // height: hp(100),
+        }}
         keyboardShouldPersistTaps="handled">
         <StackHeader title={'Update Profile'} />
 
@@ -53,24 +67,28 @@ const UpdateVehicleInfo = ({navigation, route}) => {
             height={textInput_HEIGHT}
           />
 
-          <CButton
-            title="Continue"
-            marginTop={hp(43)}
-            onPress={() => ref_RBSheet?.current?.open()}
-          />
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            <CButton
+              title="Continue"
+              width={wp(89)}
+              // marginTop={hp(43)}
+
+              onPress={() => ref_RBSheet?.current?.open()}
+            />
+          </View>
         </View>
+        <RBSheetSuccess
+          refRBSheet={ref_RBSheet}
+          title={'Profile Updated Successfully'}
+          // textColor={'#68686E'}
+          btnText={'OK'}
+          onPress={() => {
+            ref_RBSheet?.current?.close();
+            navigation?.popToTop();
+            navigation?.navigate('Drawer');
+          }}
+        />
       </ScrollView>
-      <RBSheetSuccess
-        refRBSheet={ref_RBSheet}
-        title={'Profile Updated Successfully'}
-        // textColor={'#68686E'}
-        btnText={'OK'}
-        onPress={() => {
-          ref_RBSheet?.current?.close();
-          navigation?.popToTop();
-          navigation?.navigate('Drawer');
-        }}
-      />
     </View>
   );
 };
