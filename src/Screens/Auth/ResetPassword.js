@@ -24,7 +24,15 @@ import CRBSheetComponent from '../../components/BottomSheet/CRBSheetComponent';
 import Lottie from 'lottie-react-native';
 import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import Snackbar from 'react-native-snackbar';
+import {useKeyboard} from '../../utils/UseKeyboardHook';
 const ResetPassword = ({navigation, route}) => {
+  const keyboardHeight = useKeyboard();
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd();
+  }, [keyboardHeight]);
+
   const ref_RBSheet = useRef();
   const [showNewPass, setShowNewPass] = useState(false);
   const [showOldPass, setShowOldPass] = useState(false);
@@ -65,10 +73,11 @@ const ResetPassword = ({navigation, route}) => {
   };
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
-      <StackHeader title={''} backIconColor={'#1D1D20'} />
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        ref={scrollViewRef}>
+        <StackHeader title={''} backIconColor={'#1D1D20'} />
         <View
           style={{
             flex: 1,
@@ -116,7 +125,8 @@ const ResetPassword = ({navigation, route}) => {
           />
           <View
             style={{
-              height: hp(36),
+              // height: hp(36),
+              flex: 1,
               justifyContent: 'flex-end',
               paddingBottom: 30,
             }}>

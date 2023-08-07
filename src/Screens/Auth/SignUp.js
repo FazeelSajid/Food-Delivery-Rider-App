@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Colors, Fonts, Icons, Images} from '../../constants';
 import {
   widthPercentageToDP as wp,
@@ -19,8 +19,17 @@ import CInput from '../../components/TextInput/CInput';
 import Feather from 'react-native-vector-icons/Feather';
 import CButton from '../../components/Buttons/CButton';
 import STYLE from './STYLE';
+import {useKeyboard} from '../../utils/UseKeyboardHook';
 
 const SignUp = ({navigation, route}) => {
+  const keyboardHeight = useKeyboard();
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    // scrollViewRef.current?.scrollToEnd();
+    scrollViewRef.current?.scrollTo({y: 150});
+  }, [keyboardHeight]);
+
   const [username, setUsername] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
 
@@ -28,6 +37,7 @@ const SignUp = ({navigation, route}) => {
     <View style={STYLE.container}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
         <View style={STYLE.authBGContainer}>
