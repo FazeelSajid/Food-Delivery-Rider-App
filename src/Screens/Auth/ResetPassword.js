@@ -126,9 +126,8 @@ const ResetPassword = ({navigation, route}) => {
           <View
             style={{
               // height: hp(36),
-              flex: 1,
+              flex: 2,
               justifyContent: 'flex-end',
-              paddingBottom: 30,
             }}>
             <CButton
               title="UPDATE"
@@ -137,6 +136,7 @@ const ResetPassword = ({navigation, route}) => {
               onPress={() => handleUpdate()}
             />
           </View>
+          <View style={{height: 60}} />
         </View>
       </ScrollView>
 
