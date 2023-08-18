@@ -73,12 +73,37 @@ const MyOrdersDetail = ({navigation, route}) => {
             <CustomerCard
               disabled={true}
               onChatPress={() => {
-                navigation?.navigate('Conversation');
+                navigation?.navigate('Conversation', {
+                  userId: 'customer',
+                  name: 'John Doe',
+                  image: Images.user6,
+                });
               }}
               profile={Images.user6}
               name={'John Doe'}
               phoneNo={'0000-0000000'}
               // location={'Amet minim mollit non deserunt'}
+              showChatIcon={true}
+            />
+          </View>
+
+          <View style={{marginBottom: 5}}>
+            <Text style={{...styles.heading, color: Colors.Orange}}>
+              Restaurant Details
+            </Text>
+            <CustomerCard
+              disabled={true}
+              onChatPress={() => {
+                navigation?.navigate('Conversation', {
+                  userId: 'restaurant',
+                  name: 'Restaurant Name',
+                  image: Images.restaurant1,
+                });
+              }}
+              profile={Images.restaurant1}
+              name={'Restaurant Name'}
+              // phoneNo={'0000-0000000'}
+              location={'Amet minim mollit non deserunt'}
               showChatIcon={true}
             />
           </View>
