@@ -167,7 +167,7 @@ import Check from '../Assets/svg/check.svg';
 import Refresh from '../Assets/svg/refresh.svg';
 
 //
-import OnboardingLogo from '../Assets/svg/onboardinglogo.svg';
+
 import AuthLogo from '../Assets/svg/authLogo.svg';
 import OnboardingFood from '../Assets/svg/onboardingFood.svg';
 import OnboardingCircle from '../Assets/svg/onboardingCircle.svg';
@@ -255,7 +255,7 @@ export const Icons = {
   Lock,
   Check,
   Refresh,
-  OnboardingLogo,
+
   AuthLogo,
   OnboardingFood,
   OnboardingCircle,

@@ -17,7 +17,13 @@ const ChatCard = ({profile, user_name, message, created_at, unread_count}) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Conversation')}
+      onPress={() =>
+        navigation.navigate('Conversation', {
+          userId: 'customer',
+          name: 'John Doe',
+          image: Images.user6,
+        })
+      }
       style={styles.card}>
       <Avatar.Image source={profile} size={40} />
       <View style={{marginLeft: 10, flex: 1}}>
