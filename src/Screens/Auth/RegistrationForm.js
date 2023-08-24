@@ -16,7 +16,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import {Avatar} from 'react-native-paper';
 import {chooseImageFromCamera} from '../../utils/helpers';
 import moment from 'moment';
@@ -114,6 +113,7 @@ const RegistrationForm = ({navigation, route}) => {
             marginTop={10}
             onPress={() => navigation?.navigate('RegistrationDocuments')}
           />
+
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"

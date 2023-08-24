@@ -34,6 +34,7 @@ import firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/firestore';
 import Loader from '../../../components/Loader';
 import {useDispatch, useSelector} from 'react-redux';
+import {getUserFcmToken, send_Push_Notification} from '../../../utils/helpers';
 // import {setMessages} from '../../../redux/MySlice';
 
 const Conversation = ({route, navigation}) => {
@@ -303,11 +304,38 @@ const Conversation = ({route, navigation}) => {
         // createdAt: firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        console.log('message sended successfully');
+        //message sended successfully
+        //send notification to receiver
+        handleSendPushNotification(obj.text);
       })
       .catch(err => {
         console.log('error while sending new message : ', err);
       });
+  };
+
+  const handleSendPushNotification = async text => {
+    const receiver_fcm = await getUserFcmToken();
+    console.log('receiver_fcm  :   ', receiver_fcm);
+
+    if (receiver_fcm) {
+      let body = {
+        to: receiver_fcm,
+        notification: {
+          title: route?.params?.name ? route?.params?.name : 'John Doe',
+          body: text ? text : 'sended a message',
+          // mutable_content: true,
+          sound: 'default',
+        },
+        data: {
+          // user_id: user,
+          type: 'chat',
+        },
+        priority: 'high',
+      };
+      send_Push_Notification(body);
+    } else {
+      console.log('receiver_fcm not found');
+    }
   };
 
   const CustomBubble = props => {
