@@ -1,6 +1,8 @@
 // helpers.js
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import messaging from '@react-native-firebase/messaging';
+import {firebase_server_key} from './globalVariables';
 
 export const chooseImageFromCamera = async () => {
   return new Promise(async (resolve, reject) => {
@@ -40,4 +42,46 @@ export const chooseImageFromCamera = async () => {
         reject(err);
       });
   });
+};
+
+// -------------------------------------- Firebase Notification _________________________________
+
+export const getUserFcmToken = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      if (enabled) {
+        const fcmToken = await messaging().getToken();
+        resolve(fcmToken);
+      } else {
+        resolve('');
+      }
+    } catch (error) {
+      resolve('');
+    }
+  });
+};
+
+export const send_Push_Notification = async body => {
+  var requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `key=${firebase_server_key}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  fetch('https://fcm.googleapis.com/fcm/send', requestOptions)
+    .then(response => response.text())
+    .then(response => {
+      let res = JSON.parse(response);
+      console.log('push notification response :  ', res);
+    })
+    .catch(err => {
+      console.log('error :  ', err);
+    });
 };

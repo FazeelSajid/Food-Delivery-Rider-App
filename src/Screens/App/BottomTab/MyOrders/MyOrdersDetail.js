@@ -12,15 +12,16 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {RFPercentage} from 'react-native-responsive-fontsize';
-import PromoCodeCard from '../../../../components/Cards/PromoCodeCard';
 import CButton from '../../../../components/Buttons/CButton';
 import SuccessModal from '../../../../components/Modal/SuccessModal';
 import {Colors, Fonts, Images, Icons} from '../../../../constants';
-import StackHeader from '../../../../components/Header/StackHeader';
-import OrdersCard from '../../../../components/Cards/OrdersCard';
 import CustomerCard from '../../../../components/Cards/CustomerCard';
 import HeaderImageSlider from '../../../../components/Slider/HeaderImageSlider';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+  getUserFcmToken,
+  send_Push_Notification,
+} from '../../../../utils/helpers';
 
 const MyOrdersDetail = ({navigation, route}) => {
   const [selected, setSelected] = useState(0);
@@ -28,6 +29,7 @@ const MyOrdersDetail = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
 
   const [data, setData] = useState([]);
+
   useEffect(() => {
     getSliderImages();
   }, []);
@@ -56,6 +58,39 @@ const MyOrdersDetail = ({navigation, route}) => {
       },
     ]);
   }, [data]);
+
+  const handleOrderDelivered = async () => {
+    console.log('handleOrderDelivered   called.....');
+    let title = 'Order Delivered';
+    let text = 'Your Order is delivered successfully!';
+    //send notification to customer when order is delivered
+    //Note: send notification to restaurant that your order is completed
+    handleSendPushNotification(text, title);
+  };
+
+  const handleSendPushNotification = async (text, title) => {
+    const receiver_fcm = await getUserFcmToken();
+    if (receiver_fcm) {
+      let body = {
+        to: receiver_fcm,
+        notification: {
+          title: title ? title : '',
+          body: text ? text : '',
+          // mutable_content: true,
+          sound: 'default',
+        },
+        data: {
+          // user_id: user,
+          type: 'order',
+        },
+        priority: 'high',
+      };
+
+      send_Push_Notification(body);
+    } else {
+      console.log('receiver_fcm not found');
+    }
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
@@ -227,7 +262,10 @@ const MyOrdersDetail = ({navigation, route}) => {
                 <View style={styles.horizontalLine} />
                 <TouchableOpacity
                   style={{alignItems: 'center'}}
-                  onPress={() => setSelected(1)}>
+                  onPress={() => {
+                    setSelected(1);
+                    handleOrderDelivered();
+                  }}>
                   <View
                     style={{
                       ...styles.orderCard,
