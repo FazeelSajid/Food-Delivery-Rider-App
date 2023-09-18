@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {Colors, Fonts, Icons, Images} from '../../constants';
@@ -20,6 +21,9 @@ import CButton from '../../components/Buttons/CButton';
 import STYLE from './STYLE';
 import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
+import {getUserFcmToken, showAlert} from '../../utils/helpers';
+import api from '../../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignIn = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -31,10 +35,66 @@ const SignIn = ({navigation, route}) => {
   }, [keyboardHeight]);
 
   const ref_RBSheet = useRef();
+  const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [riderId, setRiderId] = useState('');
   const [password, setPassword] = useState('');
   const [count, setCount] = useState(1);
+
+  const validate = () => {
+    if (riderId?.length == 0) {
+      showAlert('Please Enter a valid rider id');
+      return false;
+    } else if (password?.length == 0) {
+      showAlert('Please Enter a valid Password');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleLogin = async () => {
+    if (validate()) {
+      Keyboard.dismiss();
+      setLoading(true);
+      console.log({riderId, password});
+      let fcm_token = await getUserFcmToken();
+      fetch(api.login, {
+        method: 'POST',
+        body: JSON.stringify({
+          rider_id: riderId,
+          password: password,
+          fcm_token: fcm_token,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          console.log('response  :  ', response);
+          if (response?.status == false) {
+            // showAlert(response?.message);
+            showAlert('Invalid Credentials');
+          } else {
+            // // showAlert(response.message, 'green');
+            await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
+            await AsyncStorage.setItem(
+              'rider_detail',
+              JSON.stringify(response?.result),
+            );
+            // // navigation?.popToTop()
+            navigation?.replace('Drawer');
+          }
+        })
+        .catch(err => {
+          console.log('Error in Login :  ', err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
 
   return (
     <View style={STYLE.container}>
@@ -59,9 +119,12 @@ const SignIn = ({navigation, route}) => {
             value={riderId}
             onChangeText={text => setRiderId(text)}
           />
+
           <CInput
             placeholder="Password"
             secureTextEntry={!showPass}
+            value={password}
+            onChangeText={text => setPassword(text)}
             rightContent={
               <TouchableOpacity onPress={() => setShowPass(!showPass)}>
                 <Feather
@@ -72,8 +135,17 @@ const SignIn = ({navigation, route}) => {
               </TouchableOpacity>
             }
           />
+
           <TouchableOpacity
-            onPress={() => navigation.navigate('ForgetPassword')}
+            onPress={() => {
+              if (riderId?.length == 0) {
+                showAlert('Please Enter a valid rider id');
+              } else {
+                navigation.navigate('ForgetPassword', {
+                  rider_id: riderId,
+                });
+              }
+            }}
             style={{
               width: 190,
               alignSelf: 'flex-end',
@@ -90,15 +162,17 @@ const SignIn = ({navigation, route}) => {
             height={hp(6.2)}
             marginTop={hp(10)}
             width={wp(88)}
+            loading={loading}
             onPress={() => {
-              setCount(count + 1);
-              if (count > 1) {
-                // StatusBar.setTranslucent(false);
-                navigation?.navigate('Drawer');
-                // navigation.navigate('Home');
-              } else {
-                ref_RBSheet?.current?.open();
-              }
+              handleLogin();
+              // setCount(count + 1);
+              // if (count > 1) {
+              //   // StatusBar.setTranslucent(false);
+              //   navigation?.navigate('Drawer');
+              //   // navigation.navigate('Home');
+              // } else {
+              //   ref_RBSheet?.current?.open();
+              // }
             }}
           />
 

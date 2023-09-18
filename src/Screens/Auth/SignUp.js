@@ -20,6 +20,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import CButton from '../../components/Buttons/CButton';
 import STYLE from './STYLE';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
+import {showAlert} from '../../utils/helpers';
 
 const SignUp = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -32,6 +33,33 @@ const SignUp = ({navigation, route}) => {
 
   const [username, setUsername] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
+
+  const clearFields = () => {
+    setUsername('');
+    setPhoneNo('');
+  };
+
+  const validate = () => {
+    if (username?.length == 0) {
+      showAlert('Please Enter Username');
+      return false;
+    } else if (phoneNo?.length == 0) {
+      showAlert('Please Enter Phone Number');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleSignUP = () => {
+    if (validate()) {
+      navigation.navigate('RegistrationForm', {
+        user_name: username,
+        phone_no: phoneNo,
+      });
+      clearFields();
+    }
+  };
 
   return (
     <View style={STYLE.container}>
@@ -68,7 +96,7 @@ const SignUp = ({navigation, route}) => {
             height={hp(6.2)}
             marginTop={hp(12)}
             width={wp(88)}
-            onPress={() => navigation.navigate('RegistrationForm')}
+            onPress={() => handleSignUP()}
           />
 
           <Text style={STYLE.orText}>-- Or --</Text>

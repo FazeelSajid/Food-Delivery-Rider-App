@@ -32,7 +32,7 @@ const OnBoarding = ({navigation, route}) => {
         height={hp(6.2)}
         marginTop={hp(15)}
         width={wp(85)}
-        onPress={() => navigation.navigate('SignIn')}
+        onPress={() => navigation.replace('SignIn')}
       />
     </View>
   );

@@ -167,6 +167,8 @@ import STYLE from './STYLE';
 import validator from 'validator';
 import Snackbar from 'react-native-snackbar';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
+import {showAlert} from '../../utils/helpers';
+import api from '../../constants/api';
 
 const ForgetPassword = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -178,7 +180,9 @@ const ForgetPassword = ({navigation, route}) => {
   }, [keyboardHeight]);
 
   const [email, setEmail] = useState('');
-  const validate = async () => {
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
     if (email?.length == 0) {
       Snackbar.show({
         text: 'Please Enter email address',
@@ -199,9 +203,37 @@ const ForgetPassword = ({navigation, route}) => {
   };
 
   const handleSendCode = async () => {
-    // if (await validate()) {
-    navigation.navigate('Verification');
-    // }
+    if (validate()) {
+      // navigation.navigate('Verification');
+      setLoading(true);
+      fetch(api.send_email, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          console.log('response  :  ', response);
+          if (response?.status == false) {
+            showAlert(response?.message);
+          } else {
+            navigation.replace('Verification', {
+              data: response?.data,
+              rider_id: route?.params?.rider_id,
+            });
+          }
+        })
+        .catch(err => {
+          console.log('Error in send email :  ', err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
@@ -241,6 +273,7 @@ const ForgetPassword = ({navigation, route}) => {
               title="SEND CODE"
               height={hp(6)}
               width={wp(85)}
+              loading={loading}
               onPress={() => handleSendCode()}
             />
           </View>
