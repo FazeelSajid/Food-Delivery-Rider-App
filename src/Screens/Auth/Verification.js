@@ -12,6 +12,9 @@ import StackHeader from '../../components/Header/StackHeader';
 import CButton from '../../components/Buttons/CButton';
 import STYLE from './STYLE';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
+import api from '../../constants/api';
+import {showAlert} from '../../utils/helpers';
+import Loader from '../../components/Loader';
 
 const Verification = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -23,9 +26,12 @@ const Verification = ({navigation, route}) => {
 
   const refOTP = useRef();
   const [otpCode, setOtpCode] = useState('');
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     setTimeout(() => refOTP.current.focusField(0), 250);
   }, []);
+
   const validate = () => {
     if (otpCode?.length == 0 || otpCode?.length < 4) {
       Snackbar.show({
@@ -38,14 +44,47 @@ const Verification = ({navigation, route}) => {
       return true;
     }
   };
+
   const handleVerifyCode = async () => {
-    // if (validate()) {
-    navigation.replace('ResetPassword');
-    // }
+    if (validate()) {
+      // navigation.replace('ResetPassword');
+      setLoading(true);
+      fetch(api.verify_otp, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: route?.params?.data?.email,
+          otp: otpCode,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          console.log('response  :  ', response);
+          if (response?.status == false) {
+            setTimeout(() => {
+              showAlert('Invalid Otp code');
+            }, 500);
+          } else {
+            navigation?.navigate('ResetPassword', {
+              email: route?.params?.data?.email,
+              rider_id: route?.params?.rider_id,
+            });
+          }
+        })
+        .catch(err => {
+          console.log('Error in Login :  ', err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <StackHeader title={''} backIconColor={'#1D1D20'} />
+      <Loader loading={loading} />
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={{flexGrow: 1}}

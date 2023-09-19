@@ -3,6 +3,8 @@
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import messaging from '@react-native-firebase/messaging';
 import {firebase_server_key} from './globalVariables';
+import Snackbar from 'react-native-snackbar';
+import api from '../constants/api';
 
 export const chooseImageFromCamera = async () => {
   return new Promise(async (resolve, reject) => {
@@ -84,4 +86,50 @@ export const send_Push_Notification = async body => {
     .catch(err => {
       console.log('error :  ', err);
     });
+};
+
+export const showAlert = (message, bgColor, numberOfLines) => {
+  Snackbar.show({
+    text: message,
+    duration: Snackbar.LENGTH_SHORT,
+    backgroundColor: bgColor ? bgColor : 'red',
+    numberOfLines: numberOfLines ? numberOfLines : 2,
+    // marginBottom:20,
+  });
+};
+
+export const uploadImage = image => {
+  return new Promise(async (resolve, reject) => {
+    var headers = {
+      'Content-Type': 'multipart/form-data',
+      Accept: 'application/json',
+    };
+
+    const formData = new FormData();
+    // let profile_Obj = {
+    //   uri: image,
+    //   name: imageName,
+    //   type: imageType,
+    // };
+    console.log('image passed________________   :  ', image);
+    formData.append('file_type', 'image');
+    formData.append('image', image);
+    await fetch(api.upload_image, {
+      method: 'POST',
+      headers: headers,
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(async response => {
+        if (response?.status == true) {
+          resolve(response?.image_url);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch(error => {
+        console.log('error uploadImage : ', error);
+        resolve(false);
+      });
+  });
 };

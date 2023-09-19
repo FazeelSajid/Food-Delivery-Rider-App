@@ -48,6 +48,8 @@ import OrderHistory from '../Screens/App/OrderHistory';
 import UpdateDocuments from '../Screens/App/Drawer/UpdateProfile/UpdateDocuments';
 import UpdateVehicleInfo from '../Screens/App/Drawer/UpdateProfile/UpdateVehicleInfo';
 import Conversation from '../Screens/App/Chat/Conversation';
+import Splash from '../Screens/Auth/Splash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -220,10 +222,12 @@ const CustomDrawerContent = props => {
         title={'Logout?'}
         description={'Do you want to logout?'}
         okText={'LOGOUT'}
-        onOk={() => {
+        onOk={async () => {
+          await AsyncStorage.clear();
+
           ref_RBSheet?.current?.close();
-          navigation?.popToTop();
-          navigation?.navigate('SignIn');
+          // navigation?.popToTop();
+          navigation?.replace('SignIn');
         }}
       />
     </DrawerContentScrollView>
@@ -279,6 +283,7 @@ function Router() {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="OnBoarding" component={OnBoarding} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />

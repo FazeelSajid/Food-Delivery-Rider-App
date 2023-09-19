@@ -5,6 +5,7 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {Colors, Fonts, Icons, Images} from '../../constants';
@@ -25,7 +26,11 @@ import Lottie from 'lottie-react-native';
 import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import Snackbar from 'react-native-snackbar';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
+import api from '../../constants/api';
+import {showAlert} from '../../utils/helpers';
+
 const ResetPassword = ({navigation, route}) => {
+  //
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
 
@@ -34,10 +39,19 @@ const ResetPassword = ({navigation, route}) => {
   }, [keyboardHeight]);
 
   const ref_RBSheet = useRef();
+  const [loading, setLoading] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
   const [showOldPass, setShowOldPass] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const validatePassword = password => {
+    // Regular expression pattern to match passwords
+    const passwordPattern =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // Test if the password matches the pattern
+    return passwordPattern.test(password);
+  };
 
   const validate = () => {
     if (password?.length == 0) {
@@ -67,10 +81,39 @@ const ResetPassword = ({navigation, route}) => {
   };
 
   const handleUpdate = async () => {
-    // if (validate()) {
-    ref_RBSheet?.current?.open();
-    // }
+    if (validate()) {
+      Keyboard.dismiss();
+      // ref_RBSheet?.current?.open();
+      setLoading(true);
+      fetch(api.update_password, {
+        method: 'PUT',
+        body: JSON.stringify({
+          rider_id: route?.params?.rider_id,
+          password: password,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          console.log('response  :  ', response);
+          if (response?.status == false) {
+            showAlert(response?.message);
+          } else {
+            ref_RBSheet?.current?.open();
+          }
+        })
+        .catch(err => {
+          console.log('Error in Login :  ', err);
+          showAlert('Something went wrong');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <ScrollView
@@ -133,6 +176,7 @@ const ResetPassword = ({navigation, route}) => {
               title="UPDATE"
               height={hp(6)}
               width={wp(85)}
+              loading={loading}
               onPress={() => handleUpdate()}
             />
           </View>

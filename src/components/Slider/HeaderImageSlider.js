@@ -14,6 +14,7 @@ import {
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {BASE_URL_IMAGE} from '../../utils/globalVariables';
 
 const HeaderImageSlider = ({
   data,
@@ -61,6 +62,7 @@ const HeaderImageSlider = ({
       marginHorizontal: 3,
     },
   });
+
   return (
     <View style={styles.sliderContainer}>
       <StatusBar
@@ -79,7 +81,8 @@ const HeaderImageSlider = ({
         renderItem={({item}) => (
           <View style={styles.imageCard}>
             <Image
-              source={item.image}
+              // source={item.image}
+              source={{uri: BASE_URL_IMAGE + item}}
               style={{
                 width: '100%',
                 height: '100%',
