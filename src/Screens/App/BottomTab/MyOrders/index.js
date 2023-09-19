@@ -22,11 +22,25 @@ import {colors} from 'react-native-swiper-flatlist/src/themes';
 import AssignedOrders from './AssignedOrders';
 import OrderRequests from './OrderRequests';
 import {useFocusEffect} from '@react-navigation/native';
+import {
+  GetAssignedOrders,
+  GetNearestOrders,
+} from '../../../../utils/helpers/orderApis';
+import Loader from '../../../../components/Loader';
 
 const MyOrders = ({navigation, route}) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const [assignedOrdersList, setAssignedOrdersList] = useState([]);
+  const [orderRequestsList, setOrderRequestsList] = useState([]);
+
+  const [assignedOrdersListCopy, setAssignedOrdersListCopy] = useState([]);
+  const [orderRequestsListCopy, setOrderRequestsListCopy] = useState([]);
+
+  const [isFirst, setIsFirst] = useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
 
-  const onChangeSearch = query => setSearchQuery(query);
   const [selectedTab, setSelectedTab] = useState(0);
   const [topTabs, setTopTabs] = useState([
     {
@@ -39,72 +53,151 @@ const MyOrders = ({navigation, route}) => {
     },
   ]);
 
-  const data = [
-    {
-      id: 0,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Order Placed',
-    },
-    {
-      id: 1,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Preparing',
-    },
-    {
-      id: 2,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Ready to Deliver',
-    },
-    {
-      id: 3,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Out for Delivery',
-    },
-    {
-      id: 4,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Order Placed',
-    },
-    {
-      id: 5,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Order Placed',
-    },
-    {
-      id: 6,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Order Placed',
-    },
-    {
-      id: 7,
-      image: Images.food8,
-      title: 'Green Salad',
-      description: 'Mix fresh real orange',
-      price: 13.2,
-      status: 'Order Placed',
-    },
-  ];
+  // __________________________ handle searcch _______________________
+
+  const handleSearch = query => {
+    try {
+      if (!query) {
+        setOrderRequestsList(orderRequestsListCopy);
+        setAssignedOrdersList(assignedOrdersListCopy);
+        setLoading(false);
+      } else {
+        const filteredData = orderRequestsListCopy?.filter(item => {
+          const firstCartItem = item?.cart_items_Data?.[0]?.itemData;
+          return (
+            item?.cart_items_Data?.length > 0 &&
+            (firstCartItem?.name?.includes(query) ||
+              firstCartItem?.item_name?.includes(query))
+          );
+        });
+        console.log('filteredData?.length', filteredData?.length);
+        setOrderRequestsList(filteredData);
+        //
+        const filteredData1 = assignedOrdersListCopy?.filter(item => {
+          const firstCartItem = item?.cart_items_Data?.[0]?.itemData;
+          return (
+            item?.cart_items_Data?.length > 0 &&
+            (firstCartItem?.name?.includes(query) ||
+              firstCartItem?.item_name?.includes(query))
+          );
+        });
+        console.log('filteredData1?.length', filteredData1?.length);
+        setAssignedOrdersList(filteredData1);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // const delayDebounceFn = setTimeout(() => {
+    //   if (isFirst) {
+    //     setIsFirst(false);
+    //   } else {
+    //     // setLoading(true);
+    //     handleSearch(searchQuery);
+    //     // Send Axios request here
+    //   }
+    // }, 1000);
+
+    // return () => clearTimeout(delayDebounceFn);
+    handleSearch(searchQuery);
+  }, [searchQuery]);
+
+  // ______________________________________________
+  // const data = [
+  //   {
+  //     id: 0,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Order Placed',
+  //   },
+  //   {
+  //     id: 1,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Preparing',
+  //   },
+  //   {
+  //     id: 2,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Ready to Deliver',
+  //   },
+  //   {
+  //     id: 3,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Out for Delivery',
+  //   },
+  //   {
+  //     id: 4,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Order Placed',
+  //   },
+  //   {
+  //     id: 5,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Order Placed',
+  //   },
+  //   {
+  //     id: 6,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Order Placed',
+  //   },
+  //   {
+  //     id: 7,
+  //     image: Images.food8,
+  //     title: 'Green Salad',
+  //     description: 'Mix fresh real orange',
+  //     price: 13.2,
+  //     status: 'Order Placed',
+  //   },
+  // ];
+
+  const getOrderRequests = async () => {
+    try {
+      // setLoading(true);
+      let list = await GetNearestOrders();
+      setOrderRequestsList(list);
+      setOrderRequestsListCopy(list);
+      let data1 = await GetAssignedOrders();
+      setAssignedOrdersList(data1);
+      setAssignedOrdersListCopy(data1);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // getOrderRequests();
+    setLoading(true);
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getOrderRequests();
+    }, []),
+  );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -118,9 +211,12 @@ const MyOrders = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
+      <Loader loading={loading} />
       <MenuHeader title={'My Order'} />
       <View style={{flex: 1}}>
         <CInput
+          value={searchQuery}
+          onChangeText={text => setSearchQuery(text)}
           placeholder={'Search order'}
           leftContent={
             <View style={{marginLeft: -5}}>
@@ -196,9 +292,9 @@ const MyOrders = ({navigation, route}) => {
             />
           </View>
           {selectedTab == 0 ? (
-            <OrderRequests data={data} />
+            <OrderRequests data={orderRequestsList} />
           ) : (
-            <AssignedOrders data={data} />
+            <AssignedOrders data={assignedOrdersList} />
           )}
         </View>
       </View>

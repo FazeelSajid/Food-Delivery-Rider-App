@@ -3,12 +3,25 @@ import React from 'react';
 import {Colors, Fonts} from '../../../../constants';
 import StackHeader from '../../../../components/Header/StackHeader';
 import {RFPercentage} from 'react-native-responsive-fontsize';
+import {WebView} from 'react-native-webview';
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const TermsAndCondition = () => {
   return (
     <ScrollView style={{flex: 1, backgroundColor: Colors.White}}>
-      <StackHeader title={'Terms & Condition'} />
-      <View style={styles.textContainer}>
+      <StackHeader
+        title={'Terms & Condition'}
+        headerStyle={{paddingBottom: 10}}
+      />
+      <WebView
+        source={{uri: 'https://mtechub.org/privacy/'}}
+        style={{flex: 1, height: hp(90), width: wp(100)}}
+      />
+      {/* <View style={styles.textContainer}>
         <Text style={styles.text}>
           Morem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
           turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec
@@ -59,7 +72,7 @@ const TermsAndCondition = () => {
           sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilisis
           nisi, ac posuere leo.
         </Text>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

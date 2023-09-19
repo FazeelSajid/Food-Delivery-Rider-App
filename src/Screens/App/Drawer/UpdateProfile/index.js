@@ -10,9 +10,17 @@ import {
 } from 'react-native-responsive-screen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Avatar} from 'react-native-paper';
-import {chooseImageFromCamera} from '../../../../utils/helpers';
+import {
+  chooseImageFromCamera,
+  showAlert,
+  uploadImage,
+} from '../../../../utils/helpers';
 import moment from 'moment';
 import {RFPercentage} from 'react-native-responsive-fontsize';
+import api from '../../../../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../../../components/Loader';
+import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 
 const UpdateProfile = ({navigation, route}) => {
   const ref_RBSheet = useRef();
@@ -26,10 +34,104 @@ const UpdateProfile = ({navigation, route}) => {
     location: '',
     dob: '',
     gender: '',
+    //
+    email: '',
+    country: '',
+    address: '',
   });
   const [DOB, setDOB] = useState('');
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [isFetching, setIsFetching] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    if (userInfo?.image?.length == 0) {
+      showAlert('Please Upload Profile Image');
+      return false;
+    }
+    //  else if (userInfo?.email?.length == 0) {
+    //   showAlert('Please Enter email address');
+    //   return false;
+    // }
+    else if (userInfo?.username?.length == 0) {
+      showAlert('Please Enter Username');
+      return false;
+    } else if (userInfo?.phoneNumber?.length == 0) {
+      showAlert('Please Enter Phone Number');
+      return false;
+    } else if (userInfo?.CNIC?.length == 0) {
+      showAlert('Please Enter CNIC');
+      return false;
+    }
+    // else if (country.length == 0) {
+    //   showAlert('Please Enter Country');
+    //   return false;
+    // }
+    //  else if (address.length == 0) {
+    //   showAlert('Please Enter Address');
+    //   return false;
+    // }
+    else if (userInfo?.location?.length == 0) {
+      showAlert('Please Enter Location');
+      return false;
+    } else if (userInfo?.dob?.length == 0) {
+      showAlert('Please Select Date Of Birth');
+      return false;
+    } else if (userInfo?.gender?.length == 0) {
+      showAlert('Please Enter Gender');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleUploadProfileImage = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (userInfo?.image?.path?.startsWith('file://')) {
+          let image = {
+            uri: userInfo?.image?.path,
+            name: userInfo?.image?.name,
+            type: userInfo?.image?.mime,
+          };
+          let filePath = await uploadImage(image);
+
+          if (filePath) {
+            resolve(filePath);
+          } else {
+            resolve('');
+          }
+        } else {
+          resolve(userInfo?.image);
+        }
+      } catch (error) {
+        console.log('error handleUploadProfileImage :  ', error);
+        resolve('');
+      }
+    });
+  };
+
+  const handleContinue = async () => {
+    if (validate()) {
+      setLoading(true);
+      let image_url = await handleUploadProfileImage();
+      navigation?.navigate('UpdateDocuments', {
+        country: userInfo?.country,
+        photo: image_url,
+        cnic: userInfo?.CNIC,
+        address: userInfo?.address,
+        dob: userInfo?.dob ? moment(userInfo?.dob).format('DD/MM/YYYY') : '',
+        gender: userInfo?.gender,
+        email: userInfo?.email,
+        name: userInfo?.username,
+        location: userInfo?.location,
+        phone: userInfo?.phoneNumber,
+      });
+      setLoading(false);
+    }
+  };
 
   const handleUploadImage = async item => {
     chooseImageFromCamera()
@@ -42,14 +144,55 @@ const UpdateProfile = ({navigation, route}) => {
         console.log('err : ', err);
       });
   };
+
   const onDatePick = (event, selectedDate) => {
     setShowDatePicker(false);
     if (event?.type == 'set') {
       setUserInfo({...userInfo, dob: selectedDate});
     }
   };
+
+  const getData = async () => {
+    setIsFetching(true);
+    let rider_id = await AsyncStorage.getItem('rider_id');
+    fetch(api.get_rider_details_by_id + rider_id)
+      .then(response => response.json())
+      .then(response => {
+        if (response?.status == true) {
+          let riderDetails = response?.result;
+          setUserInfo({
+            image: riderDetails?.photo,
+            username: riderDetails?.name,
+            phoneNumber: riderDetails?.phone,
+            CNIC: riderDetails?.cnic,
+            location: riderDetails?.location,
+            dob: moment(riderDetails?.dob, 'DD-MM-YYYY').toDate(),
+            gender: riderDetails?.gender,
+            //
+            email: riderDetails?.email,
+            country: riderDetails?.country,
+            address: riderDetails?.address,
+          });
+        } else {
+          showAlert(response?.message);
+        }
+      })
+      .catch(err => {
+        console.log('error : ', err);
+        showAlert('Something went wrong');
+      })
+      .finally(() => {
+        setIsFetching(false);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
+      <Loader loading={isFetching} />
       <ScrollView
         contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
         keyboardShouldPersistTaps="handled">
@@ -59,7 +202,12 @@ const UpdateProfile = ({navigation, route}) => {
           <View style={styles.profileImage}>
             {userInfo.image ? (
               <Avatar.Image
-                source={{uri: userInfo.image?.path}}
+                // source={{uri: userInfo.image?.path}}
+                source={{
+                  uri: userInfo.image?.path?.startsWith('file://')
+                    ? userInfo.image?.path
+                    : BASE_URL_IMAGE + userInfo.image,
+                }}
                 size={wp(22)}
               />
             ) : (
@@ -137,12 +285,14 @@ const UpdateProfile = ({navigation, route}) => {
           <CButton
             title="Continue"
             marginTop={10}
-            onPress={() => navigation?.navigate('UpdateDocuments')}
+            loading={loading}
+            onPress={() => handleContinue()}
           />
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={DOB || new Date()}
+              // value={DOB || new Date()}
+              value={userInfo.dob || new Date()}
               mode={'date'}
               display="default"
               locale="es-ES"

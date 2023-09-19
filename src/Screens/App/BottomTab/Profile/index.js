@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Colors, Fonts, Icons, Images} from '../../../../constants';
 import {
   heightPercentageToDP as hp,
@@ -19,10 +20,67 @@ import ItemSeparator from '../../../../components/Separator/ItemSeparator';
 
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import CustomStatusBar from '../../../../components/CustomStatusBar';
+import api from '../../../../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {showAlert} from '../../../../utils/helpers';
+import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import {useDispatch} from 'react-redux';
+import {setRiderDetails} from '../../../../redux/AuthSlice';
+import Loader from '../../../../components/Loader';
 
 const Profile = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  const [riderInfo, setRiderInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const getData = async () => {
+    let rider_id = await AsyncStorage.getItem('rider_id');
+    console.log('rider_id  :   ,', rider_id);
+    fetch(api.get_rider_details_by_id + rider_id)
+      .then(response => response.json())
+      .then(response => {
+        if (response?.status == true) {
+          setRiderInfo(response?.result);
+          // dispatch(setRiderDetails(response?.result));
+        } else {
+          showAlert(response?.message);
+        }
+      })
+      .catch(err => {
+        console.log('error : ', err);
+        showAlert('Something went wrong');
+      })
+      .finally(() => setIsRefreshing(false), setLoading(false));
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    getData();
+  };
+  // useEffect(() => {
+  //   setLoading(true);
+  //   // getData();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getData();
+    }, []),
+  );
+
   return (
-    <ScrollView style={{backgroundColor: Colors.White, flex: 1}}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={() => onRefresh()}
+          colors={[Colors.Orange]}
+        />
+      }
+      style={{backgroundColor: Colors.White, flex: 1}}>
+      <Loader loading={loading} />
       <StatusBar
         translucent={false}
         backgroundColor={Colors.Orange}
@@ -35,40 +93,41 @@ const Profile = ({navigation, route}) => {
       </View>
       <View style={styles.userContainer}>
         <Avatar.Image
-          source={Images.user7}
+          // source={Images.user7}
+          source={{uri: BASE_URL_IMAGE + riderInfo?.photo}}
           size={wp(20)}
           style={{
             backgroundColor: Colors.Orange,
           }}
         />
-        <Text style={styles.nameText}>John Doe</Text>
+        <Text style={styles.nameText}>{riderInfo?.name}</Text>
       </View>
 
       <View style={styles.contentContainer}>
         <View style={styles.section}>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Email Address</Text>
-            <Text style={styles.description}>example@gmail.com</Text>
+            <Text style={styles.description}> {riderInfo?.email} </Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Phone Number</Text>
-            <Text style={styles.description}>0000 0000000</Text>
+            <Text style={styles.description}>{riderInfo?.phone}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Date of Birth</Text>
-            <Text style={styles.description}>00/00/0000</Text>
+            <Text style={styles.description}>{riderInfo?.dob}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Gender</Text>
-            <Text style={styles.description}>Male</Text>
+            <Text style={styles.description}>{riderInfo?.gender}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>CNIC</Text>
-            <Text style={styles.description}>0000 00000000 0</Text>
+            <Text style={styles.description}>{riderInfo?.cnic}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Location</Text>
-            <Text style={styles.description}>lorem ipsum lorem ipsum</Text>
+            <Text style={styles.description}>{riderInfo?.location}</Text>
           </View>
         </View>
         <ItemSeparator style={{marginVertical: 0}} />
@@ -76,14 +135,23 @@ const Profile = ({navigation, route}) => {
           <Text style={styles.heading}>Documents</Text>
           <View style={styles.rowView}>
             <View style={styles.documentContainer}>
-              <Image source={Images.idCardFront} style={styles.documentImage} />
-            </View>
-            <View style={styles.documentContainer}>
-              <Image source={Images.idCardBack} style={styles.documentImage} />
+              <Image
+                // source={Images.idCardFront}
+                source={{uri: BASE_URL_IMAGE + riderInfo?.id_card_front_image}}
+                style={styles.documentImage}
+              />
             </View>
             <View style={styles.documentContainer}>
               <Image
-                source={Images.drivingLicense}
+                // source={Images.idCardBack}
+                source={{uri: BASE_URL_IMAGE + riderInfo?.id_card_back_image}}
+                style={styles.documentImage}
+              />
+            </View>
+            <View style={styles.documentContainer}>
+              <Image
+                // source={Images.drivingLicense}
+                source={{uri: BASE_URL_IMAGE + riderInfo?.driver_license}}
                 style={styles.documentImage}
               />
             </View>
@@ -94,15 +162,17 @@ const Profile = ({navigation, route}) => {
           <Text style={styles.heading}>Vehicle Information</Text>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle name</Text>
-            <Text style={styles.description}>Toyota Corolla</Text>
+            <Text style={styles.description}>{riderInfo?.vehicle_name}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle model</Text>
-            <Text style={styles.description}>Corolla</Text>
+            <Text style={styles.description}>{riderInfo?.vehicle_model}</Text>
           </View>
           <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle ownership</Text>
-            <Text style={styles.description}>John Doe</Text>
+            <Text style={styles.description}>
+              {riderInfo?.vehicle_ownership}
+            </Text>
           </View>
         </View>
       </View>

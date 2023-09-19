@@ -29,11 +29,22 @@ const CustomerCard = ({
         width: width ? width : '100%',
         ...itemContainerStyle,
       }}>
-      <Avatar.Image
-        source={profile}
-        size={50}
-        style={{backgroundColor: Colors.AvatarBG}}
-      />
+      {profile ? (
+        <Avatar.Image
+          // source={profile}
+          source={{uri: profile}}
+          size={50}
+          style={{backgroundColor: Colors.AvatarBG}}
+        />
+      ) : (
+        <Avatar.Image
+          source={profile}
+          // source={{uri: profile}}
+          size={50}
+          style={{backgroundColor: Colors.AvatarBG}}
+        />
+      )}
+
       <View style={styles.rowViewSB}>
         <View style={{...styles.textContainer, ...textContainerStyle}}>
           <Text style={styles.title}>{name}</Text>

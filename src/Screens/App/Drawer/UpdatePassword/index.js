@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, ScrollView} from 'react-native';
+import {View, TouchableOpacity, ScrollView, Keyboard} from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import StackHeader from '../../../../components/Header/StackHeader';
 import CInput from '../../../../components/TextInput/CInput';
@@ -10,6 +10,10 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {useKeyboard} from '../../../../utils/UseKeyboardHook';
+import {showAlert} from '../../../../utils/helpers';
+import Loader from '../../../../components/Loader';
+import api from '../../../../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UpdatePassword = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -21,6 +25,8 @@ const UpdatePassword = ({navigation, route}) => {
   }, [keyboardHeight]);
 
   const ref_RBSheet = useRef();
+
+  const [loading, setLoading] = useState(false);
 
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
@@ -40,8 +46,61 @@ const UpdatePassword = ({navigation, route}) => {
     setVisibleNewPass('');
     setVisibleConfirmPass('');
   };
+
+  const validate = () => {
+    if (newPass?.length == 0) {
+      showAlert('Please enter password');
+      return false;
+    } else if (confirmPass?.length == 0) {
+      showAlert('Please enter confirm password');
+      return false;
+    } else if (newPass !== confirmPass) {
+      showAlert('Password and confirm password are not matched');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (validate()) {
+      let rider_id = await AsyncStorage.getItem('rider_id');
+      Keyboard.dismiss();
+      // ref_RBSheet?.current?.open();
+      setLoading(true);
+      fetch(api.update_password, {
+        method: 'PUT',
+        body: JSON.stringify({
+          rider_id: rider_id,
+          password: newPass,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          console.log('response  of update password :  ', response);
+          if (response?.status == false) {
+            showAlert(response?.message);
+          } else {
+            setIsVisible(true);
+            ref_RBSheet?.current?.open();
+          }
+        })
+        .catch(err => {
+          console.log('Error in Login :  ', err);
+          showAlert('Something went wrong');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: '#ffffff'}}>
+      <Loader loading={loading} />
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={{flexGrow: 1, paddingBottom: 25}}
@@ -53,7 +112,7 @@ const UpdatePassword = ({navigation, route}) => {
             flex: 1,
             paddingVertical: 15,
           }}>
-          <CInput
+          {/* <CInput
             width={wp(87)}
             placeholder="Old Password"
             value={oldPass}
@@ -69,7 +128,7 @@ const UpdatePassword = ({navigation, route}) => {
                 />
               </TouchableOpacity>
             }
-          />
+          /> */}
           <CInput
             width={wp(87)}
             placeholder="New Password"
@@ -114,8 +173,7 @@ const UpdatePassword = ({navigation, route}) => {
             title="Update"
             width={wp(87)}
             onPress={() => {
-              setIsVisible(true);
-              ref_RBSheet?.current?.open();
+              handleUpdatePassword();
             }}
           />
         </View>

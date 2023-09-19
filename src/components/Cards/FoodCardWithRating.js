@@ -64,7 +64,7 @@ const FoodCardWithRating = ({
 
       <View style={{flex: 1, marginLeft: 15}}>
         <View style={styles.rowViewSB1}>
-          <Text style={styles.name}>{title ? title : 'Green Salad'}</Text>
+          <Text style={styles.name}>{title ? title : ''}</Text>
           {showRatingOnBottom == true || showRating == false ? null : (
             <View style={styles.rowView}>
               <Icons.Rating />
@@ -75,14 +75,14 @@ const FoodCardWithRating = ({
                   fontFamily: Fonts.PlusJakartaSans_Bold,
                   fontSize: RFPercentage(1.6),
                 }}>
-                {rating ? rating : '4.3'}
+                {rating ? rating : ''}
               </Text>
             </View>
           )}
         </View>
 
         <View style={{...styles.rowViewSB, ...priceContainerStyle}}>
-          <Text style={styles.priceText}>$12.50</Text>
+          <Text style={styles.priceText}>${price}</Text>
           {showNextButton == false ? null : (
             <TouchableOpacity>
               <Icons.Next width={nextIconWidth ? nextIconWidth : 30} />

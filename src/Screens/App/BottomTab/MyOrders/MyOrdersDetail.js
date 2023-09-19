@@ -21,7 +21,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   getUserFcmToken,
   send_Push_Notification,
+  showAlert,
 } from '../../../../utils/helpers';
+import api from '../../../../constants/api';
+import Loader from '../../../../components/Loader';
+import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 
 const MyOrdersDetail = ({navigation, route}) => {
   const [selected, setSelected] = useState(0);
@@ -30,42 +36,113 @@ const MyOrdersDetail = ({navigation, route}) => {
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    getSliderImages();
-  }, []);
+  const [loading, setLoading] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [fistCartItemDetail, setFistCartItemDetail] = useState(null);
+  const [itemImages, setItemImages] = useState([]);
 
-  const getSliderImages = useCallback(() => {
-    setData([
-      {
-        id: 0,
-        image: Images.food8,
+  // useEffect(() => {
+  //   getSliderImages();
+  // }, []);
+
+  // const getSliderImages = useCallback(() => {
+  //   setData([
+  //     {
+  //       id: 0,
+  //       image: Images.food8,
+  //     },
+  //     {
+  //       id: 1,
+  //       image: Images.shake,
+  //     },
+  //     {
+  //       id: 2,
+  //       image: Images.pasta,
+  //     },
+  //     {
+  //       id: 3,
+  //       image: Images.chinese,
+  //     },
+  //     {
+  //       id: 4,
+  //       image: Images.biryani,
+  //     },
+  //   ]);
+  // }, [data]);
+
+  const handelAcceptRejectOrder = async status => {
+    // setVisible(true);
+    setLoading(true);
+    let rider_id = await AsyncStorage.getItem('rider_id');
+    let data = {
+      rider_id: rider_id,
+      order_id: route?.params?.id,
+      action: status,
+      reason: 'hardcoded reason',
+    };
+    console.log(data);
+    fetch(api.accept_reject_order_by_rider, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
       },
-      {
-        id: 1,
-        image: Images.shake,
-      },
-      {
-        id: 2,
-        image: Images.pasta,
-      },
-      {
-        id: 3,
-        image: Images.chinese,
-      },
-      {
-        id: 4,
-        image: Images.biryani,
-      },
-    ]);
-  }, [data]);
+    })
+      .then(response => response.json())
+      .then(async response => {
+        console.log('response  :  ', response);
+        if (response?.status == true) {
+          setVisible(true);
+        } else {
+          showAlert(response?.message);
+        }
+      })
+      .catch(err => {
+        console.log('Error in accept/reject order :  ', err);
+        showAlert('Something went wrong');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const handleOrderDelivered = async () => {
-    console.log('handleOrderDelivered   called.....');
-    let title = 'Order Delivered';
-    let text = 'Your Order is delivered successfully!';
-    //send notification to customer when order is delivered
-    //Note: send notification to restaurant that your order is completed
-    handleSendPushNotification(text, title);
+    // console.log('handleOrderDelivered   called.....');
+    // let title = 'Order Delivered';
+    // let text = 'Your Order is delivered successfully!';
+    // //send notification to customer when order is delivered
+    // //Note: send notification to restaurant that your order is completed
+    // handleSendPushNotification(text, title);
+
+    setLoading(true);
+    let data = {
+      order_id: route?.params?.id,
+      order_status: 'delivered',
+    };
+    console.log(data);
+    fetch(api.update_order_status, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(async response => {
+        console.log('response  :  ', response);
+        if (response?.status == true) {
+          setSelected(1);
+        } else {
+          showAlert(response?.message);
+        }
+      })
+      .catch(err => {
+        console.log('Error in accept/reject order :  ', err);
+        showAlert('Something went wrong');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleSendPushNotification = async (text, title) => {
@@ -92,14 +169,55 @@ const MyOrdersDetail = ({navigation, route}) => {
     }
   };
 
+  const getDetail = id => {
+    setLoading(true);
+    fetch(api.get_order_by_id + id)
+      .then(response => response.json())
+      .then(response => {
+        if (response.status == true) {
+          setOrderDetails(response.result);
+          let cart_item =
+            response.result?.cart_items_Data?.length > 0
+              ? response.result?.cart_items_Data[0]
+              : null;
+          setItemImages(cart_item?.itemData?.images);
+          setFistCartItemDetail(cart_item);
+        } else {
+          setOrderDetails(null);
+        }
+      })
+      .catch(err => console.log('error : ', err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    let id = route?.params?.id;
+    console.log('order details id :  ', id);
+    if (id) {
+      getDetail(id);
+    }
+  }, []);
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
+      <Loader loading={loading} />
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}>
-        <HeaderImageSlider data={data} />
+        {/* <HeaderImageSlider data={data} /> */}
+        <HeaderImageSlider data={itemImages && itemImages} />
         <View style={{flex: 1, paddingHorizontal: 20}}>
           <View style={{...styles.rowViewSB, marginBottom: 15}}>
-            <Text style={styles.heading1}>Shrimp Pad Thai Sauce </Text>
-            <Text style={styles.priceText}>$ 9.67</Text>
+            <Text style={styles.heading1}>
+              {/* Shrimp Pad Thai Sauce */}
+              {fistCartItemDetail
+                ? fistCartItemDetail?.item_type == 'deal'
+                  ? fistCartItemDetail?.itemData?.name
+                  : fistCartItemDetail?.itemData?.item_name
+                : ''}
+            </Text>
+            <Text style={styles.priceText}>
+              {/* $ 9.67 */}$
+              {fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''}
+            </Text>
           </View>
           <View style={{marginBottom: 5}}>
             <Text style={{...styles.heading, color: Colors.Orange}}>
@@ -114,10 +232,11 @@ const MyOrdersDetail = ({navigation, route}) => {
                   image: Images.user6,
                 });
               }}
-              profile={Images.user6}
-              name={'John Doe'}
-              phoneNo={'0000-0000000'}
-              // location={'Amet minim mollit non deserunt'}
+              profile={null}
+              // name={'John Doe'}
+              // phoneNo={'0000-0000000'}
+              name={orderDetails?.customerData?.user_name}
+              phoneNo={orderDetails?.customerData?.phone_no}
               showChatIcon={true}
             />
           </View>
@@ -135,10 +254,14 @@ const MyOrdersDetail = ({navigation, route}) => {
                   image: Images.restaurant1,
                 });
               }}
-              profile={Images.restaurant1}
-              name={'Restaurant Name'}
+              profile={
+                orderDetails?.restaurantData?.images?.length > 0
+                  ? BASE_URL_IMAGE + orderDetails?.restaurantData?.images[0]
+                  : null
+              }
+              name={orderDetails?.restaurantData?.user_name}
               // phoneNo={'0000-0000000'}
-              location={'Amet minim mollit non deserunt'}
+              location={orderDetails?.restaurantData?.location}
               showChatIcon={true}
             />
           </View>
@@ -161,8 +284,9 @@ const MyOrdersDetail = ({navigation, route}) => {
           </Text>
           <Text style={styles.sub_heading}>Special Instructions</Text>
           <Text style={styles.description1}>
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consat du veniam
+            {/* Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
+            sint. Velit officia consat du veniam */}
+            {orderDetails?.locationData?.instructions}
           </Text>
           {route?.params?.type == 'order_history' ? (
             <View style={styles.rowViewSB}>
@@ -181,7 +305,8 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <View>
                     <Text style={styles.location_heading}>Pickup Location</Text>
                     <Text style={styles.location_description}>
-                      Amet minim mollit non deserunt ullamco
+                      {/* Amet minim mollit non deserunt ullamco */}
+                      {orderDetails?.restaurantData?.location}
                     </Text>
                   </View>
                 </View>
@@ -191,9 +316,12 @@ const MyOrdersDetail = ({navigation, route}) => {
                     <Icons.MapMarker />
                   </View>
                   <View>
-                    <Text style={styles.location_heading}>Pickup Location</Text>
+                    <Text style={styles.location_heading}>
+                      Dropoff Location
+                    </Text>
                     <Text style={styles.location_description}>
-                      Amet minim mollit non deserunt ullamco
+                      {/* Amet minim mollit non deserunt ullamco */}
+                      {orderDetails?.locationData?.address}
                     </Text>
                   </View>
                 </View>
@@ -204,7 +332,12 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <Text style={{...styles.sub_heading, marginVertical: 5}}>
                     Time
                   </Text>
-                  <Text style={styles.description1}>03:00 PM</Text>
+                  <Text style={styles.description1}>
+                    {/* 03:00 PM */}
+                    {orderDetails
+                      ? moment(orderDetails?.created_at).format('hh:mm A')
+                      : ''}
+                  </Text>
                 </View>
                 <View style={styles.rowViewSB}>
                   <Text style={{...styles.sub_heading, marginVertical: 5}}>
@@ -236,6 +369,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   marginHorizontal: 20,
                 }}>
                 <TouchableOpacity
+                  disabled
                   style={{alignItems: 'center'}}
                   onPress={() => setSelected(0)}>
                   <View
@@ -263,7 +397,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                 <TouchableOpacity
                   style={{alignItems: 'center'}}
                   onPress={() => {
-                    setSelected(1);
+                    // setSelected(1);
                     handleOrderDelivered();
                   }}>
                   <View
@@ -305,7 +439,8 @@ const MyOrdersDetail = ({navigation, route}) => {
                 height={hp(5.4)}
                 onPress={() => {
                   setModalText('Order Rejected');
-                  setVisible(true);
+                  // setVisible(true);
+                  handelAcceptRejectOrder('reject');
                 }}
               />
               <CButton
@@ -314,7 +449,8 @@ const MyOrdersDetail = ({navigation, route}) => {
                 height={hp(5.4)}
                 onPress={() => {
                   setModalText('Order Accepted');
-                  setVisible(true);
+                  // setVisible(true);
+                  handelAcceptRejectOrder('accept');
                 }}
               />
             </View>

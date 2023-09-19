@@ -89,6 +89,7 @@ const SignIn = ({navigation, route}) => {
         })
         .catch(err => {
           console.log('Error in Login :  ', err);
+          showAlert('Something went wrong');
         })
         .finally(() => {
           setLoading(false);

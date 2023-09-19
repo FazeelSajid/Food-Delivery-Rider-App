@@ -15,6 +15,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import FoodCardWithRating from '../../../components/Cards/FoodCardWithRating';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({navigation, route}) => {
   const [orderRequests, setOrderRequests] = useState([
