@@ -5,6 +5,7 @@ import OrdersCard from '../../../../components/Cards/OrdersCard';
 import {useNavigation} from '@react-navigation/native';
 import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import NoDataFound from '../../../../components/NotFound/NoDataFound';
 
 const AssignedOrders = ({route, data}) => {
   const navigation = useNavigation();
@@ -83,6 +84,7 @@ const AssignedOrders = ({route, data}) => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => <View style={{height: 5}} />}
         ListFooterComponent={() => <View style={{height: 10}} />}
+        ListEmptyComponent={() => <NoDataFound />}
         renderItem={({item}) => {
           let cart_item =
             item?.cart_items_Data?.length > 0 ? item?.cart_items_Data[0] : null;

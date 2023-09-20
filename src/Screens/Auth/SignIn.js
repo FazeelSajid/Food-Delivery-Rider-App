@@ -53,6 +53,27 @@ const SignIn = ({navigation, route}) => {
     }
   };
 
+  const createRiderWallet = async rider_id => {
+    return new Promise(async (resolve, reject) => {
+      fetch(api.create_rider_wallet, {
+        method: 'POST',
+        body: JSON.stringify({
+          rider_id: rider_id,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(async response => {
+          resolve(response);
+        })
+        .catch(err => {
+          resolve(false);
+        });
+    });
+  };
+
   const handleLogin = async () => {
     if (validate()) {
       Keyboard.dismiss();
@@ -83,6 +104,8 @@ const SignIn = ({navigation, route}) => {
               'rider_detail',
               JSON.stringify(response?.result),
             );
+            let wallet = await createRiderWallet(response?.result?.rider_id);
+            console.log('wallet  :  ', wallet);
             // // navigation?.popToTop()
             navigation?.replace('Drawer');
           }

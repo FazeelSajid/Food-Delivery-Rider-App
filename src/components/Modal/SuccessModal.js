@@ -29,6 +29,7 @@ const SuccessModal = ({visible, setVisible, onOK, title, description}) => {
           width: 150,
           marginBottom: 10,
           //   aspectRatio: 1,
+          zIndex: 999,
         }}>
         <Lottie
           source={Images.success_check}

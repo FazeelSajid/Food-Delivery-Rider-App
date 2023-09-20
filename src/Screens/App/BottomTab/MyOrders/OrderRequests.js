@@ -11,6 +11,7 @@ import {
 import {GetNearestOrders} from '../../../../utils/helpers/orderApis';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import Loader from '../../../../components/Loader';
+import NoDataFound from '../../../../components/NotFound/NoDataFound';
 
 const OrderRequests = ({route, data}) => {
   const navigation = useNavigation();
@@ -91,6 +92,7 @@ const OrderRequests = ({route, data}) => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => <View style={{height: 5}} />}
         ListFooterComponent={() => <View style={{height: 10}} />}
+        ListEmptyComponent={() => <NoDataFound />}
         renderItem={({item}) => {
           let cart_item =
             item?.cart_items_Data?.length > 0 ? item?.cart_items_Data[0] : null;

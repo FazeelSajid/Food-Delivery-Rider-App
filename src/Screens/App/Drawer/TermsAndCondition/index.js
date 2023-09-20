@@ -18,7 +18,7 @@ const TermsAndCondition = () => {
         headerStyle={{paddingBottom: 10}}
       />
       <WebView
-        source={{uri: 'https://mtechub.org/privacy/'}}
+        source={{uri: 'https://mtechub.org/terms/'}}
         style={{flex: 1, height: hp(90), width: wp(100)}}
       />
       {/* <View style={styles.textContainer}>

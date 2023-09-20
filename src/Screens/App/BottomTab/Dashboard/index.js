@@ -6,6 +6,7 @@ import {
   StatusBar,
   FlatList,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 
@@ -22,14 +23,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GetAssignedOrders,
   GetNearestOrders,
+  GetRiderOrders,
 } from '../../../../utils/helpers/orderApis';
 import Loader from '../../../../components/Loader';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setAssignedOrders,
+  setOrderHistory,
+  setOrderRequests,
+} from '../../../../redux/OrderSlice';
 
 const Dashboard = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  let {order_requests, order_history, assigned_orders, isOrderUpdate} =
+    useSelector(store => store.order);
+
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [riderInfo, setRiderInfo] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   // useEffect(() => {
   //   console.log('isFocused : ', isFocused);
@@ -38,73 +51,90 @@ const Dashboard = ({navigation, route}) => {
   //   StatusBar.setBarStyle('dark-content');
   // }, [isFocused]);
 
-  const [orderRequests, setOrderRequests] = useState([
-    // {
-    //   id: 0,
-    //   title: 'Green Salad',
-    //   image: Images.salad,
-    //   price: '14:20',
-    // },
-    // {
-    //   id: 1,
-    //   title: 'Green Salad',
-    //   image: Images.salad,
-    //   price: '14:20',
-    // },
-  ]);
+  // const [orderRequests, setOrderRequests] = useState([
+  //   // {
+  //   //   id: 0,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  //   // {
+  //   //   id: 1,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  // ]);
 
-  const [assignedOrders, setAssignedOrders] = useState([
-    // {
-    //   id: 0,
-    //   title: 'Green Salad',
-    //   image: Images.salad,
-    //   price: '14:20',
-    // },
-    // {
-    //   id: 1,
-    //   title: 'Green Salad',
-    //   image: Images.salad,
-    //   price: '14:20',
-    // },
-  ]);
+  // const [assignedOrders, setAssignedOrders] = useState([
+  //   // {
+  //   //   id: 0,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  //   // {
+  //   //   id: 1,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  // ]);
 
-  const [orderHistory, setOrderHistory] = useState([
-    {
-      id: 0,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-    {
-      id: 1,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-  ]);
+  // const [orderHistory, setOrderHistory] = useState([
+  //   // {
+  //   //   id: 0,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  //   // {
+  //   //   id: 1,
+  //   //   title: 'Green Salad',
+  //   //   image: Images.salad,
+  //   //   price: '14:20',
+  //   // },
+  // ]);
 
   const getData = async () => {
     try {
-      // setLoading(true);
       let data = await GetNearestOrders();
       if (data?.length > 2) {
         const slicedArray = data.slice(0, 2);
-        setOrderRequests(slicedArray);
+        // setOrderRequests(slicedArray);
+        dispatch(setOrderRequests(slicedArray));
       } else {
-        setOrderRequests(data);
+        // setOrderRequests(data);
+        dispatch(setOrderRequests(data));
       }
       // getting assigned orders
       let data1 = await GetAssignedOrders();
       if (data1?.length > 2) {
         const slicedArray = data1.slice(0, 2);
-        setAssignedOrders(slicedArray);
+        // setAssignedOrders(slicedArray);
+        dispatch(setAssignedOrders(slicedArray));
       } else {
-        setAssignedOrders(data1);
+        // setAssignedOrders(data1);
+        dispatch(setAssignedOrders(data1));
+      }
+
+      // getting order history
+      let data2 = await GetRiderOrders();
+      if (data2?.length > 2) {
+        const slicedArray = data2.slice(0, 2);
+        // setOrderHistory(slicedArray);
+        dispatch(setOrderHistory(slicedArray));
+      } else {
+        // setOrderHistory(data2);
+        dispatch(setOrderHistory(data2));
       }
 
       setLoading(false);
+      setRefreshing(false);
+      console.log('set refresh to false');
     } catch (error) {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -131,12 +161,24 @@ const Dashboard = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            colors={[Colors.Orange]}
+            onRefresh={() => {
+              setRefreshing(true);
+              getData();
+            }}
+          />
+        }
+        showsVerticalScrollIndicator={false}>
         <StatusBar
           translucent={false}
           backgroundColor={'white'}
           barStyle={'dark-content'}
         />
+
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation?.openDrawer()}>
             <Icons.MenuActive width={23} />
@@ -164,7 +206,7 @@ const Dashboard = ({navigation, route}) => {
             </View>
             <FlatList
               scrollEnabled={false}
-              data={orderRequests}
+              data={order_requests}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
@@ -222,7 +264,7 @@ const Dashboard = ({navigation, route}) => {
             </View>
             <FlatList
               scrollEnabled={false}
-              data={assignedOrders}
+              data={assigned_orders}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
@@ -280,7 +322,7 @@ const Dashboard = ({navigation, route}) => {
             </View>
             <FlatList
               scrollEnabled={false}
-              data={orderRequests}
+              data={order_history}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
