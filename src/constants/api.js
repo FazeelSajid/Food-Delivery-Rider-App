@@ -21,7 +21,12 @@ const api = {
   get_rider_assigned_orders:
     BASE_URL + 'orders/getAsignedOrdersOfRider?rider_id=',
 
+  get_rider_orders: BASE_URL + 'orders/getAllOrdersByRider_id?rider_id=',
+
   update_order_status: BASE_URL + 'orders/updateOrderStatus',
+
+  // wallet
+  create_rider_wallet: BASE_URL + 'wallet/createRiderWallet',
 };
 
 export default api;

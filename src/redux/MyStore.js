@@ -11,11 +11,13 @@ import {
 } from 'redux-persist';
 import MySlice from './MySlice';
 import AuthSlice from './AuthSlice';
+import OrderSlice from './OrderSlice';
 
 export const MYStore = configureStore({
   reducer: {
     store: MySlice,
     auth: AuthSlice,
+    order: OrderSlice,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

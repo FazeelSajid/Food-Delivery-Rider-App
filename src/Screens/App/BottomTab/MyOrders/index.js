@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import MenuHeader from '../../../../components/Header/MenuHeader';
@@ -27,13 +29,24 @@ import {
   GetNearestOrders,
 } from '../../../../utils/helpers/orderApis';
 import Loader from '../../../../components/Loader';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setAssignedOrders,
+  setOrderRequests,
+} from '../../../../redux/OrderSlice';
 
 const MyOrders = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  let {order_requests, order_history, assigned_orders, isOrderUpdate} =
+    useSelector(store => store.order);
+
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [data, setData] = useState([]);
 
-  const [assignedOrdersList, setAssignedOrdersList] = useState([]);
-  const [orderRequestsList, setOrderRequestsList] = useState([]);
+  // const [assignedOrdersList, setAssignedOrdersList] = useState([]);
+  // const [orderRequestsList, setOrderRequestsList] = useState([]);
 
   const [assignedOrdersListCopy, setAssignedOrdersListCopy] = useState([]);
   const [orderRequestsListCopy, setOrderRequestsListCopy] = useState([]);
@@ -53,13 +66,15 @@ const MyOrders = ({navigation, route}) => {
     },
   ]);
 
-  // __________________________ handle searcch _______________________
+  // __________________________ handle search _______________________
 
   const handleSearch = query => {
     try {
       if (!query) {
-        setOrderRequestsList(orderRequestsListCopy);
-        setAssignedOrdersList(assignedOrdersListCopy);
+        // setOrderRequestsList(orderRequestsListCopy);
+        // setAssignedOrdersList(assignedOrdersListCopy);
+        dispatch(setOrderRequests(orderRequestsListCopy));
+        dispatch(setAssignedOrders(assignedOrdersListCopy));
         setLoading(false);
       } else {
         const filteredData = orderRequestsListCopy?.filter(item => {
@@ -71,7 +86,8 @@ const MyOrders = ({navigation, route}) => {
           );
         });
         console.log('filteredData?.length', filteredData?.length);
-        setOrderRequestsList(filteredData);
+        // setOrderRequestsList(filteredData);
+        dispatch(setOrderRequests(filteredData));
         //
         const filteredData1 = assignedOrdersListCopy?.filter(item => {
           const firstCartItem = item?.cart_items_Data?.[0]?.itemData;
@@ -82,7 +98,8 @@ const MyOrders = ({navigation, route}) => {
           );
         });
         console.log('filteredData1?.length', filteredData1?.length);
-        setAssignedOrdersList(filteredData1);
+        // setAssignedOrdersList(filteredData1);
+        dispatch(setAssignedOrders(filteredData1));
         setLoading(false);
       }
     } catch (error) {
@@ -177,27 +194,37 @@ const MyOrders = ({navigation, route}) => {
     try {
       // setLoading(true);
       let list = await GetNearestOrders();
-      setOrderRequestsList(list);
+      // setOrderRequestsList(list);
+      dispatch(setOrderRequests(list));
       setOrderRequestsListCopy(list);
       let data1 = await GetAssignedOrders();
-      setAssignedOrdersList(data1);
+      console.log('assignedOrders', data1?.length);
+      // setAssignedOrdersList(data1);
+      dispatch(setAssignedOrders(data1));
       setAssignedOrdersListCopy(data1);
       setLoading(false);
+      setRefreshing(false);
     } catch (error) {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  useEffect(() => {
-    // getOrderRequests();
-    setLoading(true);
-  }, []);
+  // useEffect(() => {
+  //   // getOrderRequests();
+  //   setLoading(true);
+  // }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getOrderRequests();
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     getOrderRequests();
+  //   }, []),
+  // );
+
+  useEffect(() => {
+    setLoading(true);
+    getOrderRequests();
+  }, [isOrderUpdate]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -210,7 +237,18 @@ const MyOrders = ({navigation, route}) => {
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          colors={[Colors.Orange]}
+          onRefresh={() => {
+            setRefreshing(true);
+            getOrderRequests();
+          }}
+        />
+      }
+      style={{flex: 1, backgroundColor: 'white'}}>
       <Loader loading={loading} />
       <MenuHeader title={'My Order'} />
       <View style={{flex: 1}}>
@@ -227,6 +265,7 @@ const MyOrders = ({navigation, route}) => {
           placeholderTextColor={'#7D8FAB'}
           containerStyle={{borderWidth: 1, borderColor: '#E8EFF3', height: 45}}
         />
+
         <View style={{flex: 1}}>
           <View style={{marginBottom: 10}}>
             <FlatList
@@ -292,13 +331,13 @@ const MyOrders = ({navigation, route}) => {
             />
           </View>
           {selectedTab == 0 ? (
-            <OrderRequests data={orderRequestsList} />
+            <OrderRequests data={order_requests} />
           ) : (
-            <AssignedOrders data={assignedOrdersList} />
+            <AssignedOrders data={assigned_orders} />
           )}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

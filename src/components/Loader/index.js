@@ -8,18 +8,20 @@ import {
 
 const Loader = ({loading}) => {
   return (
-    <Modal visible={loading} transparent={true}>
-      <View
-        style={{
-          height: hp(100),
-          width: wp(100),
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <ActivityIndicator size="large" color={Colors.Orange} />
-      </View>
-    </Modal>
+    <>
+      <Modal visible={loading} transparent={true}>
+        <View
+          style={{
+            height: hp(100),
+            width: wp(100),
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator size="large" color={Colors.Orange} />
+        </View>
+      </Modal>
+    </>
   );
 };
 

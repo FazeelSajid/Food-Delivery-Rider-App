@@ -28,8 +28,12 @@ import Loader from '../../../../components/Loader';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import {useDispatch, useSelector} from 'react-redux';
+import {setIsOrderUpdate} from '../../../../redux/OrderSlice';
 
 const MyOrdersDetail = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  let {isOrderUpdate} = useSelector(store => store.order);
   const [selected, setSelected] = useState(0);
   const [modalText, setModalText] = useState('');
   const [visible, setVisible] = useState(false);
@@ -93,6 +97,7 @@ const MyOrdersDetail = ({navigation, route}) => {
         console.log('response  :  ', response);
         if (response?.status == true) {
           setVisible(true);
+          dispatch(setIsOrderUpdate(!isOrderUpdate));
         } else {
           showAlert(response?.message);
         }
@@ -132,6 +137,7 @@ const MyOrdersDetail = ({navigation, route}) => {
         console.log('response  :  ', response);
         if (response?.status == true) {
           setSelected(1);
+          dispatch(setIsOrderUpdate(!isOrderUpdate));
         } else {
           showAlert(response?.message);
         }
@@ -293,7 +299,12 @@ const MyOrdersDetail = ({navigation, route}) => {
               <Text style={{...styles.sub_heading, marginVertical: 15}}>
                 Date of Order:
               </Text>
-              <Text style={styles.description1}>01/08/2023</Text>
+              <Text style={styles.description1}>
+                {/* 01/08/2023 */}
+                {orderDetails?.created_at
+                  ? moment(orderDetails?.created_at).format('DD/MM/YYYY')
+                  : ''}
+              </Text>
             </View>
           ) : (
             <>
