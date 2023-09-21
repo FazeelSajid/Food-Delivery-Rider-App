@@ -27,6 +27,10 @@ const api = {
 
   // wallet
   create_rider_wallet: BASE_URL + 'wallet/createRiderWallet',
+
+  // complaints
+  get_all_complaints_by_rider:
+    BASE_URL + 'complaint/getAllComplaintsByRider_id?rider_id=',
 };
 
 export default api;

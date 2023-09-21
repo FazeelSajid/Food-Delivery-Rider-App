@@ -18,7 +18,17 @@ const CustomerCard = ({
   onPress,
   disabled,
   onChatPress,
+  showNameProfile,
+  descriptionLines,
 }) => {
+  const getFirstTwoLettersOfName = name => {
+    let data = name?.split(' ').map(name => name[0]);
+    if (data) {
+      return data?.toString().replace(/,/g, '');
+    } else {
+      return '';
+    }
+  };
   return (
     <TouchableOpacity
       disabled={disabled ? disabled : false}
@@ -29,7 +39,14 @@ const CustomerCard = ({
         width: width ? width : '100%',
         ...itemContainerStyle,
       }}>
-      {profile ? (
+      {showNameProfile ? (
+        <Avatar.Text
+          size={50}
+          label={getFirstTwoLettersOfName(showNameProfile)}
+          style={{backgroundColor: Colors.Orange}}
+          labelStyle={{color: Colors.White}}
+        />
+      ) : profile ? (
         <Avatar.Image
           // source={profile}
           source={{uri: profile}}
@@ -56,14 +73,23 @@ const CustomerCard = ({
           )}
 
           {description && (
-            <View style={styles.rowView}>
-              <Text style={{...styles.description, ...descriptionStyle}}>
-                {description}
-              </Text>
+            <View style={{...styles.rowView, width: '90%'}}>
+              {descriptionLines ? (
+                <Text
+                  numberOfLines={descriptionLines}
+                  style={{...styles.description, ...descriptionStyle}}>
+                  {description}
+                </Text>
+              ) : (
+                <Text style={{...styles.description, ...descriptionStyle}}>
+                  {description}
+                </Text>
+              )}
             </View>
           )}
+
           {location && (
-            <View style={styles.rowView}>
+            <View style={{...styles.rowView, width: '90%'}}>
               <Icons.MarkerOutlineActive />
               <Text style={styles.description}>{location}</Text>
             </View>

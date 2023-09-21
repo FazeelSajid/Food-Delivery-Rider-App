@@ -50,6 +50,8 @@ import UpdateVehicleInfo from '../Screens/App/Drawer/UpdateProfile/UpdateVehicle
 import Conversation from '../Screens/App/Chat/Conversation';
 import Splash from '../Screens/Auth/Splash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Complaints from '../Screens/App/Drawer/Complaints';
+import ComplaintDetail from '../Screens/App/Drawer/Complaints/ComplaintDetail';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -162,6 +164,14 @@ const CustomDrawerContent = props => {
               style={drawerItemStyles.item}
             />
             <DrawerItem
+              label="Complaints"
+              onPress={() => navigation.navigate('Complaints')}
+              icon={focused => <Icons.Complaints />}
+              labelStyle={drawerItemStyles.label}
+              style={drawerItemStyles.item}
+            />
+
+            <DrawerItem
               label="Update Profile"
               onPress={() => navigation.navigate('UpdateProfile')}
               icon={focused => <Icons.EditProfile />}
@@ -267,6 +277,8 @@ const DrawerNavigation = () => {
         options={{title: 'Home'}}
       />
       <Drawer.Screen name="MyWallet" component={MyWallet} />
+      <Drawer.Screen name="Complaints" component={Complaints} />
+
       <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
       <Drawer.Screen name="UpdatePassword" component={UpdatePassword} />
       <Drawer.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
@@ -305,6 +317,8 @@ function Router() {
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Home" component={DashboardTabs} /> */}
       <Stack.Screen name="Drawer" component={DrawerNavigation} />
+
+      <Stack.Screen name="ComplaintDetail" component={ComplaintDetail} />
     </Stack.Navigator>
   );
 }

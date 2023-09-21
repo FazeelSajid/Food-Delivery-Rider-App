@@ -97,7 +97,7 @@ const MyOrdersDetail = ({navigation, route}) => {
         console.log('response  :  ', response);
         if (response?.status == true) {
           setVisible(true);
-          dispatch(setIsOrderUpdate(!isOrderUpdate));
+          // dispatch(setIsOrderUpdate(!isOrderUpdate));
         } else {
           showAlert(response?.message);
         }
@@ -135,9 +135,50 @@ const MyOrdersDetail = ({navigation, route}) => {
       .then(response => response.json())
       .then(async response => {
         console.log('response  :  ', response);
+        setSelected(1);
+        // if (response?.status == true) {
+        //   setSelected(1);
+        //   // dispatch(setIsOrderUpdate(!isOrderUpdate));
+        // } else {
+        //   showAlert(response?.message);
+        // }
+      })
+      .catch(err => {
+        console.log('Error in accept/reject order :  ', err);
+        showAlert('Something went wrong');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const handleOrderOutForDelivery = async () => {
+    // console.log('handleOrderDelivered   called.....');
+    // let title = 'Order Delivered';
+    // let text = 'Your Order is delivered successfully!';
+    // //send notification to customer when order is delivered
+    // //Note: send notification to restaurant that your order is completed
+    // handleSendPushNotification(text, title);
+
+    setLoading(true);
+    let data = {
+      order_id: route?.params?.id,
+      order_status: 'out_for_delivery',
+    };
+    console.log(data);
+    fetch(api.update_order_status, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(async response => {
+        console.log('response  :  ', response);
         if (response?.status == true) {
-          setSelected(1);
-          dispatch(setIsOrderUpdate(!isOrderUpdate));
+          setSelected(0);
+          // dispatch(setIsOrderUpdate(!isOrderUpdate));
         } else {
           showAlert(response?.message);
         }
@@ -149,6 +190,15 @@ const MyOrdersDetail = ({navigation, route}) => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const handleOrderStatusUpdate = index => {
+    // setSelected(index);
+    if (index === 0) {
+      handleOrderOutForDelivery();
+    } else if (index === 1) {
+      handleOrderDelivered();
+    }
   };
 
   const handleSendPushNotification = async (text, title) => {
@@ -182,6 +232,14 @@ const MyOrdersDetail = ({navigation, route}) => {
       .then(response => {
         if (response.status == true) {
           setOrderDetails(response.result);
+          if (response?.result?.order_status == 'out_for_delivery') {
+            setSelected(0);
+          } else if (response?.result?.order_status == 'delievered') {
+            setSelected(1);
+          } else {
+            setSelected(-1);
+          }
+
           let cart_item =
             response.result?.cart_items_Data?.length > 0
               ? response.result?.cart_items_Data[0]
@@ -238,7 +296,8 @@ const MyOrdersDetail = ({navigation, route}) => {
                   image: Images.user6,
                 });
               }}
-              profile={null}
+              // profile={null}
+              showNameProfile={orderDetails?.customerData?.user_name}
               // name={'John Doe'}
               // phoneNo={'0000-0000000'}
               name={orderDetails?.customerData?.user_name}
@@ -277,10 +336,12 @@ const MyOrdersDetail = ({navigation, route}) => {
               <Text style={styles.heading}>Customer Details</Text>
               <CustomerCard
                 disabled={true}
-                profile={Images.user6}
-                name={'John Doe'}
-                phoneNo={'0000-0000000'}
-                location={'Amet minim mollit non deserunt'}
+                showNameProfile={orderDetails?.customerData?.user_name}
+                // name={'John Doe'}
+                // phoneNo={'0000-0000000'}
+                name={orderDetails?.customerData?.user_name}
+                phoneNo={orderDetails?.customerData?.phone_no}
+                location={orderDetails?.customerData?.location}
                 showChatIcon={false}
               />
             </>
@@ -380,9 +441,9 @@ const MyOrdersDetail = ({navigation, route}) => {
                   marginHorizontal: 20,
                 }}>
                 <TouchableOpacity
-                  disabled
+                  disabled={selected == 0 ? true : false}
                   style={{alignItems: 'center'}}
-                  onPress={() => setSelected(0)}>
+                  onPress={() => handleOrderStatusUpdate(0)}>
                   <View
                     style={{
                       ...styles.orderCard,
@@ -401,15 +462,17 @@ const MyOrdersDetail = ({navigation, route}) => {
                       ...styles.orderCardText,
                       color: selected == 0 ? Colors.Orange : '#A0A0A6',
                     }}>
-                    Order Placed
+                    {/* Order Placed */}
+                    Out for Delivery
                   </Text>
                 </TouchableOpacity>
                 <View style={styles.horizontalLine} />
                 <TouchableOpacity
+                  disabled={selected == 1 ? true : false}
                   style={{alignItems: 'center'}}
                   onPress={() => {
                     // setSelected(1);
-                    handleOrderDelivered();
+                    handleOrderStatusUpdate(1);
                   }}>
                   <View
                     style={{
@@ -472,7 +535,10 @@ const MyOrdersDetail = ({navigation, route}) => {
         visible={visible}
         setVisible={setVisible}
         description={modalText}
-        onOK={() => navigation.goBack()}
+        onOK={() => {
+          dispatch(setIsOrderUpdate(!isOrderUpdate));
+          navigation.goBack();
+        }}
       />
     </View>
   );
