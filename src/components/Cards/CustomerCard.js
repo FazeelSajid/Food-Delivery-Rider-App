@@ -29,6 +29,7 @@ const CustomerCard = ({
       return '';
     }
   };
+
   return (
     <TouchableOpacity
       disabled={disabled ? disabled : false}

@@ -35,6 +35,7 @@ import {firebase} from '@react-native-firebase/firestore';
 import Loader from '../../../components/Loader';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUserFcmToken, send_Push_Notification} from '../../../utils/helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {setMessages} from '../../../redux/MySlice';
 
 const Conversation = ({route, navigation}) => {
@@ -47,149 +48,55 @@ const Conversation = ({route, navigation}) => {
   const ref = useRef('');
   const inputRef = useRef('');
 
-  const [user_id, setUser_id] = useState('rider');
-  const [userId, setUserId] = useState('rider');
+  // const [user_id, setUser_id] = useState('rider');
+  const [userId, setUserId] = useState('');
   const [docId, setDocId] = useState('');
 
-  useEffect(() => {
-    if (route?.params?.userId) {
+  const handleDocId = async () => {
+    let rider_detail = await AsyncStorage.getItem('rider_detail');
+    console.log('rider_detail  : ', rider_detail);
+    if (route?.params?.type) {
+      let rider_id = await AsyncStorage.getItem('rider_id');
       let doc = '';
       if (
-        route?.params?.userId == 'customer' ||
-        route?.params?.userId == 'restaurant'
+        route?.params?.type == 'customer' ||
+        route?.params?.type == 'restaurant'
       ) {
-        doc = route?.params?.userId + '-' + userId;
+        doc = route?.params?.userId + '-' + rider_id;
       } else {
-        doc = userId + '-' + route?.params?.userId;
+        doc = rider_id + '-' + route?.params?.userId;
       }
       console.log('doc  :  ', doc);
       setDocId(doc);
+      setUserId(rider_id);
     } else {
       console.log('else userId not found');
     }
+  };
+
+  useEffect(() => {
+    // if (route?.params?.userId) {
+    //   let doc = '';
+    //   if (
+    //     route?.params?.userId == 'customer' ||
+    //     route?.params?.userId == 'restaurant'
+    //   ) {
+    //     doc = route?.params?.userId + '-' + userId;
+    //   } else {
+    //     doc = userId + '-' + route?.params?.userId;
+    //   }
+    //   console.log('doc  :  ', doc);
+    //   setDocId(doc);
+    // } else {
+    //   console.log('else userId not found');
+    // }
+
+    handleDocId();
   }, [route?.params, docId]);
 
   useEffect(() => {
     ref.current = '';
   }, []);
-
-  // useEffect(() => {
-  //   setMessages([
-  //     {
-  //       _id: 10,
-  //       text: 'Ok,Lorem ipsum dolor sit amet,',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 9,
-  //       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 8,
-  //       text: 'Ok,Lorem ipsum dolor sit amet,',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 7,
-  //       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //       sent: true,
-  //       received: true,
-  //     },
-  //     {
-  //       _id: 6,
-  //       text: 'Ok,Lorem ipsum dolor sit amet,',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 5,
-  //       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //       sent: true,
-  //       received: true,
-  //     },
-  //     {
-  //       _id: 4,
-  //       text: 'Ok, thanks for answer all the questions.Lorem ipsum dolor sit amet, consectetur adipis.',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //       // Mark the message as sent, using one tick
-  //       sent: true,
-  //       // Mark the message as received, using two tick
-  //       received: true,
-  //       // Mark the message as pending with a clock loader
-  //       // pending: true,
-  //       // // Any additional custom parameters are passed through
-  //       // system: true,
-  //       // Any additional custom parameters are passed through
-  //     },
-  //     {
-  //       _id: 3,
-  //       text: 'Ok,Lorem ipsum dolor sit amet,',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 2,
-  //       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 1,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //     {
-  //       _id: 1,
-  //       text: 'Good afternoon, How can i help?',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //   ]);
-  // }, []);
 
   useEffect(() => {
     console.log('____________________  :   ', docId);
@@ -203,18 +110,22 @@ const Conversation = ({route, navigation}) => {
       .collection('messages')
       .orderBy('createdAt', 'desc')
       .onSnapshot(snapshot => {
-        const messageList = snapshot.docs.map(doc => {
+        const messageList = snapshot?.docs?.map(doc => {
           console.log(
             'messageList :  ++++++++++++++++++++++++++',
             messageList?.length,
           );
-          let data = doc.data();
+          let data = doc?.data();
           console.log('message id    ;;;    :  ', data?._id);
           console.log('message sender id user id  ', data?.user?._id);
 
           //update message read status
-          if (data?.user?._id != userId) {
-            doc.ref
+          if (
+            data?.user?._id != userId &&
+            typeof data?.user?._id != 'undefined' &&
+            userId?.length !== 0
+          ) {
+            doc?.ref
               .update({
                 received: true,
               })
@@ -314,14 +225,21 @@ const Conversation = ({route, navigation}) => {
   };
 
   const handleSendPushNotification = async text => {
-    const receiver_fcm = await getUserFcmToken();
-    console.log('receiver_fcm  :   ', receiver_fcm);
+    // const receiver_fcm = await getUserFcmToken();
+    // console.log('receiver_fcm  :   ', receiver_fcm);
+
+    const receiver_fcm = route?.params?.fcm_token;
+    let rider_detail = await AsyncStorage.getItem('rider_detail');
+    if (rider_detail) {
+      let parsed = JSON.parse(rider_detail);
+      current_user_name = parsed?.name;
+    }
 
     if (receiver_fcm) {
       let body = {
         to: receiver_fcm,
         notification: {
-          title: route?.params?.name ? route?.params?.name : 'John Doe',
+          title: current_user_name,
           body: text ? text : 'sended a message',
           // mutable_content: true,
           sound: 'default',
@@ -398,7 +316,7 @@ const Conversation = ({route, navigation}) => {
           }}
         />
 
-        {props?.currentMessage?.user?._id != user_id ? (
+        {props?.currentMessage?.user?._id != userId ? (
           <View
             style={{
               backgroundColor: '#F1F1F1',
@@ -493,11 +411,13 @@ const Conversation = ({route, navigation}) => {
       </TouchableOpacity>
     );
   };
+
   const onChangeText = item => {
     ref.current = item;
     // setNewMessage(item);
     inputRef.current = item;
   };
+
   const RenderComposer = props => {
     return (
       <TextInput
@@ -523,15 +443,17 @@ const Conversation = ({route, navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ChatHeader
-        profile={route?.params?.image ? route?.params?.image : Images.user1}
-        title={route?.params?.name ? route?.params?.name : 'Anabel Ramon'}
+        profile={route?.params?.image ? route?.params?.image : null}
+        title={route?.params?.name ? route?.params?.name : ''}
       />
       <Loader loading={loading} />
 
       <View style={{flex: 1}}>
         <GiftedChat
           keyboardShouldPersistTaps={'handled'}
-          messagesContainerStyle={{paddingBottom: 30}}
+          messagesContainerStyle={{
+            paddingBottom: 30,
+          }}
           messages={messages}
           onSend={messages => onSend(messages)}
           user={{
@@ -544,6 +466,7 @@ const Conversation = ({route, navigation}) => {
           // renderAvatar={props => {
           //   return null;
           // }}
+
           renderAvatar={null}
           renderBubble={props => {
             return <CustomBubble {...props} />;
@@ -555,21 +478,19 @@ const Conversation = ({route, navigation}) => {
           onInputTextChanged={text => {
             console.log('text : ', text);
           }}
-          renderChatEmpty={() => (
-            <View
-              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-              {loading ? null : (
-                <Text
-                  style={{
-                    color: 'gray',
-                    fontSize: 14,
-                    transform: [{scaleY: -1}],
-                  }}>
-                  No Record Found
-                </Text>
-              )}
-            </View>
-          )}
+          // renderChatEmpty={() => (
+          //   <View
+          //     style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          //     <Text
+          //       style={
+          //         {
+          //           // transform: [{scaleY: -1}],
+          //         }
+          //       }>
+          //       No messages yet
+          //     </Text>
+          //   </View>
+          // )}
         />
       </View>
     </View>

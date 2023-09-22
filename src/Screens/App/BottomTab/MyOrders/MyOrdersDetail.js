@@ -34,6 +34,7 @@ import {setIsOrderUpdate} from '../../../../redux/OrderSlice';
 const MyOrdersDetail = ({navigation, route}) => {
   const dispatch = useDispatch();
   let {isOrderUpdate} = useSelector(store => store.order);
+
   const [selected, setSelected] = useState(0);
   const [modalText, setModalText] = useState('');
   const [visible, setVisible] = useState(false);
@@ -291,9 +292,14 @@ const MyOrdersDetail = ({navigation, route}) => {
               disabled={true}
               onChatPress={() => {
                 navigation?.navigate('Conversation', {
-                  userId: 'customer',
-                  name: 'John Doe',
-                  image: Images.user6,
+                  // userId: 'customer',
+                  // name: 'John Doe',
+                  // image: Images.user6,
+                  type: 'customer',
+                  userId: orderDetails?.customerData?.customer_id,
+                  name: orderDetails?.customerData?.user_name,
+                  image: null,
+                  fcm_token: orderDetails?.customerData?.fcm_token,
                 });
               }}
               // profile={null}
@@ -314,9 +320,16 @@ const MyOrdersDetail = ({navigation, route}) => {
               disabled={true}
               onChatPress={() => {
                 navigation?.navigate('Conversation', {
-                  userId: 'restaurant',
-                  name: 'Restaurant Name',
-                  image: Images.restaurant1,
+                  // userId: 'restaurant',
+                  // name: 'Restaurant Name',
+                  // image: Images.restaurant1,
+
+                  type: 'restaurant',
+                  userId: orderDetails?.restaurantData?.restaurant_id,
+                  name: orderDetails?.restaurantData?.user_name,
+                  image:
+                    BASE_URL_IMAGE + orderDetails?.restaurantData?.images[0],
+                  fcm_token: orderDetails?.restaurantData?.fcm_token,
                 });
               }}
               profile={
@@ -355,6 +368,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             sint. Velit officia consat du veniam */}
             {orderDetails?.locationData?.instructions}
           </Text>
+
           {route?.params?.type == 'order_history' ? (
             <View style={styles.rowViewSB}>
               <Text style={{...styles.sub_heading, marginVertical: 15}}>
@@ -531,6 +545,7 @@ const MyOrdersDetail = ({navigation, route}) => {
           )}
         </View>
       </ScrollView>
+
       <SuccessModal
         visible={visible}
         setVisible={setVisible}
