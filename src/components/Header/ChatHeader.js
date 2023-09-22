@@ -19,6 +19,14 @@ import {Avatar} from 'react-native-paper';
 
 const ChatHeader = ({title, profile, rightIcon}) => {
   const navigation = useNavigation();
+  const getFirstTwoLettersOfName = name => {
+    let data = name?.split(' ').map(name => name[0]);
+    if (data) {
+      return data?.toString().replace(/,/g, '');
+    } else {
+      return '';
+    }
+  };
   return (
     <View style={styles.header}>
       <StatusBar
@@ -32,11 +40,20 @@ const ChatHeader = ({title, profile, rightIcon}) => {
           style={styles.iconContainer}>
           <Ionicons name={'chevron-back'} size={hp(3)} color={Colors.Orange} />
         </TouchableOpacity>
-        <Avatar.Image
-          source={profile}
-          size={40}
-          style={{marginHorizontal: 12, backgroundColor: Colors.AvatarBG}}
-        />
+        {profile ? (
+          <Avatar.Image
+            source={profile}
+            size={40}
+            style={{marginHorizontal: 12, backgroundColor: Colors.AvatarBG}}
+          />
+        ) : (
+          <Avatar.Text
+            size={40}
+            label={getFirstTwoLettersOfName(title)}
+            style={{backgroundColor: Colors.Orange, marginHorizontal: 12}}
+            labelStyle={{color: Colors.White}}
+          />
+        )}
         <View style={styles.headerTextContainer}>
           <Text style={styles.mainText}>{title}</Text>
         </View>

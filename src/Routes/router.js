@@ -52,6 +52,9 @@ import Splash from '../Screens/Auth/Splash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Complaints from '../Screens/App/Drawer/Complaints';
 import ComplaintDetail from '../Screens/App/Drawer/Complaints/ComplaintDetail';
+import Languages from '../Screens/App/Drawer/Languages';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -186,6 +189,16 @@ const CustomDrawerContent = props => {
               style={drawerItemStyles.item}
             />
             <DrawerItem
+              label="Languages"
+              onPress={() => navigation.navigate('Languages')}
+              icon={focused => (
+                <MaterialIcons name="language" size={25} color={'#757575'} />
+              )}
+              labelStyle={drawerItemStyles.label}
+              style={drawerItemStyles.item}
+            />
+
+            <DrawerItem
               label="Privacy Policy"
               onPress={() => navigation.navigate('PrivacyPolicy')}
               icon={focused => <Icons.Note />}
@@ -281,6 +294,7 @@ const DrawerNavigation = () => {
 
       <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
       <Drawer.Screen name="UpdatePassword" component={UpdatePassword} />
+      <Drawer.Screen name="Languages" component={Languages} />
       <Drawer.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       <Drawer.Screen name="TermsAndCondition" component={TermsAndCondition} />
     </Drawer.Navigator>
