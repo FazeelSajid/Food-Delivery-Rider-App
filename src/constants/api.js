@@ -27,10 +27,15 @@ const api = {
 
   // wallet
   create_rider_wallet: BASE_URL + 'wallet/createRiderWallet',
-
+  get_available_payment_of_rider:
+    BASE_URL + 'wallet/getAvaliablePaymentsOfRider?rider_id=',
   // complaints
   get_all_complaints_by_rider:
     BASE_URL + 'complaint/getAllComplaintsByRider_id?rider_id=',
+
+  // notifications
+  get_all_notifications:
+    BASE_URL + 'notifications/getNotificationRider?rider_id=',
 };
 
 export default api;

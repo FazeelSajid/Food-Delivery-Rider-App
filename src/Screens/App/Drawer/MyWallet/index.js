@@ -8,60 +8,105 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
+import {useFocusEffect} from '@react-navigation/native';
+import api from '../../../../constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {GetWalletAmount} from '../../../../utils/helpers/walletApis';
+import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import Loader from '../../../../components/Loader';
 
 const MYWallet = ({navigation, route}) => {
+  const [loading, setLoading] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [data, setData] = useState([
-    {
-      id: 0,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 1,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 2,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 3,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 4,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 5,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 6,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
-    {
-      id: 7,
-      image: Images.salad,
-      actual_price: '13.40',
-      after_deduction: '10.00',
-    },
+    // {
+    //   id: 0,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 1,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 2,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 3,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 4,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 5,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 6,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
+    // {
+    //   id: 7,
+    //   image: Images.salad,
+    //   actual_price: '13.40',
+    //   after_deduction: '10.00',
+    // },
   ]);
+
+  const getData = async () => {
+    setLoading(true);
+    let amount = await GetWalletAmount();
+    console.log({amount});
+    setTotalAmount(amount);
+    // setLoading(false);
+    let rider_id = await AsyncStorage.getItem('rider_id');
+    fetch(api.get_rider_orders + rider_id)
+      .then(response => response.json())
+      .then(response => {
+        let list = response?.result ? response?.result : [];
+        let filteredData = list?.filter(
+          item => item?.cart_items_Data?.length > 0,
+        );
+        filteredData = filteredData?.filter(
+          item =>
+            item?.order_status == 'delievered' ||
+            item?.order_status == 'delivered',
+        );
+        setData(filteredData);
+      })
+      .catch(err => console.log('error : ', err))
+      .finally(() => setLoading(false));
+  };
+
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, []),
+  );
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
+      <Loader loading={loading} />
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}>
         <View style={styles.headerContainer}>
           <StackHeader
@@ -73,7 +118,7 @@ const MYWallet = ({navigation, route}) => {
             headerView={{marginTop: 10}}
           />
           <View style={styles.header}>
-            <Text style={styles.priceText}>$ 3,567</Text>
+            <Text style={styles.priceText}>$ {totalAmount}</Text>
             <Text style={styles.totalAmount}>Total Amount</Text>
           </View>
         </View>
@@ -84,18 +129,40 @@ const MYWallet = ({navigation, route}) => {
             scrollEnabled={false}
             ListHeaderComponent={() => <View style={{height: 10}} />}
             renderItem={({item, index}) => {
+              let cart_item =
+                item?.cart_items_Data?.length > 0
+                  ? item?.cart_items_Data[0]
+                  : null;
               return (
                 <FoodCardWithRating
-                  disabled={true}
-                  title={item?.title}
-                  image={item?.image}
-                  description={item?.description}
-                  price={item?.price}
-                  // label={item?.status}
-                  // type={'all'}
+                  disabled={false}
+                  onPress={() => {
+                    navigation.navigate('MyOrdersDetail', {
+                      type: 'order_history',
+                      id: item?.order_id,
+                    });
+                  }}
+                  // title={item?.title}
+                  // image={item?.image}
+                  // description={item?.description}
+                  // price={item?.price}
+                  image={
+                    cart_item && cart_item?.itemData?.images?.length > 0
+                      ? BASE_URL_IMAGE + cart_item?.itemData?.images[0]
+                      : ''
+                  }
+                  title={
+                    cart_item
+                      ? cart_item?.item_type == 'deal'
+                        ? cart_item?.itemData?.name
+                        : cart_item?.itemData?.item_name
+                      : ''
+                  }
+                  price={cart_item ? cart_item?.itemData?.price : ''}
                   cardStyle={{marginTop: 15}}
                   showNextButton={false}
-                  showRatingOnBottom={true}
+                  // showRatingOnBottom={true}
+                  showRating={false}
                 />
               );
             }}
