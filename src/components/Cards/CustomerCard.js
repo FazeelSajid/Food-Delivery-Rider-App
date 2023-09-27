@@ -92,7 +92,9 @@ const CustomerCard = ({
           {location && (
             <View style={{...styles.rowView, width: '90%'}}>
               <Icons.MarkerOutlineActive />
-              <Text style={styles.description}>{location}</Text>
+              <Text style={{...styles.description, lineHeight: 15}}>
+                {location}
+              </Text>
             </View>
           )}
         </View>

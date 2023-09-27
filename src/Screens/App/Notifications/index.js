@@ -107,6 +107,7 @@ const Notification = ({navigation, route}) => {
     setLoading(true);
     getData();
   }, []);
+
   const onRefresh = () => {
     setRefreshing(true);
     getData();

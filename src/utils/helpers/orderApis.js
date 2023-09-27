@@ -3,6 +3,7 @@ import api from '../../constants/api';
 import {getCurrentLocation} from './location';
 
 export const GetNearestOrders = id => {
+  console.log('GetNearestOrders_____________________________________');
   return new Promise(async (resolve, reject) => {
     try {
       let {latitude, longitude} = await getCurrentLocation();
@@ -12,6 +13,7 @@ export const GetNearestOrders = id => {
       // // let url =api.get_nearest_orders + `?longitude=73.065753&latitude=33.688447`
       let url =
         api.get_nearest_orders + `?longitude=${longitude}&latitude=${latitude}`;
+      console.log('url  to get nearest orders :', url);
       fetch(url)
         .then(response => response.json())
         .then(response => {

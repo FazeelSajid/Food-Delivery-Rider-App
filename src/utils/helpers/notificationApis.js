@@ -13,7 +13,7 @@ export const GetAllNotifications = async () => {
             resolve([]);
           } else {
             let list = response?.result ? response?.result : [];
-            resolve(list);
+            resolve(list?.reverse());
           }
         })
         .catch(err => {

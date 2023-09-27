@@ -44,14 +44,19 @@ const FoodCardWithRating = ({
       {image && (
         <>
           <ImageBackground
-            source={image}
+            // source={image}
+            source={{uri: image}}
             style={{
               ...styles.imageContainer,
               height: imageHeight ? imageHeight : hp(7.5),
               ...imageContainerStyle,
             }}
             blurRadius={40}>
-            <Image source={image} style={{...styles.image, ...imageStyle}} />
+            <Image
+              // source={image}
+              source={{uri: image}}
+              style={{...styles.image, ...imageStyle}}
+            />
           </ImageBackground>
         </>
       )}
