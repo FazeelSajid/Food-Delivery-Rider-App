@@ -425,11 +425,20 @@ const MyOrdersDetail = ({navigation, route}) => {
                       : ''}
                   </Text>
                 </View>
-                <View style={styles.rowViewSB}>
+                {/* <View style={styles.rowViewSB}>
                   <Text style={{...styles.sub_heading, marginVertical: 5}}>
                     Rider’s Commission
                   </Text>
                   <Text style={styles.description1}>$ 2.05</Text>
+                </View> */}
+
+                <View style={styles.rowViewSB}>
+                  <Text style={{...styles.sub_heading, marginVertical: 5}}>
+                    Delivery Charges
+                  </Text>
+                  <Text style={styles.description1}>
+                    $ {orderDetails?.delivery_charges}
+                  </Text>
                 </View>
               </View>
             </>
@@ -638,6 +647,7 @@ const styles = StyleSheet.create({
 
   location_container: {
     marginVertical: 15,
+    flex: 1,
   },
   circle: {
     height: 40,
@@ -650,7 +660,9 @@ const styles = StyleSheet.create({
   },
 
   verticalDottedLine: {
-    height: 45,
+    // height: 45,
+    minHeight: 45,
+    flex: 1,
     borderWidth: 1,
     borderColor: Colors.Orange,
     borderStyle: 'dashed',
@@ -666,5 +678,6 @@ const styles = StyleSheet.create({
     color: '#808D9E',
     fontFamily: Fonts.Inter_Regular,
     fontSize: RFPercentage(1.5),
+    width: wp(70),
   },
 });
