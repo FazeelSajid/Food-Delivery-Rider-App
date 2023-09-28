@@ -10,6 +10,7 @@ import {
 import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../../../components/Loader';
+import NoDataFound from '../../../../components/NotFound/NoDataFound';
 
 const Complaints = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -106,6 +107,7 @@ const Complaints = ({navigation, route}) => {
       <FlatList
         data={data}
         ListHeaderComponent={() => <StackHeader title={'Complaints'} />}
+        ListEmptyComponent={() => <NoDataFound loading={loading} />}
         renderItem={({item, index}) => (
           <CustomerCard
             onPress={() =>

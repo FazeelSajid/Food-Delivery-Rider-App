@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GetWalletAmount} from '../../../../utils/helpers/walletApis';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import Loader from '../../../../components/Loader';
+import NoDataFound from '../../../../components/NotFound/NoDataFound';
 
 const MYWallet = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
@@ -128,6 +129,7 @@ const MYWallet = ({navigation, route}) => {
             showsVerticalScrollIndicator={false}
             scrollEnabled={false}
             ListHeaderComponent={() => <View style={{height: 10}} />}
+            ListEmptyComponent={() => <NoDataFound loading={loading} />}
             renderItem={({item, index}) => {
               let cart_item =
                 item?.cart_items_Data?.length > 0
@@ -158,7 +160,8 @@ const MYWallet = ({navigation, route}) => {
                         : cart_item?.itemData?.item_name
                       : ''
                   }
-                  price={cart_item ? cart_item?.itemData?.price : ''}
+                  // price={cart_item ? cart_item?.itemData?.price : ''}
+                  price={item?.total_amount}
                   cardStyle={{marginTop: 15}}
                   showNextButton={false}
                   // showRatingOnBottom={true}

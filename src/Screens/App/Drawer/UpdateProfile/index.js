@@ -21,8 +21,11 @@ import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../../../components/Loader';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import CameraBottomSheet from '../../../../components/BottomSheet/CameraBottomSheet';
 
 const UpdateProfile = ({navigation, route}) => {
+  const cameraSheet_ref = useRef();
+
   const ref_RBSheet = useRef();
   const textInput_HEIGHT = 42;
   const [profileImage, setProfileImage] = useState(null);
@@ -216,7 +219,8 @@ const UpdateProfile = ({navigation, route}) => {
             )}
             <TouchableOpacity
               style={{position: 'absolute', bottom: 0, right: 0}}
-              onPress={() => handleUploadImage()}>
+              // onPress={() => handleUploadImage()}
+              onPress={() => cameraSheet_ref?.current?.open()}>
               <Icons.EditSquare />
             </TouchableOpacity>
           </View>
@@ -250,6 +254,7 @@ const UpdateProfile = ({navigation, route}) => {
             onChangeText={text => setUserInfo({...userInfo, CNIC: text})}
             height={textInput_HEIGHT}
           />
+
           <CInput
             heading={'Location'}
             headingStyle={styles.headingStyle}
@@ -311,6 +316,16 @@ const UpdateProfile = ({navigation, route}) => {
           )}
         </View>
       </ScrollView>
+
+      <CameraBottomSheet
+        refRBSheet={cameraSheet_ref}
+        onCameraPick={img => {
+          img && setUserInfo({...userInfo, image: img});
+        }}
+        onGalleryPick={img => {
+          img && setUserInfo({...userInfo, image: img});
+        }}
+      />
     </View>
   );
 };

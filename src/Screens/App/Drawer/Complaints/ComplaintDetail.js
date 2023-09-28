@@ -109,9 +109,10 @@ const ComplaintDetail = ({navigation, route}) => {
                 itemImages?.length > 0 ? BASE_URL_IMAGE + itemImages[0] : ''
               }
               // description={'Mix fresh real orange '}
-              price={
-                fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''
-              }
+              // price={
+              //   fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''
+              // }
+              price={detail?.order?.total_amount}
               cardStyle={{marginTop: 15}}
               showNextButton={false}
               // showRatingOnBottom={true}

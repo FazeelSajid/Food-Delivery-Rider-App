@@ -15,6 +15,7 @@ import {
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import CButton from '../../components/Buttons/CButton';
 import {Colors, Fonts, Icons, Images} from '../../constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoarding = ({navigation, route}) => {
   return (
@@ -32,7 +33,10 @@ const OnBoarding = ({navigation, route}) => {
         height={hp(6.2)}
         marginTop={hp(15)}
         width={wp(85)}
-        onPress={() => navigation.replace('SignIn')}
+        onPress={async () => {
+          await AsyncStorage.setItem('isFirstLaunch', 'true');
+          navigation.replace('SignIn');
+        }}
       />
     </View>
   );

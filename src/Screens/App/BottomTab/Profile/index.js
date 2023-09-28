@@ -58,14 +58,13 @@ const Profile = ({navigation, route}) => {
     setIsRefreshing(true);
     getData();
   };
-  // useEffect(() => {
-  //   setLoading(true);
-  //   // getData();
-  // }, []);
+  useEffect(() => {
+    setLoading(true);
+    // getData();
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      setLoading(true);
       getData();
     }, []),
   );

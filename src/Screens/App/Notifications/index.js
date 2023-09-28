@@ -134,7 +134,8 @@ const Notification = ({navigation, route}) => {
             {item?.type == 'request' ||
             item?.orderData?.order_status == 'in_process' ||
             item?.orderData?.order_status == 'order_placed' ||
-            item?.orderData?.order_status == 'placed' ? (
+            item?.orderData?.order_status == 'placed' ||
+            item?.orderData?.order_status == 'pending' ? (
               <View style={styles.iconContainer}>
                 <Icons.OrderPlaced />
               </View>
@@ -153,7 +154,8 @@ const Notification = ({navigation, route}) => {
               <View style={styles.iconContainer}>
                 <Icons.Refresh />
               </View>
-            ) : item?.type == 'rating' ? (
+            ) : item?.type == 'rating' ||
+              item?.notification_type == 'rating' ? (
               <View style={styles.iconContainer}>
                 <Icons.RatingActive />
               </View>

@@ -24,14 +24,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../../../constants/api';
 import Loader from '../../../../components/Loader';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
+import CameraBottomSheet from '../../../../components/BottomSheet/CameraBottomSheet';
 
 const UpdateDocuments = ({navigation, route}) => {
+  const cameraSheet_ref = useRef();
+
   const [frontIDCard, setFrontIDCard] = useState(null);
   const [backIDCard, setBackIDCard] = useState(null);
   const [drivingLicense, setDrivingLicense] = useState(null);
 
   const [isFetching, setIsFetching] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [selectedImageType, setSelectedImageType] = useState('');
 
   const handleUploadFrontIDCard = () => {
     return new Promise(async (resolve, reject) => {
@@ -57,6 +62,7 @@ const UpdateDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadBackIDCard = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -81,6 +87,7 @@ const UpdateDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadDrivingLicense = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -124,6 +131,7 @@ const UpdateDocuments = ({navigation, route}) => {
     let id_card_front_image = await handleUploadFrontIDCard();
     let id_card_back_image = await handleUploadBackIDCard();
     let driving_license_image = await handleUploadDrivingLicense();
+    console.log('id_card_front_image  :  ', id_card_front_image);
     navigation.navigate('UpdateVehicleInfo', {
       country,
       photo,
@@ -142,22 +150,30 @@ const UpdateDocuments = ({navigation, route}) => {
     setLoading(false);
   };
 
-  const handleUploadImage = async type => {
-    chooseImageFromCamera()
-      .then(res => {
-        if (res) {
-          if (type == 'front') {
-            setFrontIDCard(res);
-          } else if (type == 'back') {
-            setBackIDCard(res);
-          } else {
-            setDrivingLicense(res);
-          }
-        }
-      })
-      .catch(err => {
-        console.log('err : ', err);
-      });
+  const handleUploadImage = async img => {
+    console.log('image :  ', img);
+    if (selectedImageType == 'front') {
+      setFrontIDCard(img);
+    } else if (selectedImageType == 'back') {
+      setBackIDCard(img);
+    } else {
+      setDrivingLicense(img);
+    }
+    // chooseImageFromCamera()
+    //   .then(res => {
+    //     if (res) {
+    //       if (type == 'front') {
+    //         setFrontIDCard(res);
+    //       } else if (type == 'back') {
+    //         setBackIDCard(res);
+    //       } else {
+    //         setDrivingLicense(res);
+    //       }
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log('err : ', err);
+    //   });
   };
 
   const getData = async () => {
@@ -227,7 +243,11 @@ const UpdateDocuments = ({navigation, route}) => {
                 title="Change"
                 width={90}
                 height={32}
-                onPress={() => handleUploadImage('front')}
+                // onPress={() => handleUploadImage('front')}
+                onPress={() => {
+                  setSelectedImageType('front');
+                  cameraSheet_ref?.current?.open();
+                }}
               />
             </TouchableOpacity>
             <Text style={styles.imageTitle}>Font id card image</Text>
@@ -255,7 +275,11 @@ const UpdateDocuments = ({navigation, route}) => {
                 title="Change"
                 width={90}
                 height={32}
-                onPress={() => handleUploadImage('back')}
+                // onPress={() => handleUploadImage('back')}
+                onPress={() => {
+                  setSelectedImageType('back');
+                  cameraSheet_ref?.current?.open();
+                }}
               />
             </TouchableOpacity>
             <Text style={styles.imageTitle}>Back id card image</Text>
@@ -283,7 +307,11 @@ const UpdateDocuments = ({navigation, route}) => {
                 title="Change"
                 width={90}
                 height={32}
-                onPress={() => handleUploadImage('driving')}
+                // onPress={() => handleUploadImage('driving')}
+                onPress={() => {
+                  setSelectedImageType('driving');
+                  cameraSheet_ref?.current?.open();
+                }}
               />
             </TouchableOpacity>
             <Text style={styles.imageTitle}>Driver’s License</Text>
@@ -296,6 +324,15 @@ const UpdateDocuments = ({navigation, route}) => {
           </View>
         )}
       </ScrollView>
+      <CameraBottomSheet
+        refRBSheet={cameraSheet_ref}
+        onCameraPick={img => {
+          img && handleUploadImage(img);
+        }}
+        onGalleryPick={img => {
+          img && handleUploadImage(img);
+        }}
+      />
     </View>
   );
 };

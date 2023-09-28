@@ -107,7 +107,11 @@ const SignIn = ({navigation, route}) => {
             let wallet = await createRiderWallet(response?.result?.rider_id);
             console.log('wallet  :  ', wallet);
             // // navigation?.popToTop()
-            navigation?.replace('Drawer');
+            // navigation?.replace('Drawer');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Drawer'}],
+            });
           }
         })
         .catch(err => {
