@@ -24,6 +24,7 @@ import {
   uploadImage,
 } from '../../utils/helpers';
 import moment from 'moment';
+
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import api from '../../constants/api';
 import Loader from '../../components/Loader';
@@ -98,6 +99,7 @@ const RegistrationDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadBackIDCard = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -118,6 +120,7 @@ const RegistrationDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadDrivingLicense = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -233,6 +236,7 @@ const RegistrationDocuments = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <Loader loading={loading} />
+
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">

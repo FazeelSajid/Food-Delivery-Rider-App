@@ -204,8 +204,7 @@ const SignIn = ({navigation, route}) => {
             }}
           />
 
-          <Text style={STYLE.orText}>
-            {/* -- Or -- */}
+          {/* <Text style={STYLE.orText}>
             —— Or ——
           </Text>
           <View style={STYLE.socialIconContainer}>
@@ -217,7 +216,7 @@ const SignIn = ({navigation, route}) => {
             <TouchableOpacity activeOpacity={0.7}>
               <Icons.Facebook width={wp(13)} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
 

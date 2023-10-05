@@ -285,6 +285,7 @@ const MyOrdersDetail = ({navigation, route}) => {
               {orderDetails?.total_amount}
             </Text>
           </View>
+
           {orderDetails?.customerData?.customer_id && (
             <View style={{marginBottom: 5}}>
               <Text style={{...styles.heading, color: Colors.Orange}}>
@@ -371,6 +372,7 @@ const MyOrdersDetail = ({navigation, route}) => {
           <Text style={{...styles.heading, color: Colors.Orange}}>
             Other Details
           </Text>
+
           <Text style={styles.sub_heading}>Special Instructions</Text>
           <Text style={styles.description1}>
             {/* Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
@@ -576,6 +578,7 @@ const MyOrdersDetail = ({navigation, route}) => {
     </View>
   );
 };
+
 export default MyOrdersDetail;
 
 const styles = StyleSheet.create({
@@ -630,6 +633,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
   orderCard: {
     borderWidth: 1,
     borderColor: Colors.Orange,
@@ -640,6 +644,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   orderCardText: {
     color: Colors.Orange,
     fontFamily: Fonts.PlusJakartaSans_Medium,
