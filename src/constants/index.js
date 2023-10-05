@@ -94,6 +94,8 @@ export const Images = {
   idCardBack: require('../Assets/png/Dashboard/idCardBack.png'),
   drivingLicense: require('../Assets/png/Dashboard/drivingLicense.png'),
 
+  master_card: require('../Assets/png/Dashboard/master_card.png'),
+
   //other
   success_check: require('../Assets/other/success_check.json'),
   //new

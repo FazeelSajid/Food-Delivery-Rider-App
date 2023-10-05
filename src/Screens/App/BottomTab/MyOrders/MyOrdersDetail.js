@@ -281,68 +281,78 @@ const MyOrdersDetail = ({navigation, route}) => {
             </Text>
             <Text style={styles.priceText}>
               {/* $ 9.67 */}$
-              {fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''}
+              {/* {fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''} */}
+              {orderDetails?.total_amount}
             </Text>
-          </View>
-          <View style={{marginBottom: 5}}>
-            <Text style={{...styles.heading, color: Colors.Orange}}>
-              Customer’s Details
-            </Text>
-            <CustomerCard
-              disabled={true}
-              onChatPress={() => {
-                navigation?.navigate('Conversation', {
-                  // userId: 'customer',
-                  // name: 'John Doe',
-                  // image: Images.user6,
-                  type: 'customer',
-                  userId: orderDetails?.customerData?.customer_id,
-                  name: orderDetails?.customerData?.user_name,
-                  image: null,
-                  fcm_token: orderDetails?.customerData?.fcm_token,
-                });
-              }}
-              // profile={null}
-              showNameProfile={orderDetails?.customerData?.user_name}
-              // name={'John Doe'}
-              // phoneNo={'0000-0000000'}
-              name={orderDetails?.customerData?.user_name}
-              phoneNo={orderDetails?.customerData?.phone_no}
-              showChatIcon={true}
-            />
           </View>
 
-          <View style={{marginBottom: 5}}>
-            <Text style={{...styles.heading, color: Colors.Orange}}>
-              Restaurant Details
-            </Text>
-            <CustomerCard
-              disabled={true}
-              onChatPress={() => {
-                navigation?.navigate('Conversation', {
-                  // userId: 'restaurant',
-                  // name: 'Restaurant Name',
-                  // image: Images.restaurant1,
+          {orderDetails?.customerData?.customer_id && (
+            <View style={{marginBottom: 5}}>
+              <Text style={{...styles.heading, color: Colors.Orange}}>
+                Customer’s Details
+              </Text>
 
-                  type: 'restaurant',
-                  userId: orderDetails?.restaurantData?.restaurant_id,
-                  name: orderDetails?.restaurantData?.user_name,
-                  image:
-                    BASE_URL_IMAGE + orderDetails?.restaurantData?.images[0],
-                  fcm_token: orderDetails?.restaurantData?.fcm_token,
-                });
-              }}
-              profile={
-                orderDetails?.restaurantData?.images?.length > 0
-                  ? BASE_URL_IMAGE + orderDetails?.restaurantData?.images[0]
-                  : null
-              }
-              name={orderDetails?.restaurantData?.user_name}
-              // phoneNo={'0000-0000000'}
-              location={orderDetails?.restaurantData?.location}
-              showChatIcon={true}
-            />
-          </View>
+              <CustomerCard
+                disabled={true}
+                onChatPress={() => {
+                  navigation?.navigate('Conversation', {
+                    // userId: 'customer',
+                    // name: 'John Doe',
+                    // image: Images.user6,
+                    type: 'customer',
+                    userId: orderDetails?.customerData?.customer_id,
+                    name: orderDetails?.customerData?.user_name,
+                    image: null,
+                    fcm_token: orderDetails?.customerData?.fcm_token,
+                  });
+                }}
+                // profile={null}
+                showNameProfile={orderDetails?.customerData?.user_name}
+                // name={'John Doe'}
+                // phoneNo={'0000-0000000'}
+                name={orderDetails?.customerData?.user_name}
+                phoneNo={orderDetails?.customerData?.phone_no}
+                showChatIcon={true}
+              />
+            </View>
+          )}
+
+          {orderDetails?.restaurantData?.restaurant_id && (
+            <View style={{marginBottom: 5}}>
+              <Text style={{...styles.heading, color: Colors.Orange}}>
+                Restaurant Details
+              </Text>
+              <CustomerCard
+                disabled={true}
+                onChatPress={() => {
+                  navigation?.navigate('Conversation', {
+                    // userId: 'restaurant',
+                    // name: 'Restaurant Name',
+                    // image: Images.restaurant1,
+
+                    type: 'restaurant',
+                    userId: orderDetails?.restaurantData?.restaurant_id,
+                    name: orderDetails?.restaurantData?.user_name,
+                    image:
+                      orderDetails?.restaurantData?.images?.length > 0
+                        ? BASE_URL_IMAGE +
+                          orderDetails?.restaurantData?.images[0]
+                        : null,
+                    fcm_token: orderDetails?.restaurantData?.fcm_token,
+                  });
+                }}
+                profile={
+                  orderDetails?.restaurantData?.images?.length > 0
+                    ? BASE_URL_IMAGE + orderDetails?.restaurantData?.images[0]
+                    : null
+                }
+                name={orderDetails?.restaurantData?.user_name}
+                // phoneNo={'0000-0000000'}
+                location={orderDetails?.restaurantData?.location}
+                showChatIcon={true}
+              />
+            </View>
+          )}
 
           {route?.params?.type == 'earning' && (
             <>
@@ -362,6 +372,7 @@ const MyOrdersDetail = ({navigation, route}) => {
           <Text style={{...styles.heading, color: Colors.Orange}}>
             Other Details
           </Text>
+
           <Text style={styles.sub_heading}>Special Instructions</Text>
           <Text style={styles.description1}>
             {/* Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
@@ -567,6 +578,7 @@ const MyOrdersDetail = ({navigation, route}) => {
     </View>
   );
 };
+
 export default MyOrdersDetail;
 
 const styles = StyleSheet.create({
@@ -621,6 +633,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
   orderCard: {
     borderWidth: 1,
     borderColor: Colors.Orange,
@@ -631,6 +644,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   orderCardText: {
     color: Colors.Orange,
     fontFamily: Fonts.PlusJakartaSans_Medium,

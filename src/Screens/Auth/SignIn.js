@@ -107,7 +107,11 @@ const SignIn = ({navigation, route}) => {
             let wallet = await createRiderWallet(response?.result?.rider_id);
             console.log('wallet  :  ', wallet);
             // // navigation?.popToTop()
-            navigation?.replace('Drawer');
+            // navigation?.replace('Drawer');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Drawer'}],
+            });
           }
         })
         .catch(err => {
@@ -200,8 +204,7 @@ const SignIn = ({navigation, route}) => {
             }}
           />
 
-          <Text style={STYLE.orText}>
-            {/* -- Or -- */}
+          {/* <Text style={STYLE.orText}>
             —— Or ——
           </Text>
           <View style={STYLE.socialIconContainer}>
@@ -213,7 +216,7 @@ const SignIn = ({navigation, route}) => {
             <TouchableOpacity activeOpacity={0.7}>
               <Icons.Facebook width={wp(13)} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
 

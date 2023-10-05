@@ -185,8 +185,9 @@ const UpdateVehicleInfo = ({navigation, route}) => {
         </View>
         <RBSheetSuccess
           refRBSheet={ref_RBSheet}
-          title={'Profile Updated Successfully'}
-          // textColor={'#68686E'}
+          // title={'Profile Updated Successfully'}
+          title={'Your profile update request has been sent to the admin.'}
+          textColor={'#68686E'}
           btnText={'OK'}
           onPress={() => {
             ref_RBSheet?.current?.close();

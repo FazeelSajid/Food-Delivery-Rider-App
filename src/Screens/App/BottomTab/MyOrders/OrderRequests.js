@@ -124,7 +124,8 @@ const OrderRequests = ({route, data}) => {
                     : cart_item?.itemData?.item_name
                   : ''
               }
-              price={cart_item ? cart_item?.itemData?.price : ''}
+              // price={cart_item ? cart_item?.itemData?.price : ''}
+              price={item?.total_amount}
               cardStyle={{marginTop: 15}}
               showNextButton={true}
               // showRatingOnBottom={false}

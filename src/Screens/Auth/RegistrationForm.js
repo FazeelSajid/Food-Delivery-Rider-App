@@ -25,8 +25,11 @@ import {
 import moment from 'moment';
 import Loader from '../../components/Loader';
 import {launchCamera} from 'react-native-image-picker';
+import CameraBottomSheet from '../../components/BottomSheet/CameraBottomSheet';
 
 const RegistrationForm = ({navigation, route}) => {
+  const cameraSheet_ref = useRef();
+
   const ref_RBSheet = useRef();
   const textInput_HEIGHT = 42;
 
@@ -265,7 +268,6 @@ const RegistrationForm = ({navigation, route}) => {
                 title="Continue"
                 width={wp(89)}
                 // marginTop={hp(43)}
-
                 onPress={() => handleContinue()}
               />
             </View>
@@ -273,7 +275,8 @@ const RegistrationForm = ({navigation, route}) => {
         ) : (
           <View style={{flex: 1}}>
             <TouchableOpacity
-              onPress={() => handleUploadImage()}
+              // onPress={() => handleUploadImage()}
+              onPress={() => cameraSheet_ref?.current?.open()}
               style={styles.profileImage}>
               {profileImage ? (
                 <Avatar.Image
@@ -354,6 +357,16 @@ const RegistrationForm = ({navigation, route}) => {
           </View>
         )}
       </ScrollView>
+
+      <CameraBottomSheet
+        refRBSheet={cameraSheet_ref}
+        onCameraPick={img => {
+          img && setProfileImage(img);
+        }}
+        onGalleryPick={img => {
+          img && setProfileImage(img);
+        }}
+      />
     </View>
   );
 };

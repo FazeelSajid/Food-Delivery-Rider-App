@@ -24,11 +24,15 @@ import {
   uploadImage,
 } from '../../utils/helpers';
 import moment from 'moment';
+
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import api from '../../constants/api';
 import Loader from '../../components/Loader';
+import CameraBottomSheet from '../../components/BottomSheet/CameraBottomSheet';
 
 const RegistrationDocuments = ({navigation, route}) => {
+  const cameraSheet_ref = useRef();
+
   const ref_RBSheet = useRef();
 
   const [loading, setLoading] = useState(false);
@@ -37,24 +41,36 @@ const RegistrationDocuments = ({navigation, route}) => {
   const [drivingLicense, setDrivingLicense] = useState(null);
 
   const [file, setFile] = useState(null);
+  const [selectedImageType, setSelectedImageType] = useState('');
 
-  const handleUploadImage = async type => {
-    chooseImageFromCamera()
-      .then(res => {
-        if (res) {
-          if (type == 'front') {
-            setFrontIDCard(res);
-          } else if (type == 'back') {
-            setBackIDCard(res);
-          } else {
-            setDrivingLicense(res);
-          }
-        }
-      })
-      .catch(err => {
-        console.log('err : ', err);
-      });
+  const handleUploadImage = async img => {
+    console.log('image :  ', img);
+    if (selectedImageType == 'front') {
+      setFrontIDCard(img);
+    } else if (selectedImageType == 'back') {
+      setBackIDCard(img);
+    } else {
+      setDrivingLicense(img);
+    }
   };
+
+  // const handleUploadImage = async type => {
+  //   chooseImageFromCamera()
+  //     .then(res => {
+  //       if (res) {
+  //         if (type == 'front') {
+  //           setFrontIDCard(res);
+  //         } else if (type == 'back') {
+  //           setBackIDCard(res);
+  //         } else {
+  //           setDrivingLicense(res);
+  //         }
+  //       }
+  //     })
+  //     .catch(err => {
+  //       console.log('err : ', err);
+  //     });
+  // };
   const onDatePick = (event, selectedDate) => {
     console.log('event  :   ', event);
     setShowDatePicker(false);
@@ -83,6 +99,7 @@ const RegistrationDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadBackIDCard = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -103,6 +120,7 @@ const RegistrationDocuments = ({navigation, route}) => {
       }
     });
   };
+
   const handleUploadDrivingLicense = () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -218,6 +236,7 @@ const RegistrationDocuments = ({navigation, route}) => {
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <Loader loading={loading} />
+
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
@@ -237,7 +256,11 @@ const RegistrationDocuments = ({navigation, route}) => {
             Documents
           </Text>
           <TouchableOpacity
-            onPress={() => handleUploadImage('front')}
+            // onPress={() => handleUploadImage('front')}
+            onPress={() => {
+              setSelectedImageType('front');
+              cameraSheet_ref?.current?.open();
+            }}
             style={styles.fileContainer}>
             {frontIDCard ? (
               <Image source={{uri: frontIDCard?.path}} style={styles.image} />
@@ -249,7 +272,11 @@ const RegistrationDocuments = ({navigation, route}) => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleUploadImage('back')}
+            // onPress={() => handleUploadImage('back')}
+            onPress={() => {
+              setSelectedImageType('back');
+              cameraSheet_ref?.current?.open();
+            }}
             style={styles.fileContainer}>
             {backIDCard ? (
               <Image source={{uri: backIDCard?.path}} style={styles.image} />
@@ -261,7 +288,11 @@ const RegistrationDocuments = ({navigation, route}) => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleUploadImage('driving')}
+            // onPress={() => handleUploadImage('driving')}
+            onPress={() => {
+              setSelectedImageType('driving');
+              cameraSheet_ref?.current?.open();
+            }}
             style={styles.fileContainer}>
             {drivingLicense ? (
               <Image
@@ -291,6 +322,15 @@ const RegistrationDocuments = ({navigation, route}) => {
         onPress={() => {
           ref_RBSheet?.current?.close();
           navigation.replace('SignIn');
+        }}
+      />
+      <CameraBottomSheet
+        refRBSheet={cameraSheet_ref}
+        onCameraPick={img => {
+          img && handleUploadImage(img);
+        }}
+        onGalleryPick={img => {
+          img && handleUploadImage(img);
         }}
       />
     </View>

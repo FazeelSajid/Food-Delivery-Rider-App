@@ -109,7 +109,8 @@ const AssignedOrders = ({route, data}) => {
                     : cart_item?.itemData?.item_name
                   : ''
               }
-              price={cart_item ? cart_item?.itemData?.price : ''}
+              // price={cart_item ? cart_item?.itemData?.price : ''}
+              price={item?.total_amount}
               // title={item?.title}
               // image={item?.image}
               // description={item?.description}

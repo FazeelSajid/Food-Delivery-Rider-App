@@ -99,7 +99,7 @@ const SignUp = ({navigation, route}) => {
             onPress={() => handleSignUP()}
           />
 
-          <Text style={STYLE.orText}>-- Or --</Text>
+          {/* <Text style={STYLE.orText}>-- Or --</Text>
           <View style={STYLE.socialIconContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -109,7 +109,7 @@ const SignUp = ({navigation, route}) => {
             <TouchableOpacity activeOpacity={0.7}>
               <Icons.Facebook width={wp(13)} />
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </View>

@@ -55,6 +55,8 @@ import ComplaintDetail from '../Screens/App/Drawer/Complaints/ComplaintDetail';
 import Languages from '../Screens/App/Drawer/Languages';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import CardForTopUp from '../Screens/App/CardInfo/CardForTopUp';
+import CardForWithdraw from '../Screens/App/CardInfo/CardForWithdraw';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -318,6 +320,7 @@ function Router() {
         name="RegistrationDocuments"
         component={RegistrationDocuments}
       />
+
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="Verification" component={Verification} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
@@ -333,6 +336,9 @@ function Router() {
       <Stack.Screen name="Drawer" component={DrawerNavigation} />
 
       <Stack.Screen name="ComplaintDetail" component={ComplaintDetail} />
+
+      <Stack.Screen name="CardForTopUp" component={CardForTopUp} />
+      <Stack.Screen name="CardForWithdraw" component={CardForWithdraw} />
     </Stack.Navigator>
   );
 }

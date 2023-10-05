@@ -33,6 +33,7 @@ import {
   setOrderHistory,
   setOrderRequests,
 } from '../../../../redux/OrderSlice';
+import NoDataFound from '../../../../components/NotFound/NoDataFound';
 
 const Dashboard = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -207,6 +208,7 @@ const Dashboard = ({navigation, route}) => {
             <FlatList
               scrollEnabled={false}
               data={order_requests}
+              ListEmptyComponent={() => <NoDataFound loading={loading} />}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
@@ -232,7 +234,8 @@ const Dashboard = ({navigation, route}) => {
                           : cart_item?.itemData?.item_name
                         : ''
                     }
-                    price={cart_item ? cart_item?.itemData?.price : ''}
+                    // price={cart_item ? cart_item?.itemData?.price : ''}
+                    price={item?.total_amount}
                     showRating={false}
                     nextIconWidth={26}
                     cardStyle={{marginHorizontal: 0, marginBottom: 15}}
@@ -265,6 +268,7 @@ const Dashboard = ({navigation, route}) => {
             <FlatList
               scrollEnabled={false}
               data={assigned_orders}
+              ListEmptyComponent={() => <NoDataFound loading={loading} />}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
@@ -291,7 +295,8 @@ const Dashboard = ({navigation, route}) => {
                           : cart_item?.itemData?.item_name
                         : ''
                     }
-                    price={cart_item ? cart_item?.itemData?.price : ''}
+                    // price={cart_item ? cart_item?.itemData?.price : ''}
+                    price={item?.total_amount}
                     // title={item?.title}
                     // image={item?.image}
                     // description={item?.description}
@@ -323,6 +328,7 @@ const Dashboard = ({navigation, route}) => {
             <FlatList
               scrollEnabled={false}
               data={order_history}
+              ListEmptyComponent={() => <NoDataFound loading={loading} />}
               renderItem={({item, index}) => {
                 let cart_item =
                   item?.cart_items_Data?.length > 0
@@ -365,7 +371,8 @@ const Dashboard = ({navigation, route}) => {
                           : cart_item?.itemData?.item_name
                         : ''
                     }
-                    price={cart_item ? cart_item?.itemData?.price : ''}
+                    // price={cart_item ? cart_item?.itemData?.price : ''}
+                    price={item?.total_amount}
                     showRating={false}
                     nextIconWidth={26}
                     cardStyle={{marginHorizontal: 0, marginBottom: 15}}
