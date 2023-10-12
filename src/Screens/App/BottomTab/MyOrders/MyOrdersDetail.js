@@ -30,6 +30,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import {useDispatch, useSelector} from 'react-redux';
 import {setIsOrderUpdate} from '../../../../redux/OrderSlice';
+import SectionSeparator from '../../../../components/Separator/SectionSeparator';
+import ItemSeparator from '../../../../components/Separator/ItemSeparator';
 
 const MyOrdersDetail = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -136,13 +138,13 @@ const MyOrdersDetail = ({navigation, route}) => {
       .then(response => response.json())
       .then(async response => {
         console.log('response  :  ', response);
-        setSelected(1);
-        // if (response?.status == true) {
-        //   setSelected(1);
-        //   // dispatch(setIsOrderUpdate(!isOrderUpdate));
-        // } else {
-        //   showAlert(response?.message);
-        // }
+        // setSelected(1);
+        if (response?.status == true) {
+          setSelected(1);
+          // dispatch(setIsOrderUpdate(!isOrderUpdate));
+        } else {
+          showAlert(response?.message);
+        }
       })
       .catch(err => {
         console.log('Error in accept/reject order :  ', err);
@@ -263,6 +265,15 @@ const MyOrdersDetail = ({navigation, route}) => {
     }
   }, []);
 
+  const calculateSubtotal = (total, platform_fee, delivery_charges) => {
+    let service_charges = platform_fee + delivery_charges;
+    let subTotal =
+      service_charges > total
+        ? service_charges - total
+        : total - service_charges;
+    return subTotal;
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
       <Loader loading={loading} />
@@ -270,21 +281,198 @@ const MyOrdersDetail = ({navigation, route}) => {
         {/* <HeaderImageSlider data={data} /> */}
         <HeaderImageSlider data={itemImages && itemImages} />
         <View style={{flex: 1, paddingHorizontal: 20}}>
-          <View style={{...styles.rowViewSB, marginBottom: 15}}>
+          {/* __________________________ updated  _______________________________ */}
+          <View style={{...styles.rowViewSB}}>
+            <View>
+              <Text
+                style={{
+                  color: '#191A26',
+                  fontFamily: Fonts.PlusJakartaSans_Bold,
+                  fontSize: RFPercentage(2),
+                  lineHeight: 30,
+                }}>
+                Order #{orderDetails?.order_id}
+              </Text>
+              {route?.params?.type == 'cancelled' ? (
+                <Text
+                  style={{
+                    color: '#6C6C6C',
+                    fontFamily: Fonts.PlusJakartaSans_Regular,
+                    fontSize: RFPercentage(1.7),
+                  }}>
+                  {/* Cancelled on 02 Oct, 2023 */}
+                  Cancelled on{' '}
+                  {moment(new Date(orderDetails?.updated_at)).format(
+                    'Do,MMM YYYY',
+                  )}
+                </Text>
+              ) : route?.params?.type == 'completed' ? (
+                <Text
+                  style={{
+                    color: '#6C6C6C',
+                    fontFamily: Fonts.PlusJakartaSans_Regular,
+                    fontSize: RFPercentage(1.7),
+                  }}>
+                  {/* Delivered on 02 Oct, 2023 */}
+                  Delivered on{' '}
+                  {moment(new Date(orderDetails?.updated_at)).format(
+                    'Do,MMM YYYY',
+                  )}
+                </Text>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      color: '#6C6C6C',
+                      fontFamily: Fonts.PlusJakartaSans_Regular,
+                      fontSize: RFPercentage(1.7),
+                    }}>
+                    Order Status:{' '}
+                    <Text
+                      style={{
+                        color: Colors.Orange,
+                        fontFamily: Fonts.PlusJakartaSans_SemiBold,
+                        fontSize: RFPercentage(1.7),
+                        textTransform: 'capitalize',
+                      }}>
+                      {orderDetails?.order_status}
+                    </Text>
+                  </Text>
+                </>
+              )}
+            </View>
+            <Text style={styles.priceText}>$ {orderDetails?.total_amount}</Text>
+          </View>
+
+          <View style={styles.location_container}>
+            <View style={{flexDirection: 'row'}}>
+              <Icons.MapPinActive />
+              <View style={{marginTop: 0}}>
+                <Text style={styles.location_description}>Order from</Text>
+                <Text style={styles.location_heading}>
+                  {orderDetails?.restaurantData?.user_name}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.verticalDottedLine} />
+            <View style={{flexDirection: 'row', marginTop: 25}}>
+              <Icons.MapPinActive />
+              <View style={{}}>
+                <Text style={styles.location_description}>Delivered to</Text>
+                <Text style={styles.location_heading}>
+                  {orderDetails?.locationData?.address}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <ItemSeparator />
+          <View style={{}}>
+            {orderDetails?.cart_items_Data &&
+              orderDetails?.cart_items_Data?.map((item, key) => (
+                <View style={{...styles.rowView, marginBottom: 5}}>
+                  <Ionicons
+                    name={'close'}
+                    size={15}
+                    color={Colors.Orange}
+                    style={{marginBottom: -3}}
+                  />
+                  <Text
+                    style={{
+                      color: Colors.Orange,
+                      fontFamily: Fonts.PlusJakartaSans_Bold,
+                      fontSize: RFPercentage(2),
+                      marginLeft: 5,
+                      marginHorizontal: 10,
+                    }}>
+                    {item?.quantity}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#191A26',
+                      fontFamily: Fonts.PlusJakartaSans_Bold,
+                      fontSize: RFPercentage(2),
+                    }}>
+                    {item
+                      ? item?.item_type == 'deal'
+                        ? item?.itemData?.name
+                        : item?.itemData?.item_name
+                      : ''}
+                  </Text>
+                  <Text
+                    style={{
+                      flex: 1,
+                      textAlign: 'right',
+                      color: Colors.Orange,
+                      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+                      fontSize: RFPercentage(2),
+                    }}>
+                    $ {item?.itemData?.price * item?.quantity}
+                  </Text>
+                </View>
+              ))}
+          </View>
+          <ItemSeparator />
+
+          {route?.params?.type == 'cancelled' ? null : (
+            <>
+              <View style={{paddingBottom: 20}}>
+                <View style={styles.rowViewSB}>
+                  <Text style={styles.subText2}>Subtotal</Text>
+                  <Text style={styles.subText2}>
+                    $
+                    {/* {orderDetails?.total_amount -
+                     ( orderDetails?.platform_fees -
+                      orderDetails?.delivery_charges)} */}
+                    {calculateSubtotal(
+                      orderDetails?.total_amount,
+                      orderDetails?.platform_fees,
+                      orderDetails?.delivery_charges,
+                    )}
+                  </Text>
+                </View>
+
+                <View style={styles.rowViewSB}>
+                  <Text style={styles.subText2}>Service Charges</Text>
+                  <Text style={styles.subText2}>
+                    $
+                    {orderDetails?.platform_fees +
+                      orderDetails?.delivery_charges}
+                  </Text>
+                </View>
+                <ItemSeparator />
+                <View style={{...styles.rowViewSB, marginTop: -5}}>
+                  <Text style={styles.total_amountText}>Total</Text>
+                  <Text style={styles.total_amountText}>
+                    $ {orderDetails?.total_amount}
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
+
+          {/* _________________________ updated __________________________________ */}
+
+          <Text
+            style={{
+              ...styles.heading,
+              color: Colors.Orange,
+              marginVertical: 20,
+              marginBottom: 20,
+            }}>
+            Other Details
+          </Text>
+
+          {/* <View style={{...styles.rowViewSB, marginBottom: 15}}>
             <Text style={styles.heading1}>
-              {/* Shrimp Pad Thai Sauce */}
               {fistCartItemDetail
                 ? fistCartItemDetail?.item_type == 'deal'
                   ? fistCartItemDetail?.itemData?.name
                   : fistCartItemDetail?.itemData?.item_name
                 : ''}
             </Text>
-            <Text style={styles.priceText}>
-              {/* $ 9.67 */}$
-              {/* {fistCartItemDetail ? fistCartItemDetail?.itemData?.price : ''} */}
-              {orderDetails?.total_amount}
-            </Text>
-          </View>
+            <Text style={styles.priceText}>{orderDetails?.total_amount}</Text>
+          </View> */}
 
           {orderDetails?.customerData?.customer_id && (
             <View style={{marginBottom: 5}}>
@@ -369,9 +557,9 @@ const MyOrdersDetail = ({navigation, route}) => {
               />
             </>
           )}
-          <Text style={{...styles.heading, color: Colors.Orange}}>
+          {/* <Text style={{...styles.heading, color: Colors.Orange}}>
             Other Details
-          </Text>
+          </Text> */}
 
           <Text style={styles.sub_heading}>Special Instructions</Text>
           <Text style={styles.description1}>
@@ -394,7 +582,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             </View>
           ) : (
             <>
-              <View style={styles.location_container}>
+              {/* <View style={styles.location_container}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <View style={styles.circle}>
                     <Icons.MapMarker />
@@ -402,7 +590,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <View>
                     <Text style={styles.location_heading}>Pickup Location</Text>
                     <Text style={styles.location_description}>
-                      {/* Amet minim mollit non deserunt ullamco */}
+                     
                       {orderDetails?.restaurantData?.location}
                     </Text>
                   </View>
@@ -417,12 +605,11 @@ const MyOrdersDetail = ({navigation, route}) => {
                       Dropoff Location
                     </Text>
                     <Text style={styles.location_description}>
-                      {/* Amet minim mollit non deserunt ullamco */}
                       {orderDetails?.locationData?.address}
                     </Text>
                   </View>
                 </View>
-              </View>
+              </View> */}
 
               <View style={{marginVertical: 10, marginTop: 5}}>
                 <View style={styles.rowViewSB}>
@@ -693,5 +880,95 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Inter_Regular,
     fontSize: RFPercentage(1.5),
     width: wp(70),
+  },
+
+  //
+
+  location_container: {
+    marginVertical: 15,
+    // flex: 1,
+    // paddingHorizontal: 20,
+  },
+  circle: {
+    // height: 40,
+    // width: 40,
+    // borderRadius: 40 / 2,
+    // // backgroundColor: 'red',
+    // marginRight: 15,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
+
+  verticalDottedLine: {
+    // height: 45,
+    minHeight: 47,
+    flex: 1,
+    borderWidth: 1,
+    borderColor: Colors.Orange,
+    borderStyle: 'dashed',
+    width: 1,
+    // marginLeft: 19,
+    marginLeft: 1,
+    position: 'absolute',
+    left: 5.9,
+    top: 13,
+  },
+  location_heading: {
+    color: Colors.Orange,
+    fontFamily: Fonts.Inter_Medium,
+    fontSize: RFPercentage(2),
+    width: wp(70),
+    marginLeft: 15,
+  },
+  location_description: {
+    color: '#808D9E',
+    fontFamily: Fonts.Inter_Regular,
+    fontSize: RFPercentage(1.5),
+    width: wp(70),
+    marginLeft: 15,
+  },
+  subText2: {
+    color: '#0C0B0B',
+    fontFamily: Fonts.Inter_Regular,
+    fontSize: RFPercentage(2),
+    lineHeight: 30,
+  },
+  total_amountText: {
+    color: '#292323',
+    fontFamily: Fonts.Inter_Bold,
+    fontSize: RFPercentage(2),
+    // lineHeight: 30,
+  },
+
+  //
+
+  itemView: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor: '#F6F6F6',
+    backgroundColor: '#F5F6FA',
+    padding: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#FF572233',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textContainer: {
+    marginLeft: 10,
+    flex: 1,
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
   },
 });

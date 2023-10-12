@@ -27,6 +27,7 @@ import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import {useDispatch} from 'react-redux';
 import {setRiderDetails} from '../../../../redux/AuthSlice';
 import Loader from '../../../../components/Loader';
+import {TextInput} from 'react-native-paper';
 
 const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const Profile = ({navigation, route}) => {
     setIsRefreshing(true);
     getData();
   };
+
   useEffect(() => {
     setLoading(true);
     // getData();
@@ -85,6 +87,90 @@ const Profile = ({navigation, route}) => {
         backgroundColor={Colors.Orange}
         barStyle={'light-content'}
       />
+
+      {/* <View style={{alignSelf: 'center'}}>
+        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
+          {' '}
+          Dummy initial value{' '}
+        </Text>
+        <TextInput
+          mode="outlined"
+          label="Add Banner link"
+          value="dummy value"
+          onChangeText={text => setAddBannerLink(text)}
+          //multiline={true} // Enable multiline input
+          //numberOfLines={3} // Set the initial number of lines
+          style={{
+            marginTop: '5%',
+            width: 300,
+            backgroundColor: 'white',
+            fontSize: wp(4),
+            paddingLeft: '2%',
+            borderRadius: 10,
+            marginVertical: 20,
+          }} // Adjust the height as needed
+          outlineColor="#0000001F"
+          placeholderTextColor="#646464"
+          activeOutlineColor="#FACA4E"
+          autoCapitalize="none"
+          // onFocus={handleFocusAddBanner}
+          // onBlur={handleBlurAddBanner}
+        />
+        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
+          Placeholder
+        </Text>
+        <TextInput
+          mode="outlined"
+          label="dummy placeholder"
+          value=""
+          onChangeText={text => setAddBannerLink(text)}
+          //multiline={true} // Enable multiline input
+          //numberOfLines={3} // Set the initial number of lines
+          style={{
+            marginTop: '5%',
+            width: 300,
+            backgroundColor: 'white',
+            fontSize: wp(4),
+            paddingLeft: '2%',
+            borderRadius: 10,
+            marginVertical: 20,
+          }} // Adjust the height as needed
+          outlineColor="#0000001F"
+          placeholderTextColor="#646464"
+          activeOutlineColor="#FACA4E"
+          autoCapitalize="none"
+          // onFocus={handleFocusAddBanner}
+          // onBlur={handleBlurAddBanner}
+        />
+
+        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
+          When user type
+        </Text>
+        <TextInput
+          mode="outlined"
+          label="Add Banner link"
+          value=""
+          onChangeText={text => setAddBannerLink(text)}
+          //multiline={true} // Enable multiline input
+          //numberOfLines={3} // Set the initial number of lines
+          style={{
+            marginTop: '5%',
+            width: 300,
+            backgroundColor: 'white',
+            fontSize: wp(4),
+            paddingLeft: '2%',
+            borderRadius: 10,
+            marginVertical: 20,
+          }} // Adjust the height as needed
+          outlineColor="#0000001F"
+          placeholderTextColor="#646464"
+          activeOutlineColor="#FACA4E"
+          autoCapitalize="none"
+          // onFocus={handleFocusAddBanner}
+          // onBlur={handleBlurAddBanner}
+        />
+      </View> */}
+
       <View style={styles.headerView}>
         <TouchableOpacity onPress={() => navigation?.openDrawer()}>
           <Icons.Menu />

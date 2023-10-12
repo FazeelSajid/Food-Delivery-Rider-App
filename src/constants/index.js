@@ -195,6 +195,8 @@ import LockBlack from '../Assets/svg/lockBlack.svg';
 import EditProfile from '../Assets/svg/editProfile.svg';
 import Note from '../Assets/svg/note.svg';
 
+import MapPinActive from '../Assets/svg/MapPinActive.svg';
+
 export const Icons = {
   SearchIcon,
   SearchIconInActive,
@@ -207,6 +209,7 @@ export const Icons = {
   RatingActive,
   Marker,
   MapPin,
+  MapPinActive,
   Van,
   Location,
   ChatActive,
