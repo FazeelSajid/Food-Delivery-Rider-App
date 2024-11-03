@@ -9,9 +9,33 @@ import {
 } from 'react-native-responsive-screen';
 import {Colors, Fonts} from '../../constants';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { uploadImage } from '../../utils/helpers';
 
 const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
   const navigation = useNavigation();
+
+
+  const handleUploadProfileImage = (img) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let image = {
+          uri: img?.path,
+          name: img?.name,
+          type: img?.mime,
+        };
+        console.log('image :  ', image);
+        let filePath = await uploadImage(image);
+        if (filePath) {
+          resolve(filePath);
+        } else {
+          resolve('');
+        }
+      } catch (error) {
+        console.log('error handleUploadProfileImage :  ', error);
+        resolve('');
+      }
+    });
+  };
 
   const takePhotoFromCamera = async () => {
     var options = {
@@ -21,7 +45,7 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
       },
       maxWidth: 500,
       maxHeight: 500,
-      quality: 0.5,
+      quality: 1,
     };
 
     await launchCamera(options)
@@ -40,6 +64,10 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
           };
           // setImage(image1);
           onCameraPick(image1);
+          // let image_url = await handleUploadProfileImage(image1);
+          // onCameraPick({url: image_url});
+
+          
         }
       })
       .catch(err => {
@@ -55,7 +83,7 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
       },
       maxWidth: 500,
       maxHeight: 500,
-      quality: 0.5,
+      quality: 1,
     };
 
     await launchImageLibrary(options)

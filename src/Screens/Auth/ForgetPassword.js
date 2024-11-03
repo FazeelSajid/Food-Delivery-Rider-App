@@ -217,13 +217,17 @@ const ForgetPassword = ({navigation, route}) => {
       })
         .then(response => response.json())
         .then(async response => {
-          console.log('response  :  ', response);
-          if (response?.status == false) {
+          // console.log('response  :  ', response);
+          if (response?.success == false) {
             showAlert(response?.message);
+
           } else {
+            // console.log(response.userID);
+            
             navigation.replace('Verification', {
-              data: response?.data,
-              rider_id: route?.params?.rider_id,
+              data: response?.userID,
+              rider_id: response.userID.rider_id,
+              otp: response?.otp
             });
           }
         })

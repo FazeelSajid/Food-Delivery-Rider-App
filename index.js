@@ -9,6 +9,22 @@ import {name as appName} from './app.json';
 import PushNotification, {Importance} from 'react-native-push-notification';
 
 import messaging from '@react-native-firebase/messaging';
+import Add from './src/Assets/svg/add.svg';
+
+
+
+// Function to get FCM token
+// async function getFCMToken() {
+//   const token = await messaging().getToken();
+//   if (token) {
+//     console.log('FCM Token:', token);
+//   } else {
+//     console.log('Failed to get FCM Token');
+//   }
+// }
+
+// // Call getFCMToken when the app initializes
+// getFCMToken();
 
 // Listen for incoming foreground messages
 messaging().onMessage(async remoteMessage => {
@@ -20,7 +36,7 @@ messaging().onMessage(async remoteMessage => {
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function (token) {
-    console.log('TOKEN:', token);
+    // console.log('TOKEN:', token);
     PushNotification.createChannel(
       {
         channelId: 'fcm_fallback_notification_channel', // (required)
@@ -30,6 +46,7 @@ PushNotification.configure({
         soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
         importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
         vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+        // icon : <Add/>
       },
       created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
     );

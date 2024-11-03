@@ -45,40 +45,53 @@ const Verification = ({navigation, route}) => {
     }
   };
 
+  console.log(route?.params?.otp)
+
   const handleVerifyCode = async () => {
     if (validate()) {
+
+      if (otpCode == route.params.otp) {
+        navigation?.navigate('ResetPassword', {
+                  email: route?.params?.data?.email,
+                  rider_id: route?.params?.rider_id,
+                });
+      } else {
+        setTimeout(() => {
+                  showAlert('Invalid Otp code');
+                }, 500);
+      }
       // navigation.replace('ResetPassword');
-      setLoading(true);
-      fetch(api.verify_otp, {
-        method: 'POST',
-        body: JSON.stringify({
-          email: route?.params?.data?.email,
-          otp: otpCode,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-        .then(response => response.json())
-        .then(async response => {
-          console.log('response  :  ', response);
-          if (response?.status == false) {
-            setTimeout(() => {
-              showAlert('Invalid Otp code');
-            }, 500);
-          } else {
-            navigation?.navigate('ResetPassword', {
-              email: route?.params?.data?.email,
-              rider_id: route?.params?.rider_id,
-            });
-          }
-        })
-        .catch(err => {
-          console.log('Error in Login :  ', err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      // setLoading(true);
+      // fetch(api.verify_otp, {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     email: route?.params?.data?.email,
+      //     otp: otpCode,
+      //   }),
+      //   headers: {
+      //     'Content-type': 'application/json; charset=UTF-8',
+      //   },
+      // })
+      //   .then(response => response.json())
+      //   .then(async response => {
+      //     console.log('response  :  ', response);
+      //     if (response?.status == false) {
+      //       setTimeout(() => {
+      //         showAlert('Invalid Otp code');
+      //       }, 500);
+      //     } else {
+      //       navigation?.navigate('ResetPassword', {
+      //         email: route?.params?.data?.email,
+      //         rider_id: route?.params?.rider_id,
+      //       });
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log('Error in Login :  ', err);
+      //   })
+      //   .finally(() => {
+      //     setLoading(false);
+      //   });
     }
   };
   return (

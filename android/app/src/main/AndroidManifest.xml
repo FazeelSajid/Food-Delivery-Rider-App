@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- PUSH NOTIFICATION -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -65,5 +66,8 @@
             <!-- PUSH NOTIFICATION -->
         </intent-filter>
       </activity>
+        <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyD2gv4DJD2-xSnjvdfPmdyjhbhFyPgqMrI"/>
     </application>
 </manifest>

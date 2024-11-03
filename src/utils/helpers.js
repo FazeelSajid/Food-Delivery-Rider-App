@@ -48,24 +48,41 @@ export const chooseImageFromCamera = async () => {
 
 // -------------------------------------- Firebase Notification _________________________________
 
+
 export const getUserFcmToken = async () => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      if (enabled) {
-        const fcmToken = await messaging().getToken();
-        resolve(fcmToken);
+  try {
+    const authStatus = await messaging().requestPermission();
+    console.log(authStatus, 'authStatus');
+
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    console.log(enabled, 'enabled');
+
+    if (enabled) {
+      const fcmToken = await messaging().getToken();
+      console.log(fcmToken, 'token');
+
+      if (fcmToken) {
+        return fcmToken;
       } else {
-        resolve('');
+        console.log('FCM Token is empty');
+        return '';
       }
-    } catch (error) {
-      resolve('');
+    } else {
+      console.log('Permission not granted');
+      return '';
     }
-  });
+  } catch (error) {
+    if (error.message.includes("FIS_AUTH_ERROR")) {
+      console.error('Specific Error: FIS_AUTH_ERROR - Authentication failed with Firebase Instance ID.');
+    } else {
+      console.error('Error fetching FCM Token:', error);
+    }
+    throw error;  // Rethrow error to allow external handling
+  }
 };
+
 
 export const send_Push_Notification = async body => {
   var requestOptions = {
@@ -111,7 +128,7 @@ export const uploadImage = image => {
     //   name: imageName,
     //   type: imageType,
     // };
-    console.log('image passed________________   :  ', image);
+    // console.log('image passed________________   :  ', image);
     formData.append('file_type', 'image');
     formData.append('image', image);
     await fetch(api.upload_image, {
@@ -121,6 +138,8 @@ export const uploadImage = image => {
     })
       .then(response => response.json())
       .then(async response => {
+        // console.log(response);
+        
         if (response?.status == true) {
           resolve(response?.image_url);
         } else {

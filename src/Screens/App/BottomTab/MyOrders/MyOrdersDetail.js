@@ -85,7 +85,7 @@ const MyOrdersDetail = ({navigation, route}) => {
       rider_id: rider_id,
       order_id: route?.params?.id,
       action: status,
-      reason: 'hardcoded reason',
+      reason: 'reason',
     };
     console.log(data);
     fetch(api.accept_reject_order_by_rider, {
@@ -233,14 +233,18 @@ const MyOrdersDetail = ({navigation, route}) => {
     fetch(api.get_order_by_id + id)
       .then(response => response.json())
       .then(response => {
-        if (response.status == true) {
+
+        // console.log(response);
+        if (response.error == false) {
+          
+          
           setOrderDetails(response.result);
           if (response?.result?.order_status == 'out_for_delivery') {
             setSelected(0);
           } else if (response?.result?.order_status == 'delievered') {
             setSelected(1);
           } else {
-            setSelected(-1);
+            setSelected(1);
           }
 
           let cart_item =
@@ -259,6 +263,7 @@ const MyOrdersDetail = ({navigation, route}) => {
 
   useEffect(() => {
     let id = route?.params?.id;
+    
     console.log('order details id :  ', id);
     if (id) {
       getDetail(id);

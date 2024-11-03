@@ -29,7 +29,7 @@ export default STYLE = StyleSheet.create({
     color: '#02010E',
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(3.5),
-    marginBottom: hp(7),
+    marginBottom: hp(4),
   },
   txtForgotPassword: {
     color: Colors.Orange,
@@ -43,7 +43,7 @@ export default STYLE = StyleSheet.create({
     color: '#91909A',
     fontFamily: Fonts.PlusJakartaSans_Regular,
     fontSize: RFPercentage(2),
-    marginVertical: hp(5),
+    marginTop: hp(3),
   },
   socialIconContainer: {
     flexDirection: 'row',
@@ -78,5 +78,21 @@ export default STYLE = StyleSheet.create({
     lineHeight: 20,
     marginTop: 10,
     marginBottom: hp(12),
+  },
+  rowViewSB1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  rowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }, 
+  rbSheetHeading: {
+    color: Colors.Text,
+    fontFamily: Fonts.PlusJakartaSans_Bold,
+    fontSize: RFPercentage(2),
   },
 });

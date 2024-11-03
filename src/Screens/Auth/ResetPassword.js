@@ -80,6 +80,9 @@ const ResetPassword = ({navigation, route}) => {
     }
   };
 
+  console.log(route?.params?.rider_id);
+  
+
   const handleUpdate = async () => {
     if (validate()) {
       Keyboard.dismiss();

@@ -19,10 +19,13 @@ import CButton from '../../../../components/Buttons/CButton';
 import PaymentCard from '../../../../components/Cards/PaymentCard';
 import CRBSheetComponent from '../../../../components/BottomSheet/CRBSheetComponent';
 import CInput from '../../../../components/TextInput/CInput';
+import { useSelector } from 'react-redux';
 
 const MYWallet = ({navigation, route}) => {
   const ref_RBTopUpSheet = useRef();
   const ref_RBWithdrawSheet = useRef();
+  const { rider_id } = useSelector(store => store.auth)
+
 
   const [loading, setLoading] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -79,14 +82,16 @@ const MYWallet = ({navigation, route}) => {
 
   const getData = async () => {
     setLoading(true);
-    let amount = await GetWalletAmount();
+    let amount = await GetWalletAmount(rider_id);
     console.log({amount});
     setTotalAmount(amount);
     // setLoading(false);
-    let rider_id = await AsyncStorage.getItem('rider_id');
+    // let rider_id = await AsyncStorage.getItem('rider_id');
     fetch(api.get_rider_orders + rider_id)
       .then(response => response.json())
       .then(response => {
+        console.log ( 'Rider Order Fetched from Wallet screen', {response});
+        
         let list = response?.result ? response?.result : [];
         let filteredData = list?.filter(
           item => item?.cart_items_Data?.length > 0,
@@ -114,7 +119,7 @@ const MYWallet = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.White}}>
-      <Loader loading={loading} />
+      {/* <Loader loading={loading} /> */}
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}>
         <View style={styles.headerContainer}>
           <StackHeader

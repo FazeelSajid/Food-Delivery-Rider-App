@@ -57,6 +57,13 @@ import Languages from '../Screens/App/Drawer/Languages';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CardForTopUp from '../Screens/App/CardInfo/CardForTopUp';
 import CardForWithdraw from '../Screens/App/CardInfo/CardForWithdraw';
+import { useSelector } from 'react-redux';
+import SearchOrder from '../Screens/App/BottomTab/Dashboard/SearchOrders';
+import OrderDetails from '../Screens/App/Home/OrderDetails';
+import { useDispatch } from 'react-redux';
+import { resetState } from '../redux/AuthSlice';
+import OrderMapScreen from '../Screens/App/Home/OrderMapScreen';
+import HistoryOrderDetailScreen from '../Screens/App/Home/HistoryOrderScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -94,11 +101,11 @@ function DashboardTabs() {
       />
 
       <Tab.Screen
-        name="My Orders"
-        component={MyOrders}
+        name="MyWallet"
+        component={MyWallet}
         options={{
           tabBarIcon: ({focused}) =>
-            focused ? <Icons.OrdersActive /> : <Icons.Order />,
+            <Icons.Wallet />,
         }}
       />
       <Tab.Screen
@@ -119,6 +126,7 @@ const CustomDrawerContent = props => {
   const ref_RBSheet = useRef();
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
   return (
     <DrawerContentScrollView
       {...props}
@@ -247,8 +255,9 @@ const CustomDrawerContent = props => {
         title={'Logout?'}
         description={'Do you want to logout?'}
         okText={'LOGOUT'}
+        height={360}
         onOk={async () => {
-          await AsyncStorage.clear();
+        dispatch(resetState())
 
           ref_RBSheet?.current?.close();
           // navigation?.popToTop();
@@ -306,8 +315,13 @@ const DrawerNavigation = () => {
 // _____________________________ Drawer_Navigation --------------------------------
 
 function Router() {
+  const rider_id = useSelector(store => store.auth.rider_id)
+  console.log(rider_id, 'router');
+  
+
   return (
     <Stack.Navigator
+    initialRouteName={rider_id ? 'Drawer' : 'OnBoarding' }
       screenOptions={{
         headerShown: false,
       }}>
@@ -326,7 +340,10 @@ function Router() {
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="Notifications" component={Notifications} />
       <Stack.Screen name="MyOrdersDetail" component={MyOrdersDetail} />
+      <Stack.Screen name="OrdersDetail" component={OrderDetails} />
+      <Stack.Screen name="OrderMapScreen" component={OrderMapScreen} />
       <Stack.Screen name="OrderHistory" component={OrderHistory} />
+      <Stack.Screen name="HistoryOrderDetailScreen" component={HistoryOrderDetailScreen} />
       <Stack.Screen name="UpdateDocuments" component={UpdateDocuments} />
       <Stack.Screen name="UpdateVehicleInfo" component={UpdateVehicleInfo} />
       <Stack.Screen name="Conversation" component={Conversation} />
@@ -336,6 +353,7 @@ function Router() {
       <Stack.Screen name="Drawer" component={DrawerNavigation} />
 
       <Stack.Screen name="ComplaintDetail" component={ComplaintDetail} />
+      <Stack.Screen name="SearchOrder" component={SearchOrder} />
 
       <Stack.Screen name="CardForTopUp" component={CardForTopUp} />
       <Stack.Screen name="CardForWithdraw" component={CardForWithdraw} />
