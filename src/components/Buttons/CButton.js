@@ -31,8 +31,12 @@ const CButton = ({
   iconImage,
   activeOpacity,
   textStyle,
+  leftIcon,
+  borderColor
 }) => {
   let isDarkMode = false;
+  // console.log({marginTop});
+  
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity ? activeOpacity : 0.8}
@@ -43,7 +47,7 @@ const CButton = ({
         width: width ? width : wp(90),
         padding: padding ? padding : 0,
         borderWidth: transparent ? 1 : 0,
-        borderColor: Colors.Orange,
+        borderColor: borderColor? borderColor : Colors.Orange,
         backgroundColor: transparent
           ? 'transparent'
           : bgColor
@@ -51,7 +55,7 @@ const CButton = ({
           : isDarkMode
           ? Colors.Text
           : Colors.Orange,
-        marginTop: marginTop ? marginTop : hp(3),
+        marginTop: marginTop ? marginTop : hp(1.5),
         ...style,
       }}
       onPress={onPress}>
@@ -61,6 +65,7 @@ const CButton = ({
           size={'small'}
         />
       )}
+      {leftIcon && leftIcon}
       {title && (
         <Text
           style={{
@@ -78,7 +83,7 @@ const CButton = ({
               ? Colors.White
               : Colors.White,
             fontSize: txtSize,
-            textTransform: 'uppercase',
+            // textTransform: 'uppercase',
             ...textStyle,
           }}>
           {title}

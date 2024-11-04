@@ -11,9 +11,12 @@ import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../../../components/Loader';
 import NoDataFound from '../../../../components/NotFound/NoDataFound';
+import { useSelector } from 'react-redux';
 
 const Complaints = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
+  const { rider_id } = useSelector(store => store.auth)
+
   const [data, setData] = useState([
     // {
     //   id: 0,
@@ -84,7 +87,7 @@ const Complaints = ({navigation, route}) => {
   ]);
 
   const getData = async () => {
-    let rider_id = await AsyncStorage.getItem('rider_id');
+    // let rider_id = await AsyncStorage.getItem('rider_id');
     fetch(api.get_all_complaints_by_rider + rider_id)
       .then(response => response.json())
       .then(response => {

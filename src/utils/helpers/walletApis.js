@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../constants/api';
+import { useSelector } from 'react-redux';
 
-export const GetWalletAmount = async () => {
+export const GetWalletAmount = async (rider_id) => {
   return new Promise(async (resolve, reject) => {
-    let rider_id = await AsyncStorage.getItem('rider_id');
+    // let rider_id = await AsyncStorage.getItem('rider_id');
+    // const { rider_id } = useSelector(store => store.auth)
     fetch(api.get_available_payment_of_rider + rider_id)
       .then(response => response.json())
       .then(response => {

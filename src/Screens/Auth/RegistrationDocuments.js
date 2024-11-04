@@ -164,7 +164,7 @@ const RegistrationDocuments = ({navigation, route}) => {
   };
 
   const handleSubmit = async () => {
-    if (validate()) {
+    if (true) {
       setLoading(true);
       let {
         country,
@@ -310,7 +310,7 @@ const RegistrationDocuments = ({navigation, route}) => {
             title="Continue"
             marginTop={15}
             // onPress={() => ref_RBSheet?.current?.open()}
-            onPress={() => handleSubmit()}
+            onPress={() => navigation.replace('SignIn')}
           />
         </View>
       </ScrollView>

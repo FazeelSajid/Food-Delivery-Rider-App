@@ -32,34 +32,34 @@ const Home = ({navigation, route}) => {
       price: '14:20',
     },
   ]);
-  const [assignedOrders, setAssignedOrders] = useState([
-    {
-      id: 0,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-    {
-      id: 1,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-  ]);
-  const [orderHistory, setOrderHistory] = useState([
-    {
-      id: 0,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-    {
-      id: 1,
-      title: 'Green Salad',
-      image: Images.salad,
-      price: '14:20',
-    },
-  ]);
+  // const [assignedOrders, setAssignedOrders] = useState([
+  //   {
+  //     id: 0,
+  //     title: 'Green Salad',
+  //     image: Images.salad,
+  //     price: '14:20',
+  //   },
+  //   {
+  //     id: 1,
+  //     title: 'Green Salad',
+  //     image: Images.salad,
+  //     price: '14:20',
+  //   },
+  // ]);
+  // const [orderHistory, setOrderHistory] = useState([
+  //   {
+  //     id: 0,
+  //     title: 'Green Salad',
+  //     image: Images.salad,
+  //     price: '14:20',
+  //   },
+  //   {
+  //     id: 1,
+  //     title: 'Green Salad',
+  //     image: Images.salad,
+  //     price: '14:20',
+  //   },
+  // ]);
 
   return (
     <View style={styles.container}>

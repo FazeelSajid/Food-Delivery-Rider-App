@@ -14,10 +14,13 @@ import {showAlert} from '../../../../utils/helpers';
 import Loader from '../../../../components/Loader';
 import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 const UpdatePassword = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
+  const { rider_id } = useSelector(store => store.auth)
+
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd();
@@ -64,7 +67,7 @@ const UpdatePassword = ({navigation, route}) => {
 
   const handleUpdatePassword = async () => {
     if (validate()) {
-      let rider_id = await AsyncStorage.getItem('rider_id');
+      // let rider_id = await AsyncStorage.getItem('rider_id');
       Keyboard.dismiss();
       // ref_RBSheet?.current?.open();
       setLoading(true);
@@ -81,7 +84,7 @@ const UpdatePassword = ({navigation, route}) => {
         .then(response => response.json())
         .then(async response => {
           console.log('response  of update password :  ', response);
-          if (response?.status == false) {
+          if (response?.error == true) {
             showAlert(response?.message);
           } else {
             setIsVisible(true);

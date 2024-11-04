@@ -24,20 +24,64 @@ import {useKeyboard} from '../../utils/UseKeyboardHook';
 import {getUserFcmToken, showAlert} from '../../utils/helpers';
 import api from '../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CRBSheetComponent from '../../components/BottomSheet/CRBSheetComponent';
+import { setRiderDetails, setSignUpWith, setRiderId } from '../../redux/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import messaging from '@react-native-firebase/messaging';
+import PopUp from '../../components/Popup/PopUp';
 
 const SignIn = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
+  const btmSheetRef = useRef()
+  const { signUpWith } = useSelector(store => store.auth)
+  const dispatch = useDispatch();
+  const [showPopUp, setShowPopUp] = useState(false)
+  const [popUpColor, setPopUpColor] = useState('')
+  const [PopUpMesage, setPopUpMesage] = useState('')
+
+  const showBtmSheet = () => {
+    btmSheetRef?.current?.open()
+  }
+  const closeBtmSheet = () => {
+    btmSheetRef?.current?.close()
+  }
+
+  const ItemSeparator = () => (
+    <View
+      style={{
+        height: hp(0.1),
+        marginVertical: 10,
+        backgroundColor: '#00000026',
+      }}
+    />
+  );
+
 
   useEffect(() => {
     // scrollViewRef.current?.scrollToEnd();
     scrollViewRef.current?.scrollTo({y: 150});
   }, [keyboardHeight]);
 
+  const toggleSelection = (param) => {
+    if (param === 'phone'){
+      signUpWith === param ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
+      navigation.navigate('SignUpWithPhone')
+      closeBtmSheet()
+    }
+    if (param === 'email'){
+      signUpWith === 'email' ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
+      navigation.navigate('SignUpWithEmail')
+      closeBtmSheet()
+    }
+  }
+
   const ref_RBSheet = useRef();
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const [riderId, setRiderId] = useState('');
+  const [riderId, setRiderid] = useState('');
   const [password, setPassword] = useState('');
   const [count, setCount] = useState(1);
 
@@ -76,57 +120,110 @@ const SignIn = ({navigation, route}) => {
 
   const handleLogin = async () => {
     if (validate()) {
-      Keyboard.dismiss();
-      setLoading(true);
-      console.log({riderId, password});
-      let fcm_token = await getUserFcmToken();
-      fetch(api.login, {
-        method: 'POST',
-        body: JSON.stringify({
-          rider_id: riderId,
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?[0-9\s-]+$/;
+    
+
+      if (emailRegex.test(riderId)) {
+        Keyboard.dismiss();
+        setLoading(true);
+        const fcmToken = await messaging().getToken();
+        console.log(fcmToken, 'token');
+  
+        const body = {
+          email: riderId.toLocaleLowerCase(),
           password: password,
-          fcm_token: fcm_token,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-        .then(response => response.json())
-        .then(async response => {
-          console.log('response  :  ', response);
-          if (response?.status == false) {
-            // showAlert(response?.message);
-            showAlert('Invalid Credentials');
-          } else {
-            // // showAlert(response.message, 'green');
-            await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
-            await AsyncStorage.setItem(
-              'rider_detail',
-              JSON.stringify(response?.result),
-            );
-            let wallet = await createRiderWallet(response?.result?.rider_id);
-            console.log('wallet  :  ', wallet);
-            // // navigation?.popToTop()
-            // navigation?.replace('Drawer');
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Drawer'}],
-            });
-          }
+          fcm_token: fcmToken,
+          signup_type: 'email'
+
+        }
+
+      
+
+        fetch(api.login, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
         })
-        .catch(err => {
-          console.log('Error in Login :  ', err);
-          showAlert('Something went wrong');
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+          .then(response => response.json())
+          .then(async response => {
+            console.log('response  :  ', response);
+            console.log({body});
+            
+            if (response?.status == false) {
+              setShowPopUp(true)
+              setPopUpColor('red')
+              setPopUpMesage(response?.message)
+              setTimeout(()=>{
+                setShowPopUp(false)
+              }, 1000)
+              // showAlert(response?.message);
+              // showAlert('Invalid Credentials');
+            } else {
+              console.log(response?.results);
+              
+              setShowPopUp(true)
+              setPopUpMesage('Logged in Successfully')
+              setPopUpColor(Colors.Orange)
+              setTimeout(()=>{
+                setShowPopUp(false)
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Drawer'}],
+                });
+              }, 1000)
+              // // showAlert(response.message, 'green');
+              dispatch(setRiderId(response?.user?.rider_id))
+              dispatch(setRiderDetails(response?.user))
+              // await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
+              // await AsyncStorage.setItem(
+              //   'rider_detail',
+              //   JSON.stringify(response?.result),
+              // );
+              let wallet = await createRiderWallet(response?.result?.rider_id);
+              console.log('wallet  :  ', wallet);
+            
+            }
+          })
+          .catch(err => {
+            console.log('Error in Login :  ', err);
+            // showAlert('Something went wrong');
+            setShowPopUp(true)
+            setPopUpColor('red')
+            setPopUpMesage('Something went wrong');
+            setTimeout(()=>{
+              setShowPopUp(false)
+            }, 1000)
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }else{
+        // setLoading(true);
+        console.log('phone');
+        
+        const fcmToken = await messaging().getToken();
+        console.log(fcmToken, 'token');
+
+       const body = {
+          email:  riderId,
+          password: password,
+          fcm_token: fcmToken,
+        }
+        console.log(body ,'Phone ');
+        
+      }
+     
     }
   };
 
   return (
     <View style={STYLE.container}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
+      { showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={{flexGrow: 1}}
@@ -143,9 +240,9 @@ const SignIn = ({navigation, route}) => {
           <Text style={STYLE.heading}>Sign In </Text>
 
           <CInput
-            placeholder="Rider’s ID"
+            placeholder="Email/Phone Number"
             value={riderId}
-            onChangeText={text => setRiderId(text)}
+            onChangeText={text => setRiderid(text)}
           />
 
           <CInput
@@ -166,13 +263,9 @@ const SignIn = ({navigation, route}) => {
 
           <TouchableOpacity
             onPress={() => {
-              if (riderId?.length == 0) {
-                showAlert('Please Enter a valid rider id');
-              } else {
                 navigation.navigate('ForgetPassword', {
                   rider_id: riderId,
                 });
-              }
             }}
             style={{
               width: 190,
@@ -237,6 +330,50 @@ const SignIn = ({navigation, route}) => {
           ref_RBSheet?.current?.close();
         }}
       />
+      {/* <CRBSheetComponent
+          height={170}
+          refRBSheet={btmSheetRef}
+          content={
+            <View style={{ width: wp(90) }} >
+              <View style={STYLE.rowViewSB1}>
+                <Text style={STYLE.rbSheetHeading}>Select an option</Text>
+                <TouchableOpacity
+                  onPress={() => closeBtmSheet()}>
+                  <Ionicons name={'close'} size={22} color={'#1E2022'} />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity style={STYLE.rowView} onPress={() =>toggleSelection('phone')} >
+                <RadioButton color={Colors.Orange} uncheckedColor={Colors.Orange} status={signUpWith === 'phone' ? 'checked' : 'unchecked'} onPress={() =>toggleSelection('phone')}/>
+                <Text
+                  style={{
+                    color: '#56585B',
+                    fontFamily: Fonts.PlusJakartaSans_Regular,
+                    fontSize: RFPercentage(2),
+                    marginLeft: wp(4)
+                  }}>
+                  Phone Number
+                </Text>
+
+              </TouchableOpacity  >
+              <ItemSeparator />
+              <TouchableOpacity style={STYLE.rowView} onPress={() => toggleSelection('email')}>
+                <RadioButton color={Colors.Orange} uncheckedColor={Colors.Orange} status={signUpWith === 'email' ? 'checked' : 'unchecked'} onPress={() => toggleSelection('email')} />
+                <Text
+                  style={{
+                    color: '#56585B',
+                    fontFamily: Fonts.PlusJakartaSans_Regular,
+                    fontSize: RFPercentage(2),
+                    marginLeft: wp(4)
+                  }}>
+                  Email
+                </Text>
+
+              </TouchableOpacity  >
+            </View>
+          }
+
+        /> */}
     </View>
   );
 };

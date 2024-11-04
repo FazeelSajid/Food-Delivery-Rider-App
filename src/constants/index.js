@@ -18,6 +18,7 @@ export const Colors = {
   Text: '#0A212B',
   AvatarBG: '#FF572233',
   Border: '#B0B0B0',
+  grayText: '#56585B'
 };
 
 export const Fonts = {
@@ -103,7 +104,6 @@ export const Images = {
   authBG: require('../Assets/png/Auth/authBG.png'),
   google: require('../Assets/png/Auth/google.png'),
 };
-
 import SearchIcon from '../Assets/svg/search.svg';
 import SearchIconInActive from '../Assets/svg/searchInactive.svg';
 import Heart from '../Assets/svg/heart.svg';
@@ -123,7 +123,6 @@ import Delete from '../Assets/svg/delete.svg';
 import Remove from '../Assets/svg/remove.svg';
 import Edit from '../Assets/svg/edit.svg';
 import Phone from '../Assets/svg/phone.svg';
-
 import OrderInProcess from '../Assets/svg/order_in_process.svg';
 import OrderOutForDelivery from '../Assets/svg/order_out_for_delivery.svg';
 import OrderPlaced from '../Assets/svg/order_placed.svg';
@@ -194,6 +193,10 @@ import LogoutIcon from '../Assets/svg/logout.svg';
 import LockBlack from '../Assets/svg/lockBlack.svg';
 import EditProfile from '../Assets/svg/editProfile.svg';
 import Note from '../Assets/svg/note.svg';
+import TopSearch from '../Assets/svg/topSearch.svg';
+import Close from '../Assets/svg/close.svg';
+
+
 
 import MapPinActive from '../Assets/svg/MapPinActive.svg';
 
@@ -273,13 +276,13 @@ export const Icons = {
   MenuActive,
   NotificationActive,
   NotificationWithDot,
-
+  Close,
   Discover,
   DiscoverActive,
   Order,
   OrdersActive,
   LogoutIcon,
-
+  TopSearch,
   EditProfile,
   Note,
   LockBlack,
