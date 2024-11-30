@@ -34,7 +34,7 @@ const HistoryOrderDetailScreen = ({route, navigation}) => {
         // setAccepted(route.params?.item?.accepted_by_rider)
 
     }, [])
-console.log(orderDetails);
+console.log(orderDetails?.comments);
 
 
     useEffect(() => {
@@ -144,8 +144,12 @@ console.log(orderDetails);
 
       {/* Special Instructions */}
       {/* <View style={styles.infoContainer}> */}
+
+      {orderDetails?.comments && <View>  
         <Text style={styles.sectionTitle}>Special Instructions</Text>
         <Text style={styles.feedbackText}>{orderDetails?.comments}</Text>
+        </View>}
+
       {/* </View> */}
 
       {/* Payment Details */}

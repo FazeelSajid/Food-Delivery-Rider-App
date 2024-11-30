@@ -30,6 +30,8 @@ const RBSheetConfirmation = ({
   onCancel,
   onOk,
   description,
+  svg
+
 }) => {
   const navigation = useNavigation();
   return (
@@ -50,20 +52,39 @@ const RBSheetConfirmation = ({
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{width: wp(87), alignItems: 'center'}}>
-            <View
+            {/* <View
               style={{
                 height: 150,
                 width: 150,
                 marginBottom: 10,
                 //   aspectRatio: 1,
-              }}>
-              <Lottie
-                source={Images.success_check}
-                autoPlay
-                loop={true}
-                resizeMode="cover"
-              />
-            </View>
+              }}> */}
+               {
+                  svg ? <View style={{
+                    height: 120,
+                    // width: 150,
+                    marginBottom: 10,
+                    //   aspectRatio: 1,
+                  }} >
+                    {svg}
+                  </View> :   
+                  <View style={{
+                    height: 150,
+                    width: 150,
+                    marginBottom: 10,
+                    //   aspectRatio: 1,
+                  }}>
+                     <Lottie
+                  source={Images.success_check}
+                  autoPlay
+                  loop={true}
+                  resizeMode="cover"
+                />
+                  </View>
+                 
+                }
+
+            {/* </View> */}
             <Text
               style={{
                 color: textColor ? textColor : '#1D1D20',
@@ -85,7 +106,8 @@ const RBSheetConfirmation = ({
                 {description}
               </Text>
             )}
-            <View
+            {
+              !svg ?  <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -109,7 +131,15 @@ const RBSheetConfirmation = ({
                 marginTop={hp(5)}
                 onPress={onOk}
               />
-            </View>
+            </View> :   <CButton
+                title={okText ? okText : 'DELETE'}
+                width={wp(70)}
+                height={hp(6)}
+                marginTop={hp(5)}
+                onPress={onOk}
+              />
+            }
+           
           </View>
         </ScrollView>
       </RBSheet>

@@ -2,7 +2,7 @@ import {BASE_URL} from '../utils/globalVariables';
 
 const api = {
   //universal apis
-  upload_image: BASE_URL + 'fileUpload/upload',
+  upload_image: BASE_URL + 'uploadImage',
   send_email: BASE_URL + 'rider/forgetpassword',
   verify_otp: BASE_URL + 'rider/otpVerification',
   update_password: BASE_URL + 'rider/updatePassword',
@@ -27,16 +27,26 @@ const api = {
 
   update_order_status: BASE_URL + 'orders/updateOrderStatus',
   updateOrderStatusByRider: BASE_URL + 'orders/updateOrderStatusByRider',
-  get_all_orders : BASE_URL + 'orders/getAllOrders',
+  get_all_orders : BASE_URL + 'orders/getAllOrders?page=1&limit=10&order_status=placed',
+  distribute_payment_order : BASE_URL + `wallet/distribute?order_id=`,
 
   // wallet
   create_rider_wallet: BASE_URL + 'wallet/createRiderWallet',
   get_available_payment_of_rider:
     BASE_URL + 'wallet/getAvaliablePaymentsOfRider?rider_id=',
+    add_payment_to_Rider_wallet:
+    BASE_URL + 'wallet/makeRiderWalletPayment',
+    getRiderTransactionHistory: BASE_URL+'wallet/getRiderTransactions?rider_id=',
   // complaints
   get_all_complaints_by_rider:
     BASE_URL + 'complaint/getAllComplaintsByRider_id?rider_id=',
 
+// Rating
+
+GetRiderRating: BASE_URL + 'riderRating/getByRider?rider_id=',
+    // Stripe
+    create_customer_stripe_card:
+    BASE_URL + 'payment/getCustomerStripeId?customer_id=',
   // notifications
   get_all_notifications:
     BASE_URL + 'notifications/getNotificationRider?rider_id=',

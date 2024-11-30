@@ -37,6 +37,9 @@ const Profile = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const {rider_id, rider_details} = useSelector(store => store.auth)
+
+  console.log(rider_id);
+  
   
 
 
@@ -219,7 +222,7 @@ const Profile = ({navigation, route}) => {
       <View style={styles.userContainer}>
         <Avatar.Image
           // source={Images.user7}
-          source={{uri: BASE_URL_IMAGE + rider_details?.photo}}
+          source={{uri: rider_details?.photo}}
           size={wp(20)}
           style={{
             backgroundColor: Colors.Orange,
@@ -262,28 +265,28 @@ const Profile = ({navigation, route}) => {
             <View style={styles.documentContainer}>
               <Image
                 // source={Images.idCardFront}
-                source={{uri: BASE_URL_IMAGE + rider_details?.id_card_front_image}}
+                source={{uri:rider_details?.id_card_front_image}}
                 style={styles.documentImage}
               />
             </View>
             <View style={styles.documentContainer}>
               <Image
                 // source={Images.idCardBack}
-                source={{uri: BASE_URL_IMAGE + rider_details?.id_card_back_image}}
+                source={{uri:rider_details?.id_card_back_image}}
                 style={styles.documentImage}
               />
             </View>
             <View style={styles.documentContainer}>
               <Image
                 // source={Images.drivingLicense}
-                source={{uri: BASE_URL_IMAGE + rider_details?.license_front_image}}
+                source={{uri:rider_details?.license_front_image}}
                 style={styles.documentImage}
               />
             </View>
             <View style={styles.documentContainer}>
               <Image
                 // source={Images.drivingLicense}
-                source={{uri: BASE_URL_IMAGE + rider_details?.license_back_image}}
+                source={{uri:rider_details?.license_back_image}}
                 style={styles.documentImage}
               />
             </View>

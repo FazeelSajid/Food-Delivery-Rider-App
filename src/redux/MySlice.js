@@ -21,6 +21,7 @@ const MySlice = createSlice({
     setPopUpMesage(state, action) {
       state.PopUpMesage = action.payload;
     },
+   
   },
 });
 

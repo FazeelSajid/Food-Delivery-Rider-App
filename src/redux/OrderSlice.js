@@ -7,6 +7,7 @@ const OrderSlice = createSlice({
     order_history: [],
     assigned_orders: [],
     isOrderUpdate: true,
+    updatedOrder: {}
   },
   reducers: {
     setOrderRequests(state, action) {
@@ -21,6 +22,12 @@ const OrderSlice = createSlice({
     setIsOrderUpdate(state, action) {
       state.isOrderUpdate = action.payload;
     },
+    setUpdatedOrder(state, action) {
+      state.updatedOrder = action.payload;
+    },
+    setUpdatedOrdr(state, action) {
+      state.updatedOrder = {...state.updatedOrder, ...action.payload};
+    },
   },
 });
 
@@ -29,6 +36,8 @@ export const {
   setAssignedOrders,
   setOrderHistory,
   setIsOrderUpdate,
+  setUpdatedOrder,
+  setUpdatedOrdr
 } = OrderSlice.actions;
 
 export default OrderSlice.reducer;

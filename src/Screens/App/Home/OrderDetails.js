@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, RefreshCon
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { googleMapKey } from '../../../utils/globalVariables';
-import { Colors, Fonts } from '../../../constants';
+import { BASE_URL, googleMapKey } from '../../../utils/globalVariables';
+import { Colors, Fonts, Icons } from '../../../constants';
 import StartLocation from '../../../Assets/svg/StartLocation.svg';
 import MapPinActive from '../../../Assets/svg/Location.svg';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -15,6 +15,10 @@ import PopUp from '../../../components/Popup/PopUp';
 import { setPopUpColor, setPopUpMesage, setShowPopUp } from '../../../redux/MySlice';
 import { setIsOrderUpdate } from '../../../redux/OrderSlice';
 import api from '../../../constants/api';
+import RBSheetConfirmation from '../../../components/BottomSheet/RBSheetConfirmation';
+import Alert from '../../../Assets/svg/alert.svg';
+import { setContacts } from '../../../redux/AuthSlice';
+import { io } from 'socket.io-client';
 
 
 
@@ -24,20 +28,88 @@ const OrderDetails = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
     const [selected, setSelected] = useState(0);
-    const { rider_id } = useSelector(store => store.auth)
-    let { isOrderUpdate } = useSelector(store => store.order);
+    const { rider_id, contacts } = useSelector(store => store.auth)
+    let { isOrderUpdate, updatedOrder } = useSelector(store => store.order);
     const [orderStatus, setOrderStatus] = useState()
     const [accepted, setAccepted] = useState()
     const dispatch = useDispatch()
 
+    const ref_RBSheet = useRef()
+    const alert_RBSheet = useRef()
+    const [BtmSheetValues, setBtmSheetValues] = useState({
+        title: '',
+        btnText: '',
+        order_Id: 0,
+        status: '',
+        restaurantId: '',
+        amountToTransfer: 0,
+        payment_option: ''
+    })
+    // console.log({updatedOrder});
+    useEffect(() => {
+        const newSocket = io(BASE_URL);
+        // setSocket(newSocket);
+    
+        // Fetch contacts on socket connection
+        newSocket.on('connect', () => {
+            newSocket.emit('getContacts', { rider_id }); 
+        });
+    
+        // Listen for contacts data
+        newSocket.on('contacts', (contactsData) => {
+            dispatch(setContacts(contactsData));  
+    
+            // console.log({contactsData});
+            
+    
+            
+        });
+    
+    
+        newSocket.on('error', (error) => {
+            console.error('Socket Error:', error.message);
+        });
+    
+        // Cleanup on component unmount
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []);
+
+
+    function getRoomIdByRestaurantId(restaurantId) {
+        for (const item of contacts) {
+            if (item.restaurant_id === restaurantId) {
+                console.log(item.room_id);
+                
+                return item.room_id; // Return the room_id if the restaurant_id matches
+            }
+        }
+        return null; // Return null if no match is found
+    }
+
+    function getRoomIdByCustomerId(customerId) {
+        for (const item of contacts) {
+            if (item.customer_id === customerId) {
+                return item.room_id; // Return the room_id if the customer_id matches
+            }
+        }
+        return null; // Return null if no match is found
+    }
+
+    const RestaruantContact = { "customer_id": null, "receiver_id": updatedOrder?.restaurantData?.restaurant_id, "receiver_type": "restaurant", "restaurant_id": updatedOrder?.restaurantData?.restaurant_id, "rider_id": rider_id, "room_id": getRoomIdByRestaurantId(updatedOrder?.restaurantData?.restaurant_id), "sender_id": rider_id, "sender_type": "rider", "restaurant_name": updatedOrder?.restaurantData?.user_name }
+    const customerContact = { "customer_id": updatedOrder?.customerData?.customer_id, "receiver_id": updatedOrder?.customerData?.customer_id, "receiver_type": "customer", "restaurant_id": null, "rider_id":rider_id, "room_id": getRoomIdByCustomerId(updatedOrder?.customerData?.customer_id), "sender_id": rider_id, "sender_type": "rider", "customer_name": updatedOrder?.customerData?.user_name }
+
+    // console.log({RestaruantContact});
+
     // Dummy locations for map markers and polyline
     const pickupLocation = {
-        latitude: orderDetails?.restaurantData?.latitude, // Replace with destination latitude
-        longitude: orderDetails?.restaurantData?.longitude, // Replace with origin longitude
+        latitude: updatedOrder?.restaurantData?.latitude, // Replace with destination latitude
+        longitude: updatedOrder?.restaurantData?.longitude, // Replace with origin longitude
     };
     const dropoffLocation = {
-        latitude: orderDetails?.locationData?.latitude, // Replace with destination latitude
-        longitude: orderDetails?.locationData?.longitude, // Replace with destination longitude
+        latitude: updatedOrder?.locationData?.latitude, // Replace with destination latitude
+        longitude: updatedOrder?.locationData?.longitude, // Replace with destination longitude
     };
 
     const getDetail = id => {
@@ -46,11 +118,11 @@ const OrderDetails = ({ navigation, route }) => {
             .then(response => response.json())
             .then(response => {
 
-                console.log('Order iD  +++++++++++ ', id, { response });
+                // console.log('Order iD  +++++++++++ ', id, { response });
                 if (response.error == false) {
 
 
-                    setOrderDetails(response.result);
+                    // setOrderDetails(response.result);
                     // if (response?.result?.order_status == 'out_for_delivery') {
                     //     setSelected(0);
                     // } else if (response?.result?.order_status == 'delievered') {
@@ -62,23 +134,24 @@ const OrderDetails = ({ navigation, route }) => {
 
 
                 } else {
-                    setOrderDetails(route?.params?.item);
+                    // setOrderDetails(route?.params?.item);
                 }
             })
             .catch(err => console.log('error : ', err))
             .finally(() => setLoading(false));
     };
+
     useEffect(() => {
-        setOrderDetails(route?.params?.item)
+        // setOrderDetails(route?.params?.item)
         // setOrderStatus(route?.params?.item?.order_status)
         // setAccepted(route.params?.item?.accepted_by_rider)
-        getDetail(route?.params?.item?.order_id);
+        // getDetail(route?.params?.item?.order_id);
 
     }, [isOrderUpdate])
 
 
     useEffect(() => {
-        if (orderDetails) {
+        if (updatedOrder) {
             if (mapRef.current) {
                 mapRef.current.fitToCoordinates([pickupLocation, dropoffLocation], {
                     edgePadding: { top: 200, right: 100, bottom: 200, left: 100 }, // Adjust padding as needed
@@ -90,72 +163,110 @@ const OrderDetails = ({ navigation, route }) => {
     }, [pickupLocation, dropoffLocation]);
 
 
-    const updateOrderDeliveryStatus = async (status, order_id, rider_id, dispatch, isOrderUpdate) => {
-        let data = {
-            order_id: order_id,
-            order_status: status, //out_for_delivery, delivered
-            rider_id: rider_id
+    // const updateOrderDeliveryStatus = async (status, order_id, rider_id, dispatch, isOrderUpdate) => {
+    //     let data = {
+    //         order_id: order_id,
+    //         order_status: status, //out_for_delivery, delivered
+    //         rider_id: rider_id
+    //     }
+    //     console.log({ data, });
+    //     console.log({ isOrderUpdate });
+    //     fetch(api.updateOrderStatusByRider, {
+    //         method: 'PUT',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-type': 'application/json; charset=UTF-8',
+    //         },
+    //     })
+    //         .then(response => response.json())
+    //         .then(async response => {
+    //             console.log('response  :  ', response);
+    //             if (response?.error == true) {
+    //                 dispatch(setShowPopUp(true))
+    //                 dispatch(setPopUpColor('red'))
+    //                 dispatch(setPopUpMesage('Something is went wrong, While updating orders'))
+
+    //                 setTimeout(() => {
+    //                     dispatch(setShowPopUp(false))
+    //                     dispatch(setPopUpColor(''))
+    //                     dispatch(setPopUpMesage(''))
+    //                 }, 1000);
+    //             } else {
+    //                 dispatch(setIsOrderUpdate(!isOrderUpdate))
+    //                 setAccepted(response?.result?.accepted_by_rider)
+    //                 setOrderStatus(response?.result?.order_status)
+    //                 if (status === 'delivered') {
+    //                     dispatch(setShowPopUp(true))
+    //                     dispatch(setPopUpColor(Colors.Orange))
+    //                     dispatch(setPopUpMesage('Order Delivered'));
+
+    //                     setTimeout(() => {
+    //                         dispatch(setShowPopUp(false))
+    //                         dispatch(setPopUpColor(''))
+    //                         navigation.goBack()
+    //                         dispatch(setPopUpMesage(''))
+    //                     })
+    //                 } else if (status === 'out_for_delivery') {
+    //                     dispatch(setShowPopUp(true))
+    //                     dispatch(setPopUpColor(Colors.Orange))
+    //                     dispatch(setPopUpMesage('Order is on the way'));
+
+    //                     setTimeout(() => {
+    //                         dispatch(setShowPopUp(false))
+    //                         dispatch(setPopUpColor(''))
+
+    //                         dispatch(setPopUpMesage(''))
+    //                     })
+    //                 }
+    //             }
+    //         })
+    //         .catch(err => {
+    //             console.log('Error in accept/reject order :  ', err);
+    //             showAlert('Something went wrong');
+    //         })
+    //         .finally(() => {
+
+    //         });
+    // };
+
+    const openBtmSheet = (obj) => {
+        // ref_RBSheet?.current?.open()
+        // setBtmSheetValues(obj)
+        if (updatedOrder.order_status === 'out_for_delivery' || updatedOrder.order_status === 'delivered' || updatedOrder.order_status === 'ready_to_deliver' || obj.status === 'accept' || obj.status === "reject") {
+            ref_RBSheet?.current?.open();
+            setBtmSheetValues(obj);
         }
-        console.log({ data, });
-        console.log({ isOrderUpdate });
-        fetch(api.updateOrderStatusByRider, {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
+        else {
+            alert_RBSheet?.current?.open()
+        }
+
+    }
+
+    console.log({contacts});
+    
+
+    function getInitials(input) {
+        // Split the string into words
+        const words = input.trim().split(' ');
+
+        // Check the number of words
+        if (words.length === 1) {
+            // If only one word, return the first letter in uppercase
+            return words[0][0].toUpperCase();
+        } else {
+            // If two or more words, return the first letters of the first two words in uppercase
+            return words[0][0].toUpperCase() + words[1][0].toUpperCase();
+        }
+    }
+
+    const handleSelectContact = async (contact) => {
+
+
+        navigation.navigate('Conversation', {
+            contact: contact,
+            name: contact?.restaurant_name || contact?.customer_name
         })
-            .then(response => response.json())
-            .then(async response => {
-                console.log('response  :  ', response);
-                if (response?.error == true) {
-                    dispatch(setShowPopUp(true))
-                    dispatch(setPopUpColor('red'))
-                    dispatch(setPopUpMesage('Something is went wrong, While updating orders'))
-
-                    setTimeout(() => {
-                        dispatch(setShowPopUp(false))
-                        dispatch(setPopUpColor(''))
-                        dispatch(setPopUpMesage(''))
-                    }, 1000);
-                } else {
-                    dispatch(setIsOrderUpdate(!isOrderUpdate))
-                    setAccepted(response?.result?.accepted_by_rider)
-                    setOrderStatus(response?.result?.order_status)
-                    if (status === 'delivered') {
-                        dispatch(setShowPopUp(true))
-                        dispatch(setPopUpColor(Colors.Orange))
-                        dispatch(setPopUpMesage('Order Delivered'));
-
-                        setTimeout(() => {
-                            dispatch(setShowPopUp(false))
-                            dispatch(setPopUpColor(''))
-                            navigation.goBack()
-                            dispatch(setPopUpMesage(''))
-                        })
-                    } else if (status === 'out_for_delivery') {
-                        dispatch(setShowPopUp(true))
-                        dispatch(setPopUpColor(Colors.Orange))
-                        dispatch(setPopUpMesage('Order is on the way'));
-
-                        setTimeout(() => {
-                            dispatch(setShowPopUp(false))
-                            dispatch(setPopUpColor(''))
-
-                            dispatch(setPopUpMesage(''))
-                        })
-                    }
-                }
-            })
-            .catch(err => {
-                console.log('Error in accept/reject order :  ', err);
-                showAlert('Something went wrong');
-            })
-            .finally(() => {
-
-            });
     };
-
 
     // const handelAcceptRejectOrder = async (status, order_id, rider_id, dispatch, isOrderUpdate) => {
     //     console.log({ isOrderUpdate });
@@ -225,6 +336,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     //   console.log(orderStatus);
 
+    // console.log(updatedOrder);
 
     return (
         <View style={styles.container}>
@@ -240,7 +352,7 @@ const OrderDetails = ({ navigation, route }) => {
                         color={Colors.White}
                     />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Order# {orderDetails?.order_id}</Text>
+                <Text style={styles.headerTitle}>Order# {updatedOrder?.order_id}</Text>
                 <TouchableOpacity style={styles.chatButton}>
                     {/* Placeholder for chat icon */}
                     <Text style={styles.chatButtonText}>💬</Text>
@@ -253,12 +365,12 @@ const OrderDetails = ({ navigation, route }) => {
 
             {/* Order Information Section */}
             <ScrollView contentContainerStyle={styles.detailsContainer} refreshControl={<RefreshControl refreshing={loading} colors={[Colors.Orange]} onRefresh={() => {
-                getDetail(route?.params?.item?.order_id)
+                // getDetail(route?.params?.item?.order_id)
             }} />} >
                 {
-                    orderDetails &&
+                    updatedOrder &&
                     <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('OrderMapScreen', {
-                        item: orderDetails
+                        item: updatedOrder
                     })}>
                         <MapView
 
@@ -290,7 +402,7 @@ const OrderDetails = ({ navigation, route }) => {
                 <View style={{ padding: wp(4) }} >
 
 
-                    <Text style={styles.orderId}>Order# {orderDetails?.order_id}</Text>
+                    <Text style={styles.orderId}>Order# {updatedOrder?.order_id}</Text>
                     <View style={styles.locationContainer}>
                         <View style={styles.locationRow}>
                             <View style={{ marginTop: wp(1.5) }} >
@@ -302,10 +414,10 @@ const OrderDetails = ({ navigation, route }) => {
                                     Pickup
                                 </Text>
                                 <Text style={[styles.locationText, { fontFamily: Fonts.PlusJakartaSans_SemiBold, fontSize: wp(4) }]}>
-                                    {orderDetails?.restaurantData?.user_name}
+                                    {updatedOrder?.restaurantData?.user_name}
                                 </Text>
                                 <Text style={styles.locationText}>
-                                    {orderDetails?.restaurantData?.location}
+                                    {updatedOrder?.restaurantData?.location}
                                 </Text>
 
                             </View>
@@ -324,12 +436,12 @@ const OrderDetails = ({ navigation, route }) => {
                                 </Text>
 
                                 <Text style={[styles.locationText, {}]}>
-                                    {orderDetails?.customerData?.user_name}
+                                    {updatedOrder?.customerData?.user_name}
                                 </Text>
 
 
                                 <Text style={styles.locationText}>
-                                    {orderDetails?.locationData?.address}
+                                    {updatedOrder?.locationData?.address}
                                 </Text>
 
                             </View>
@@ -339,78 +451,168 @@ const OrderDetails = ({ navigation, route }) => {
 
                     {/* Estimated Commission */}
                     <Text style={styles.estimatedCommissionTitle}>Estimated Commission</Text>
-                    <Text style={styles.commissionAmount}>£{orderDetails?.delivery_charges}</Text>
+                    <Text style={styles.commissionAmount}>£{updatedOrder?.delivery_charges}</Text>
 
                     {/* Special Instructions */}
                     <Text style={styles.estimatedCommissionTitle}>Special Instructions</Text>
                     <Text style={styles.commissionAmount}>
-                        {orderDetails?.description}
+                        {updatedOrder?.description}
                     </Text>
                 </View>
+                <View style={{marginHorizontal: wp(7)}} >
+
+
+                {updatedOrder?.customerData?.customer_id && (
+                        <View style={styles.itemView}>
+                            <View style={{ backgroundColor: Colors.Orange, paddingHorizontal: wp(4), paddingVertical: wp(2.2), borderRadius: wp(10), }} ><Text style={{ color: Colors.White, fontSize: RFPercentage(2.4), padding: 0 }} >{getInitials( updatedOrder?.customerData?.user_name)}</Text></View>
+
+                            <View style={styles.textContainer}>
+                                <Text style={{ ...styles.subText, marginLeft: 5 }}>
+                                    { updatedOrder?.customerData?.user_name}
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() =>
+                                    handleSelectContact(customerContact)
+                                }>
+                                <Icons.ChatActive />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                    {updatedOrder?.restaurantData?.restaurant_id && (
+                        <View style={styles.itemView}>
+                            <View style={{ backgroundColor: Colors.Orange, paddingHorizontal: wp(4), paddingVertical: wp(2.2), borderRadius: wp(10), }} ><Text style={{ color: Colors.White, fontSize: RFPercentage(2.4), padding: 0 }} >{getInitials(updatedOrder?.restaurantData?.user_name)}</Text></View>
+                            <View style={styles.textContainer}>
+                                <Text style={{ ...styles.subText, marginLeft: 5 }}>
+                                    {/* Rider's name here */}
+                                    {updatedOrder?.restaurantData?.user_name}
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => handleSelectContact(RestaruantContact)}>
+                                <Icons.ChatActive />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
+                  
+
+                </View>
+
+
+
             </ScrollView>
 
             {/* Action Buttons */}
             <View style={styles.btncontainer}>
 
-                {/* {
-                     orderStatus === 'placed' && accepted === false ? <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => handelAcceptRejectOrder('accept', orderDetails.order_id, rider_id, dispatch, isOrderUpdate)} style={styles.acceptButton}>
-                            <Text style={styles.buttonText}>Accept</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rejectButton} onPress={() => handelAcceptRejectOrder('reject', orderDetails.order_id, rider_id, dispatch)} >
-                            <Text style={styles.rejectButtonText}>Reject</Text>
-                        </TouchableOpacity>
-                    </View> :  null
-                } */}
 
 
                 {
-                    orderDetails?.accepted_by_rider ?
+                    updatedOrder?.accepted_by_rider ?
                         <View style={styles.buttonContainer} >
-                            <TouchableOpacity onPress={() => orderDetails?.order_status === 'placed' ? updateOrderDeliveryStatus('out_for_delivery', orderDetails.order_id, rider_id, dispatch, isOrderUpdate) : updateOrderDeliveryStatus('delivered', orderDetails.order_id, rider_id, dispatch, isOrderUpdate)} style={[styles.acceptButton]}>
-                                <Text style={styles.buttonText}>{orderDetails?.order_status === 'placed' ? "Out For Delivery" : 'Delivered'}</Text>
+                            <TouchableOpacity onPress={() => updatedOrder?.order_status === 'placed' ? openBtmSheet({
+                                title: 'Out For Delivery',
+                                btnText: 'Out For Delivery',
+                                order_Id: updatedOrder.order_id,
+                                status: 'out_for_delivery'
+                            }) : openBtmSheet({
+                                title: 'Delivered',
+                                btnText: 'Delivered',
+                                order_Id: updatedOrder.order_id,
+                                status: 'delivered',
+                                amount: updatedOrder.total_amount,
+                                restaurantId: updatedOrder.restaurant_id,
+                                amountToTransfer: updatedOrder.gst + updatedOrder.sub_total,
+                                commission: updatedOrder.delivery_charges,
+                                payment_option: updatedOrder.payment_option
+
+                            })} style={[styles.acceptButton]}>
+                                <Text style={styles.buttonText}>{updatedOrder?.order_status === 'placed' ? "Out For Delivery" : 'Delivered'}</Text>
                             </TouchableOpacity>
                         </View>
                         : <View style={styles.buttonContainer}  >
 
-                            <TouchableOpacity onPress={() => handelAcceptRejectOrder('accept', orderDetails.order_id, rider_id, dispatch, isOrderUpdate)} style={styles.acceptButton}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => openBtmSheet({
+                                title: 'Are you sure to Accept this order?',
+                                btnText: 'Accept',
+                                order_Id: updatedOrder.order_id,
+                                status: 'accept'
+                            })} style={styles.acceptButton}>
                                 <Text style={styles.buttonText}>Accept</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handelAcceptRejectOrder('reject', orderDetails.order_id, rider_id, dispatch)} style={styles.rejectButton}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => openBtmSheet({
+                                title: 'Are you sure to Reject this order?',
+                                btnText: 'Reject',
+                                order_Id: updatedOrder.order_id,
+                                status: 'reject'
+                            })} style={styles.rejectButton}>
                                 <Text style={styles.rejectButtonText}>Reject (00:60)</Text>
                             </TouchableOpacity>
                         </View>
                 }
-
-
-
-
-
-
-
-
-                {/* 
-                {
-                    orderStatus === 'placed'&& accepted === true ?
-                    <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() =>  updateOrderDeliveryStatus('out_for_delivery', orderDetails.order_id, rider_id, dispatch, isOrderUpdate) }  style={[styles.acceptButton, {}]}>
-                        <Text style={styles.buttonText}>{"Out For Delivery"}</Text>
-                    </TouchableOpacity>
-                </View>:  orderStatus === 'out_for_delivery' ?
-                     <View style={styles.buttonContainer}>
-                     <TouchableOpacity onPress={() => updateOrderDeliveryStatus('delivered', item.order_id, rider_id, dispatch, isOrderUpdate)}  style={[styles.acceptButton]}>
-                         <Text style={styles.buttonText}>{'Delivered'}</Text>
-                     </TouchableOpacity>
-                 </View> : ''
-                } */}
-
-
-
-
-
-
-
             </View>
+
+
+
+
+
+
+
+
+
+
+
+
+            <RBSheetConfirmation
+                refRBSheet={ref_RBSheet}
+                title={BtmSheetValues.title}
+                // description={'Do you want to logout?'}
+                okText={BtmSheetValues.btnText}
+                height={360}
+                onOk={async () => {
+                    ref_RBSheet?.current?.close();
+                    if (BtmSheetValues.status === 'reject') {
+                        handelAcceptRejectOrder('reject', BtmSheetValues.order_Id, rider_id, dispatch, isOrderUpdate,)
+                        // setupdatedOrder(Details)
+
+
+                    } else if (BtmSheetValues.status === "accept") {
+                        handelAcceptRejectOrder('accept', BtmSheetValues.order_Id, rider_id, dispatch, isOrderUpdate)
+
+                    } else if (BtmSheetValues.status === 'out_for_delivery') {
+                        updateOrderDeliveryStatus(BtmSheetValues.status, BtmSheetValues.order_Id, rider_id, dispatch, isOrderUpdate)
+                    } else if (BtmSheetValues.status === "delivered") {
+                        updateOrderDeliveryStatus(BtmSheetValues.status, BtmSheetValues.order_Id, rider_id, dispatch, isOrderUpdate, () => navigation.navigate('DeliverySuccess', {
+                            commission: BtmSheetValues?.commission,
+                            amount: BtmSheetValues?.amount,
+                            restaurantId: BtmSheetValues?.restaurantId,
+                            amountToTransfer: BtmSheetValues?.amountToTransfer,
+                            order_Id: BtmSheetValues?.order_Id,
+                            payment_option: BtmSheetValues?.payment_option
+                        }))
+                    }
+
+                }}
+            />
+            <RBSheetConfirmation
+                refRBSheet={alert_RBSheet}
+                title={"Alert"}
+                description={"For an order to be marked as 'Out for Delivery,' its status must be 'Ready for Delivery.'"}
+                okText={'Close'}
+                svg={<Alert />}
+                height={360}
+                onOk={async () => {
+                    alert_RBSheet?.current?.close();
+
+
+                }}
+            />
+
+
         </View>
     );
 };
@@ -592,6 +794,26 @@ const styles = StyleSheet.create({
         // fontFamily: Fonts.PlusJakartaSans_Regular,
         marginLeft: wp(2),
         fontFamily: Fonts.PlusJakartaSans_Medium, fontSize: wp(4)
+    },
+    textContainer: {
+        marginLeft: 10,
+        flex: 1,
+    },
+    itemView: {
+        marginVertical: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        // backgroundColor: '#F6F6F6',
+        backgroundColor: '#F5F6FA',
+        padding: 10,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        overflow: 'hidden',
+    },
+    subText: {
+        color: '#8D93A1',
+        fontFamily: Fonts.Inter_Regular,
+        fontSize: RFPercentage(2),
     },
 });
 

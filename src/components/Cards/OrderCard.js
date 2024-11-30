@@ -12,14 +12,16 @@ import StartLocation from '../../Assets/svg/StartLocation.svg';
 import MapPinActive from '../../Assets/svg/Location.svg';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsOrderUpdate } from '../../redux/OrderSlice';
+import { setIsOrderUpdate, setUpdatedOrder } from '../../redux/OrderSlice';
 import { handelAcceptRejectOrder, updateOrderDeliveryStatus } from '../../utils/helpers/orderApis';
 import { useNavigation } from '@react-navigation/native';
 
-const OrderCard = ({ item, status, }) => {
+const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => {
     const { rider_id } = useSelector(store => store.auth)
     let { isOrderUpdate } = useSelector(store => store.order);
     const navigation = useNavigation()
+
+    // console.log(item.order_id, item.order_status, item.payment_option);
 
 
     const dispatch = useDispatch()
@@ -52,28 +54,84 @@ const OrderCard = ({ item, status, }) => {
 
     // console.log(item.restaurantData);
 
-    return (
-        <TouchableOpacity activeOpacity={0.9} style={styles.card} onPress={()=> navigation.navigate('OrdersDetail',{ 
+    const openBtmSheet = (obj) => {
+        console.log(obj.status);
+        
+        if (item.order_status === 'out_for_delivery' || item.order_status === 'delivered' || item.order_status === 'ready_to_deliver' || obj.status === 'accept' || obj.status === "reject" ) {
+            refe?.current?.open();
+            setBtmSheetValues(obj);
+        }
+        else{
+            alert_RBSheet?.current?.open()
+        }
+    };
+
+    const onpress = () => {
+        navigation.navigate('OrdersDetail', {
             item: item
-          
-        })} >
+        })
+        dispatch(setUpdatedOrder(item))
+    }
+    const statusStyles = {
+        preparing_food: { color: '#5E3A09', backgroundColor: '#FFD7B0' },
+        placed: { color: '#5E3A09', backgroundColor: '#FFD7B0' },
+        out_for_delivery: { color: '#09275E', backgroundColor: '#B9D7FF' },
+        delivered: { color: '#384308', backgroundColor: '#F2FFB9' },
+        ready_to_deliver :  { color: '#09275E', backgroundColor: '#B9D7FF' },
+
+    };
+
+    const statusText = {
+        placed: 'Preparing',
+        preparing_food: 'Preparing',
+        ready_to_deliver: 'Ready To Deliver',
+        out_for_delivery: 'Out For Delivery',
+        delivered: 'Delivered',
+    };
+    const handlePress = () => {
+        if (item?.order_status === 'placed' || 
+            item?.order_status === 'preparing_food' || 
+            item?.order_status === 'ready_to_deliver') {
+            openBtmSheet({
+                title: 'Out For Delivery',
+                btnText: 'Out For Delivery',
+                order_Id: item.order_id,
+                status: 'out_for_delivery',
+            });
+        } else {
+            openBtmSheet({
+                title: 'Delivered',
+                btnText: 'Delivered',
+                order_Id: item.order_id,
+                status: 'delivered',
+                amount: item.total_amount,
+                restaurantId: item.restaurant_id,
+                amountToTransfer: item.gst + item.sub_total,
+                commission: item.delivery_charges,
+                payment_option: item.payment_option,
+            });
+        }
+    };
+
+    return (
+        <TouchableOpacity activeOpacity={0.9} style={styles.card} onPress={onpress} >
             {/* Header Row */}
             <View style={styles.headerRow}>
                 <Text style={styles.orderId}>Order# {item?.order_id}</Text>
                 {
-                    status ? <Text
-                        style={[
-                            styles.statusTxt,
-                            item?.order_status === 'placed' ? {color: '#5E3A09', backgroundColor: '#FFD7B0'} : item?.order_status === 'out_for_delivery'? {color: '#09275E', backgroundColor: '#B9D7FF'} : item?.order_status === 'delivered'? {color: '#384308', backgroundColor: '#F2FFB9'} :''
-                            
-                        ]}
-                    >
-                        {item?.order_status === 'out_for_delivery'? 'Out For Delivery' : item?.order_status === 'placed' ? 'Preparing': item?.order_status === 'delivered'? "Delivered" : item?.order_status}
-                    </Text>
-                        :
+                    status ? (
+                        <Text
+                            style={[
+                                styles.statusTxt,
+                                statusStyles[item?.order_status] || {}, // Use the corresponding styles or default to an empty object
+                            ]}
+                        >
+                            {statusText[item?.order_status] || item?.order_status} {/* Use mapped text or fallback to the raw status */}
+                        </Text>
+                    ) : (
                         <Text style={styles.price}>£{item?.total_amount}</Text>
+                    )
                 }
-
             </View>
 
             {/* Map View */}
@@ -125,13 +183,38 @@ const OrderCard = ({ item, status, }) => {
             {/* Action Buttons */}
             <View style={styles.buttonContainer}>
                 {
-                    status ? <TouchableOpacity onPress={() => item?.order_status === 'placed' ? updateOrderDeliveryStatus('out_for_delivery', item.order_id, rider_id, dispatch, isOrderUpdate) : updateOrderDeliveryStatus('delivered', item.order_id, rider_id, dispatch, isOrderUpdate)} style={[styles.acceptButton, { flex: 1 }]}>
-                        <Text style={styles.buttonText}>{item?.order_status === 'placed' ? "Out For Delivery" : 'Delivered'}</Text>
+                    status ? <TouchableOpacity onPress={() => item?.order_status === 'placed' ||item?.order_status === 'preparing_food' || item?.order_status === 'ready_to_deliver'  ? openBtmSheet({
+                        title: 'Out For Delivery',
+                        btnText: 'Out For Delivery',
+                        order_Id: item.order_id,
+                        status: 'out_for_delivery'
+                    }) : openBtmSheet({
+                        title: 'Delivered',
+                        btnText: 'Delivered',
+                        order_Id: item.order_id,
+                        status: 'delivered',
+                        amount: item.total_amount,
+                        restaurantId: item.restaurant_id,
+                        amountToTransfer: item.gst + item.sub_total,
+                        commission: item.delivery_charges,
+                        payment_option: item.payment_option
+                    })} style={[styles.acceptButton, { flex: 1 }]}>
+                        <Text style={styles.buttonText}>{item?.order_status === 'placed' ||item?.order_status === 'preparing_food' || item?.order_status === 'ready_to_deliver' ? "Out For Delivery" : 'Delivered'}</Text>
                     </TouchableOpacity> : <>
-                        <TouchableOpacity onPress={() => handelAcceptRejectOrder('reject', item.order_id, rider_id, dispatch)} style={styles.rejectButton}>
+                        <TouchableOpacity onPress={() => openBtmSheet({
+                            title: 'Are you sure to Reject this order?',
+                            btnText: 'Reject',
+                            order_Id: item.order_id,
+                            status: 'reject'
+                        })} style={styles.rejectButton}>
                             <Text style={styles.rejectButtonText}>Reject (00:60)</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handelAcceptRejectOrder('accept', item.order_id, rider_id, dispatch, isOrderUpdate)} style={styles.acceptButton}>
+                        <TouchableOpacity onPress={() => openBtmSheet({
+                            title: 'Are you sure to Accept this order?',
+                            btnText: 'Accept',
+                            order_Id: item.order_id,
+                            status: 'accept'
+                        })} style={styles.acceptButton}>
                             <Text style={styles.buttonText}>Accept</Text>
                         </TouchableOpacity>
                     </>

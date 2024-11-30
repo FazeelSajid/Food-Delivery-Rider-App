@@ -47,7 +47,7 @@ import MyOrdersDetail from '../Screens/App/BottomTab/MyOrders/MyOrdersDetail';
 import OrderHistory from '../Screens/App/OrderHistory';
 import UpdateDocuments from '../Screens/App/Drawer/UpdateProfile/UpdateDocuments';
 import UpdateVehicleInfo from '../Screens/App/Drawer/UpdateProfile/UpdateVehicleInfo';
-import Conversation from '../Screens/App/Chat/Conversation';
+import Conversation from '../Screens/App/Drawer/Messages/Conversation';
 import Splash from '../Screens/Auth/Splash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Complaints from '../Screens/App/Drawer/Complaints';
@@ -64,6 +64,10 @@ import { useDispatch } from 'react-redux';
 import { resetState } from '../redux/AuthSlice';
 import OrderMapScreen from '../Screens/App/Home/OrderMapScreen';
 import HistoryOrderDetailScreen from '../Screens/App/Home/HistoryOrderScreen';
+import DeliverySuccess from '../Screens/App/Home/DeliverySuccess';
+import Ratings from '../Screens/App/Drawer/Ratings/Ratings';
+import Messages from '../Screens/App/Drawer/Messages/Messages';
+import ImageUpload from '../Screens/App/Drawer/Messages/ImageUpload';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -177,9 +181,9 @@ const CustomDrawerContent = props => {
               style={drawerItemStyles.item}
             />
             <DrawerItem
-              label="Complaints"
-              onPress={() => navigation.navigate('Complaints')}
-              icon={focused => <Icons.Complaints />}
+              label="Ratings"
+              onPress={() => navigation.navigate('Ratings')}
+              icon={focused => <Icons.Rating />}
               labelStyle={drawerItemStyles.label}
               style={drawerItemStyles.item}
             />
@@ -199,10 +203,10 @@ const CustomDrawerContent = props => {
               style={drawerItemStyles.item}
             />
             <DrawerItem
-              label="Languages"
-              onPress={() => navigation.navigate('Languages')}
+              label="Messages"
+              onPress={() => navigation.navigate('Messages')}
               icon={focused => (
-                <MaterialIcons name="language" size={25} color={'#757575'} />
+                <Icons.Chat />
               )}
               labelStyle={drawerItemStyles.label}
               style={drawerItemStyles.item}
@@ -301,11 +305,11 @@ const DrawerNavigation = () => {
         options={{title: 'Home'}}
       />
       <Drawer.Screen name="MyWallet" component={MyWallet} />
-      <Drawer.Screen name="Complaints" component={Complaints} />
+      <Drawer.Screen name="Ratings" component={Ratings} />
 
       <Drawer.Screen name="UpdateProfile" component={UpdateProfile} />
       <Drawer.Screen name="UpdatePassword" component={UpdatePassword} />
-      <Drawer.Screen name="Languages" component={Languages} />
+      {/* <Drawer.Screen name="Languages" component={Languages} /> */}
       <Drawer.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       <Drawer.Screen name="TermsAndCondition" component={TermsAndCondition} />
     </Drawer.Navigator>
@@ -316,7 +320,7 @@ const DrawerNavigation = () => {
 
 function Router() {
   const rider_id = useSelector(store => store.auth.rider_id)
-  console.log(rider_id, 'router');
+  // console.log(rider_id, 'router');
   
 
   return (
@@ -347,6 +351,7 @@ function Router() {
       <Stack.Screen name="UpdateDocuments" component={UpdateDocuments} />
       <Stack.Screen name="UpdateVehicleInfo" component={UpdateVehicleInfo} />
       <Stack.Screen name="Conversation" component={Conversation} />
+      <Stack.Screen name="DeliverySuccess" component={DeliverySuccess} />
       {/* --------------------- app stack --------------------------------- */}
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Home" component={DashboardTabs} /> */}
@@ -357,6 +362,8 @@ function Router() {
 
       <Stack.Screen name="CardForTopUp" component={CardForTopUp} />
       <Stack.Screen name="CardForWithdraw" component={CardForWithdraw} />
+      <Stack.Screen name="Messages" component={Messages} />
+      <Stack.Screen name="ImageUpload" component={ImageUpload} />
     </Stack.Navigator>
   );
 }

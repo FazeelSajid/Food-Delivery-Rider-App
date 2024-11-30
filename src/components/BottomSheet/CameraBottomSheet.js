@@ -11,7 +11,7 @@ import {Colors, Fonts} from '../../constants';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { uploadImage } from '../../utils/helpers';
 
-const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
+const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick, obj}) => {
   const navigation = useNavigation();
 
 
@@ -46,6 +46,7 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
       maxWidth: 500,
       maxHeight: 500,
       quality: 1,
+      includeBase64: true, 
     };
 
     await launchCamera(options)
@@ -57,13 +58,24 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
         } else if (res.customButton) {
           console.log('User tapped custom button: ', res.customButton);
         } else {
+           let base64Image = `data:${res.assets[0].type};base64,${res.assets[0].base64}`
           let image1 = {
             path: res.assets[0].uri,
             mime: res.assets[0].type,
             name: res.assets[0].fileName,
+            base64:  base64Image
           };
+
+
+          if (obj) {
+            navigation.navigate('ImageUpload', {
+              ...obj, 
+              ...image1
+            })
+          }
           // setImage(image1);
-          onCameraPick(image1);
+          onCameraPick &&  onCameraPick(image1);
+          onImagePick && onImagePick(image1);
           // let image_url = await handleUploadProfileImage(image1);
           // onCameraPick({url: image_url});
 
@@ -84,6 +96,7 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
       maxWidth: 500,
       maxHeight: 500,
       quality: 1,
+      includeBase64: true, 
     };
 
     await launchImageLibrary(options)
@@ -95,13 +108,23 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick}) => {
         } else if (res.customButton) {
           console.log('User tapped custom button: ', res.customButton);
         } else {
+          let base64Image = `data:${res.assets[0].type};base64,${res.assets[0].base64}`
           let image1 = {
             path: res.assets[0].uri,
             mime: res.assets[0].type,
             name: res.assets[0].fileName,
+            base64:  base64Image
           };
+
+          if (obj) {
+            navigation.navigate('ImageUpload', {
+              ...obj, 
+              ...image1
+            })
+          }
           // setImage(image1);
-          onGalleryPick(image1);
+          onGalleryPick && onGalleryPick(image1);
+          onImagePick && onImagePick(image1);
         }
       })
       .catch(err => {

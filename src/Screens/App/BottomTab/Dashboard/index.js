@@ -6,7 +6,7 @@ import {
   StatusBar,
   useWindowDimensions,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import {
@@ -16,25 +16,141 @@ import {
 import PopUp from '../../../../components/Popup/PopUp';
 import { Colors, Fonts, Icons } from '../../../../constants';
 import { useFocusEffect } from '@react-navigation/native';
-import {  useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Requests from './Requests';
 import InProgress from './InProgress';
 import History from './History';
+import { setContacts, setUserAppOpenLocation } from '../../../../redux/AuthSlice';
+import { getCurrentLocation } from '../../../../utils/helpers/location';
+import messaging from '@react-native-firebase/messaging';
+import { BASE_URL } from '../../../../utils/globalVariables';
+import moment from 'moment';
+import { io } from 'socket.io-client';
 
 
 const Dashboard = ({ navigation, route }) => {
-  const { rider_details } = useSelector(store => store.auth)
+  const { rider_details, userAppOpenLocation, totalWalletAmount, rider_id, contacts } = useSelector(store => store.auth)
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
   const [riderInfo, setRiderInfo] = useState(null);
   const [showDorpDown, setShowDropDown] = useState(false)
   const [selectedOption, setSelectedOption] = useState('Today')
   const [index, setIndex] = React.useState(0);
   const layout = useWindowDimensions();
+  const [totalEarning, setTotalEarning] = useState(0)
+  const dispatch = useDispatch()
 
-  // console.log(rider_details.email);
+  // console.log(contacts);
+
   
+
+  const socketUrl = 'https://food-delivery-be.caprover-demo.mtechub.com/';
+
+
+  useEffect(() => {
+    const newSocket = io(BASE_URL);
+    // setSocket(newSocket);
+
+    // Fetch contacts on socket connection
+    newSocket.on('connect', () => {
+        newSocket.emit('getContacts', { rider_id }); 
+    });
+
+    // Listen for contacts data
+    newSocket.on('contacts', (contactsData) => {
+        dispatch(setContacts(contactsData));  
+
+        // console.log({contactsData});
+        
+
+        
+    });
+
+    // Listen for room join confirmation
+    // newSocket.on('roomJoined', ({ roomId }) => {
+    //     setRoomId(roomId);
+    //     console.log(`Joined room: ${roomId}`);
+    // });
+
+    // Listen for previous messages
+    // newSocket.on('previousMessages', ({ messages }) => {
+    //     setMessages(messages);
+    //     console.log('Previous messages loaded:', messages);
+    // });
+
+    // newSocket.emit('joinRoom', customer_id);
+    // newSocket.on('roomJoined', ({ roomId }) => {
+    //     setRoomId(roomId);
+    //     console.log(`Joined room: ${roomId}`);
+    // });
+
+
+    // if (rest_ID || customer_id) {
+    //     const initialContact = {
+    //         customer_id,
+    //         // rider_id,
+    //         rest_ID
+    //     };
+
+    //     // Automatically join the room or create a new room based on available IDs
+    //     newSocket.emit('joinRoom', initialContact);
+    //     newSocket.on('roomJoined', ({ roomId }) => {
+    //         setRoomId(roomId);
+    //         console.log(`Joined room: ${roomId}`);
+    //     });
+
+    //     // Fetch previous messages for the room if available
+    //     newSocket.on('previousMessages', ({ messages }) => {
+    //         setMessages(messages);
+    //         console.log('Previous messages loaded:', messages);
+    //     });
+    // }
+
+    // Listen for new messages
+    
+    // newSocket.on('newMessage', ({ sender_type, senderId, message }) => {
+
+    //     console.log(sender_type, senderId, message);
+
+    //     setMessages((prevMessages) => [
+    //         ...prevMessages,
+    //         { sender_type, senderId, message },
+    //     ]);
+
+    //     // Update the contacts list by moving the contact to the top
+    //     setContacts((prevContacts) => {
+    //         // Find the contact that received the new message
+    //         const updatedContacts = prevContacts.map(contact => {
+    //             if (contact.customer_id === senderId) {
+    //                 return {
+    //                     ...contact,
+    //                     message: message,
+    //                     last_message_time: new Date().toISOString() // Update the last message time
+    //                 };
+    //             }
+    //             return contact;
+    //         });
+    //         // Sort contacts to bring the one with the latest message to the top
+    //         return updatedContacts.sort((a, b) => new Date(b.last_message_time) - new Date(a.last_message_time));
+    //     });
+    // });
+
+    // Handle errors
+    
+    
+    newSocket.on('error', (error) => {
+        console.error('Socket Error:', error.message);
+    });
+
+    // Cleanup on component unmount
+    return () => {
+        newSocket.disconnect();
+    };
+}, []);
+  
+
+
   // const getData = async () => {
   //   try {
   //     let data = await GetNearestOrders();
@@ -76,35 +192,116 @@ const Dashboard = ({ navigation, route }) => {
   //     setRefreshing(false);
   //   }
   // };
- 
+
+  // console.log(rider_details.email);
+
+  // useFocusEffect(
+  //   React.useCallback(async () => {
+  //     setRiderInfo(rider_details)
+  //   }, []),
+  // );
+
   const renderScene = SceneMap({
     first: Requests,
     second: InProgress,
     third: History,
   });
+
   const [routes] = React.useState([
     { key: 'first', title: 'Request' },
     { key: 'second', title: 'In Progress' },
     { key: 'third', title: 'History' },
   ]);
-  useFocusEffect(
-    React.useCallback(() => {
-      setRiderInfo(rider_details)
-    }, []),
-  );
 
   const handleDropDownSelect = (option) => {
     setSelectedOption(option)
     setShowDropDown(false)
   }
 
+  // const func = async ()=> {
+  //   const fcmToken = await messaging().getToken();
+  //   console.log(fcmToken, 'token');
+  // }
+
+  useEffect(() => {
+    setRiderInfo(rider_details)
+    // func()
+  }, []);
+
+ 
+       
+  const dateString = new Date()
+  const date = moment(dateString);
+
+  const year = date.year();
+  const month = date.month() + 1;
+  const day = date.date();
+
+  const fetchPayments = async () => {
+    // setIsLoading(true);
+    let InsertAPIURL = `${BASE_URL}wallet/ViewAllPaymentsAndEarning_rider?rider_id=${rider_id}`;
+
+
+    if (selectedOption === "Today") {
+
+     
+      InsertAPIURL += `&getBy=day&year=${year}&month=${month}&day=${day}`;
+
+    } 
+    else if (selectedOption === "Weekly") {
+      // const dateString = new Date()
+      // const date = moment(dateString);
+      // const weekOfYear = date.week(); 
+      // InsertAPIURL += `&getBy=week&year=${"year"}&week=${weekOfYear}`;
+   
+
+      InsertAPIURL += `&getBy=day&year=${year}&month=${month}&day=${day}`;
+    }
+    else if (selectedOption === "Monthly") {
+ 
+
+      InsertAPIURL += `&getBy=month&year=${year}&month=${month}`;
+    } 
+    
+
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    fetch(InsertAPIURL, {
+      method: 'GET',
+      headers: headers,
+    })
+      .then(response => response.json())
+      .then(response => {
+        // setIsLoading(false);
+        if (response.status) {
+          // console.log(response?.result?.total_earnings);
+          
+          setTotalEarning(response?.result?.total_earnings || 0);
+        }
+      })
+      .catch(error => {
+        // setIsLoading(false);
+        // // toast.error(error.message);
+      });
+  };
+
+  // console.log(rider_details);
+
+
+useEffect(()=>{
+  fetchPayments()
+},[selectedOption])
+
 
   return (
     <View style={styles.container}>
-     
+
       <View style={{ flex: 1 }} >
         {showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
-        
+
         <StatusBar
           translucent={false}
           backgroundColor={'white'}
@@ -115,12 +312,12 @@ const Dashboard = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => navigation?.openDrawer()}>
             <Icons.MenuActive width={23} />
           </TouchableOpacity>
-          {/* <Text style={styles.headerLocation} >{currentLocation.shortAddress}</Text> */}
+          <Text style={styles.headerLocation} ellipsizeMode='tail' numberOfLines={1} >{userAppOpenLocation?.shortAddress}</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               style={{ marginRight: 20 }}
-            onPress={() => navigation.navigate('SearchOrder')}
+              onPress={() => navigation.navigate('SearchOrder')}
             >
               <Feather name="search" size={RFPercentage(2.8)} color={Colors.Orange} />
 
@@ -136,7 +333,7 @@ const Dashboard = ({ navigation, route }) => {
           <View style={styles.rowView} >
             <View >
               <Text style={styles.EarningText}>My Earning</Text>
-              <Text style={styles.amountText}>£15.34</Text>
+              <Text style={styles.amountText}>${totalEarning}</Text>
             </View>
             <View>
               <TouchableOpacity onPress={() => setShowDropDown(!showDorpDown)} style={styles.DropDownBtn} >
@@ -145,12 +342,11 @@ const Dashboard = ({ navigation, route }) => {
               </TouchableOpacity>
               {
                 showDorpDown && <View style={styles.DropDownContainer} >
-                  <TouchableOpacity onPress={() => handleDropDownSelect('Today')}  ><Text style={styles.DropDownOptionText} >Today</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDropDownSelect('Today')} ><Text style={styles.DropDownOptionText} >Today</Text></TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDropDownSelect('Weekly')} ><Text style={styles.DropDownOptionText}>Weekly</Text></TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDropDownSelect('Monthly')} ><Text style={styles.DropDownOptionText}>Monthly</Text></TouchableOpacity>
                 </View>
               }
-
             </View>
           </View>
         </View>
@@ -170,7 +366,7 @@ const Dashboard = ({ navigation, route }) => {
                 backgroundColor: Colors.White,
                 elevation: 4,
               }}
-              tabStyle={{ alignItems: 'center', alignContent: 'center' }}
+              tabStyle={{ alignItems: 'center', alignContent: 'center', }}
               renderLabel={({ route, focused, color }) => (
                 <Text
                   style={{
@@ -192,7 +388,7 @@ const Dashboard = ({ navigation, route }) => {
                 padding: 1.5,
                 alignSelf: 'center',
                 backgroundColor: Colors.Orange
-                
+
               }}
             />
           )}
@@ -205,7 +401,7 @@ const Dashboard = ({ navigation, route }) => {
           style={{ height: hp(83.7) }}
         />
 
-       
+
       </View>
     </View>
   );
@@ -220,6 +416,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 20,
+  },
+  headerLocation: {
+    color: Colors.Black,
+    width: wp(60),
+    fontFamily: Fonts.PlusJakartaSans_Medium,
+    textAlign: "center",
+    fontSize: RFPercentage(2),
+    alignSelf: 'center'
   },
   welcomeText: {
     fontFamily: Fonts.PlusJakartaSans_Medium,

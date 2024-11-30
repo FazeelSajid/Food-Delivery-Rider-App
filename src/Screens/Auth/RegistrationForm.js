@@ -280,7 +280,7 @@ const RegistrationForm = ({ navigation, route }) => {
     // console.log('image_url :  ', image_url);
     if (validate2()) {
       setLoading(true);
-      let profileImageUrl = await handleUploadProfileImage(profileImage);3
+      let profileImageUrl = await handleUploadProfileImage(profileImage);
       let frontIDCard = await handleUploadProfileImage(FrontIDImage);
       let backIDCard = await handleUploadProfileImage(BackIDImage);
       let frontLicense = await handleUploadProfileImage(FrontLicenseImage);
@@ -318,7 +318,7 @@ const RegistrationForm = ({ navigation, route }) => {
             
             if (response.error === false) {
               setShowPopUp(true)
-              setPopUpColor(Colors.Orange)
+              setPopUpColor('green')
               setPopUpMesage(response?.message)
               setTimeout(()=>{
                 setShowPopUp(false)

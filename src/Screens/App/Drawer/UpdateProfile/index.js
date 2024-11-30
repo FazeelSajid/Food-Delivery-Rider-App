@@ -39,7 +39,7 @@ import { setPopUpColor, setPopUpMesage, setShowPopUp } from '../../../../redux/M
 
 
 
-const UpdateProfile = ({ navigation, route }) => {
+const UpdateProfile = ({ navigation }) => {
   const cameraSheet_ref = useRef();
   const datePicker_ref = useRef();
   const dispatch = useDispatch();
@@ -663,7 +663,7 @@ const UpdateProfile = ({ navigation, route }) => {
                 <Avatar.Image
                   source={{  uri: profileImage?.path?.startsWith('file://')
                     ? profileImage?.path
-                    : BASE_URL_IMAGE + profileImage }}
+                    : profileImage }}
                   size={wp(25)}
                 />
             

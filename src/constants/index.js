@@ -11,6 +11,7 @@ export const Colors = {
   //UI Neutrals
 
   // background
+  darkTextColor: '#545151',
   Orange: '#FF5722',
   OrangeLight: '#F99145',
   White: '#FFFFFF',
@@ -18,7 +19,8 @@ export const Colors = {
   Text: '#0A212B',
   AvatarBG: '#FF572233',
   Border: '#B0B0B0',
-  grayText: '#56585B'
+  grayText: '#56585B',
+  OrangeExtraLight: '#FFF6F3',
 };
 
 export const Fonts = {
@@ -199,6 +201,7 @@ import Close from '../Assets/svg/close.svg';
 
 
 import MapPinActive from '../Assets/svg/MapPinActive.svg';
+import Chat from '../Assets/svg/chat.svg';
 
 export const Icons = {
   SearchIcon,
@@ -286,4 +289,5 @@ export const Icons = {
   EditProfile,
   Note,
   LockBlack,
+  Chat
 };

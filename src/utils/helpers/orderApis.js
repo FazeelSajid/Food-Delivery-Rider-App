@@ -3,8 +3,9 @@ import api from '../../constants/api';
 import { getCurrentLocation } from './location';
 import { setShowPopUp, setPopUpColor, setPopUpMesage } from '../../redux/MySlice';
 import { useDispatch } from 'react-redux';
-import { setAssignedOrders, setIsOrderUpdate, setOrderRequests } from '../../redux/OrderSlice';
-import { showAlert } from '../helpers';
+import { setAssignedOrders, setIsOrderUpdate, setOrderRequests, setUpdatedOrder, setUpdatedOrdr } from '../../redux/OrderSlice';
+// import { showAlert } from '../helpers';
+import { useNavigation } from '@react-navigation/native';
 
 export const GetNearestOrders = id => {
   console.log('GetNearestOrders_____________________________________');
@@ -80,53 +81,49 @@ export const GetRiderOrders = id => {
 
 
 
-export const getAllOrders = async (dispatch, setLoading, setRefreshing,) => {
-  fetch(api.get_all_orders)
-    .then(response => response.json())
-    .then(response => {
-      // console.log(response);
+export const getAllOrders = async (dispatch, setLoading, setRefreshing) => {
+  try {
+    const response = await fetch(api.get_all_orders);
+    const data = await response.json();
 
-      if (response.error) {
-        dispatch(setShowPopUp(true))
-        dispatch(setPopUpColor('red'))
-        dispatch(setPopUpMesage('Something is went wrong, While getting orders'))
-        setTimeout(() => {
-          dispatch(setShowPopUp(false))
-          dispatch(setPopUpColor(''))
-          dispatch(setPopUpMesage(''))
-        }, 1000)
-      } else {
-        let list = response?.result ? response?.result : [];
-        const filter = list.filter(item =>
-          item.accepted_by_restaurant === true &&
-          item.accepted_by_rider === false &&
-          // item.rider_id === null &&
+    if (data.error) {
+      handlePopup(dispatch, 'Something went wrong', 'red');
+    } else {
+      const filteredOrders = (data?.result || []).filter(
+        (item) =>
+          // item.order_id === '203113'
+          item.accepted_by_restaurant &&
+          !item.accepted_by_rider &&
           item.order_status === 'placed'
-        )
-        dispatch(setOrderRequests(filter));
-        // console.log(filter);
-        
-        // console.log({ filter }, 'orders');
-
-      }
-
-    })
-    .catch(err => {
-      console.log(err, 'errr');
-      dispatch(setShowPopUp(true))
-      dispatch(setPopUpColor('red'))
-      dispatch(setPopUpMesage('Something is went wrong, While getting orders'))
-      setTimeout(() => {
-        dispatch(setShowPopUp(false))
-        dispatch(setPopUpColor(''))
-        dispatch(setPopUpMesage(''))
-      }, 1000)
-    })
-    .finally(() => {
-      setLoading && setLoading(false);
-      setRefreshing && setRefreshing(false);
-    });
+      );
+      // console.log(filteredOrders);
+      
+      dispatch(setOrderRequests(filteredOrders));
+      return filteredOrders
+    }
+  } catch (error) {
+    console.error("Error in getAllOrders:", error);
+    handlePopup(dispatch, 'Something went wrong', 'red');
+  } finally {
+    if (setLoading) setLoading(false);
+    if (setRefreshing) setRefreshing(false);
+  }
 };
+
+// Helper function to show popup
+export const handlePopup = (dispatch, message, color) => {
+  dispatch(setShowPopUp(true));
+  dispatch(setPopUpColor(color||'red'));
+  dispatch(setPopUpMesage(message));
+  setTimeout(() => {
+    dispatch(setShowPopUp(false));
+    dispatch(setPopUpColor(''));
+    dispatch(setPopUpMesage(''));
+  }, 1000);
+};
+
+
+
 export const getAssignedOrders = async (rider_id, dispatch, setLoading, setRefreshing) => {
   // console.log(rider_id);
   
@@ -134,6 +131,7 @@ export const getAssignedOrders = async (rider_id, dispatch, setLoading, setRefre
     .then(response => response.json())
     .then(response => {
       // console.log(response);
+      
 
       if (response.error) {
         dispatch(setAssignedOrders([]));
@@ -147,21 +145,18 @@ export const getAssignedOrders = async (rider_id, dispatch, setLoading, setRefre
         // dispatch(setPopUpMesage(''))
         // }, 1000)
       } else {
+      // console.log(response);
+
         let list = response?.result
         // console.log({list});
-        dispatch(setAssignedOrders(list));
+        const filteredOrders = list.filter(order => order.order_status !== 'cancelled');
+
+        dispatch(setAssignedOrders(filteredOrders));
       }
     })
     .catch(err => {
-      console.log(err, 'errr');
-      dispatch(setShowPopUp(true))
-      dispatch(setPopUpColor('red'))
-      dispatch(setPopUpMesage('Something is went wrong, While getting assiged orders'))
-      setTimeout(() => {
-        dispatch(setShowPopUp(false))
-        dispatch(setPopUpColor(''))
-        dispatch(setPopUpMesage(''))
-      }, 1000)
+      console.log(err, 'errr in getAssignedOrders');
+      handlePopup(dispatch, 'Something went wrong', 'red');
     })
     .finally(() => {
       setLoading && setLoading(false);
@@ -169,8 +164,8 @@ export const getAssignedOrders = async (rider_id, dispatch, setLoading, setRefre
     });
 };
 
-export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispatch, isOrderUpdate) => {
-  console.log({isOrderUpdate});
+export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispatch, isOrderUpdate, callBack) => {
+  // console.log({isOrderUpdate});
   
   let data = {
     rider_id: rider_id,
@@ -193,7 +188,7 @@ export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispat
       if (response?.error == true) {
         dispatch(setShowPopUp(true))
         dispatch(setPopUpColor('red'))
-        dispatch(setPopUpMesage('Something is went wrong, While updating orders'))
+        dispatch(setPopUpMesage('Something is went wrong'))
 
         setTimeout(() => {
           dispatch(setShowPopUp(false))
@@ -202,11 +197,28 @@ export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispat
         }, 1000);
       } else {
         dispatch(setIsOrderUpdate(!isOrderUpdate))
+        callBack && callBack()
+        dispatch(setUpdatedOrdr(response?.result))
+    
+        // const orderResponse = await fetch(api.get_order_by_id + order_id);
+        // const orderResult = await orderResponse.json();
+  
+        // if (!orderResult.error) {
+        //   // Process order data (update state, Redux, etc. as needed)
+        //   // e.g., dispatch(updateOrderData(orderResult.result));
+        //   // console.log('Updated order data:', orderResult.result);
+        //   dispatch(setUpdatedOrder(orderResult.result));
+        //   return orderResult.result
+        // } else {
+        //   console.log('Failed to fetch updated order data.');
+        // }
+                  
+      
       }
     })
     .catch(err => {
       console.log('Error in accept/reject order :  ', err);
-      showAlert('Something went wrong');
+      handlePopup(dispatch, 'Something went wrong', 'red');
     })
     .finally(() => {
 
@@ -214,14 +226,14 @@ export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispat
 };
 
 
-export const updateOrderDeliveryStatus = async (status, order_id, rider_id, dispatch, isOrderUpdate) => {
+export const updateOrderDeliveryStatus = async (status, order_id, rider_id, dispatch, isOrderUpdate, callBack) => {
   let data = {
     order_id: order_id,
     order_status: status, //out_for_delivery, delivered
     rider_id: rider_id
 }
   console.log({ data, });
-  console.log({ isOrderUpdate });
+  // console.log({ isOrderUpdate });
   fetch(api.updateOrderStatusByRider, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -233,22 +245,21 @@ export const updateOrderDeliveryStatus = async (status, order_id, rider_id, disp
     .then(async response => {
       console.log('response  :  ', response);
       if (response?.error == true) {
-        dispatch(setShowPopUp(true))
-        dispatch(setPopUpColor('red'))
-        dispatch(setPopUpMesage('Something is went wrong, While updating orders'))
-
-        setTimeout(() => {
-          dispatch(setShowPopUp(false))
-          dispatch(setPopUpColor(''))
-          dispatch(setPopUpMesage(''))
-        }, 1000);
+        handlePopup(dispatch, 'Something went wrong', 'red');
       } else {
         dispatch(setIsOrderUpdate(!isOrderUpdate))
+        callBack && callBack()
+        dispatch(setUpdatedOrdr(response?.order))
+
+        // if (status=== 'delivered') {
+        //  navigation && navigation.navigate('DeliverySuccess')
+
+        // }
       }
     })
     .catch(err => {
       console.log('Error in accept/reject order :  ', err);
-      showAlert('Something went wrong');
+      handlePopup(dispatch, 'Something went wrong', 'red');
     })
     .finally(() => {
 

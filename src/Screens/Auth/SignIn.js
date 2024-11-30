@@ -135,7 +135,8 @@ const SignIn = ({navigation, route}) => {
           email: riderId.toLocaleLowerCase(),
           password: password,
           fcm_token: fcmToken,
-          signup_type: 'email'
+          signup_type: 'email',
+          rest_ID: "res_4074614",
 
         }
 
@@ -153,7 +154,7 @@ const SignIn = ({navigation, route}) => {
             console.log('response  :  ', response);
             console.log({body});
             
-            if (response?.status == false) {
+            if (response?.error == true) {
               setShowPopUp(true)
               setPopUpColor('red')
               setPopUpMesage(response?.message)
@@ -163,11 +164,11 @@ const SignIn = ({navigation, route}) => {
               // showAlert(response?.message);
               // showAlert('Invalid Credentials');
             } else {
-              console.log(response?.results);
+              console.log(response);
               
               setShowPopUp(true)
               setPopUpMesage('Logged in Successfully')
-              setPopUpColor(Colors.Orange)
+              setPopUpColor('green')
               setTimeout(()=>{
                 setShowPopUp(false)
                 navigation.reset({
@@ -176,15 +177,16 @@ const SignIn = ({navigation, route}) => {
                 });
               }, 1000)
               // // showAlert(response.message, 'green');
-              dispatch(setRiderId(response?.user?.rider_id))
-              dispatch(setRiderDetails(response?.user))
+              dispatch(setRiderId(response?.rider?.rider_id))
+              dispatch(setRiderDetails(response?.rider))
               // await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
               // await AsyncStorage.setItem(
               //   'rider_detail',
               //   JSON.stringify(response?.result),
               // );
-              let wallet = await createRiderWallet(response?.result?.rider_id);
+              let wallet = await createRiderWallet(response?.rider?.rider_id);
               console.log('wallet  :  ', wallet);
+             
             
             }
           })
@@ -214,6 +216,66 @@ const SignIn = ({navigation, route}) => {
           fcm_token: fcmToken,
         }
         console.log(body ,'Phone ');
+        fetch(api.login, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+          .then(response => response.json())
+          .then(async response => {
+            console.log('response  :  ', response);
+            console.log({body});
+            
+            if (response?.error == true) {
+              setShowPopUp(true)
+              setPopUpColor('red')
+              setPopUpMesage(response?.message)
+              setTimeout(()=>{
+                setShowPopUp(false)
+              }, 1000)
+              // showAlert(response?.message);
+              // showAlert('Invalid Credentials');
+            } else {
+              console.log(response?.results);
+              
+              setShowPopUp(true)
+              setPopUpMesage('Logged in Successfully')
+              setPopUpColor('green')
+              setTimeout(()=>{
+                setShowPopUp(false)
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Drawer'}],
+                });
+              }, 1000)
+              // // showAlert(response.message, 'green');
+              dispatch(setRiderId(response?.rider?.rider_id))
+              dispatch(setRiderDetails(response?.rider))
+              // await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
+              // await AsyncStorage.setItem(
+              //   'rider_detail',
+              //   JSON.stringify(response?.result),
+              // );
+              let wallet = await createRiderWallet(response?.result?.rider_id);
+              console.log('wallet  :  ', wallet);
+            
+            }
+          })
+          .catch(err => {
+            console.log('Error in Login :  ', err);
+            // showAlert('Something went wrong');
+            setShowPopUp(true)
+            setPopUpColor('red')
+            setPopUpMesage('Something went wrong');
+            setTimeout(()=>{
+              setShowPopUp(false)
+            }, 1000)
+          })
+          .finally(() => {
+            setLoading(false);
+          });
         
       }
      

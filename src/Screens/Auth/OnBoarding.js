@@ -16,6 +16,7 @@ import {RFPercentage} from 'react-native-responsive-fontsize';
 import CButton from '../../components/Buttons/CButton';
 import {Colors, Fonts, Icons, Images} from '../../constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Onboarding from '../../Assets/svg/Onboarding.svg';
 
 const OnBoarding = ({navigation, route}) => {
   return (
@@ -23,18 +24,19 @@ const OnBoarding = ({navigation, route}) => {
       <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
 
       <Image source={Images.onboardingLogo} style={styles.logo} />
-      <Text style={styles.heading}>Order your favorite food delivery</Text>
+      {/* <Onboarding/> */}
+
+      <Text style={styles.heading}>Welcome to Food Delivery</Text>
       <Text style={styles.description}>
-        Browse an extensive menu featuring mouthwatering dishes from local
-        restaurants.
+      Join our community of drivers and start earning today.
       </Text>
       <CButton
-        title="GET STARTED"
+        title="Let’s Get Started"
         height={hp(6.2)}
         marginTop={hp(15)}
         width={wp(85)}
         onPress={async () => {
-          await AsyncStorage.setItem('isFirstLaunch', 'true');
+          // await AsyncStorage.setItem('isFirstLaunch', 'true');
           navigation.replace('SignIn');
         }}
       />
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    height: hp(30),
-    width: wp(80),
+    height: hp(38),
+    width: wp(94),
     resizeMode: 'contain',
     marginBottom: hp(3),
   },
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     color: Colors.Black,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(3),
-    width: wp(65),
+    width: wp(100),
     textAlign: 'center',
     textTransform: 'capitalize',
     marginVertical: 10,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#393939B2',
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    width: wp(80),
+    width: wp(90),
     lineHeight: 20,
     fontSize: RFPercentage(1.8),
     textTransform: 'capitalize',
