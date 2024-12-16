@@ -8,7 +8,7 @@ import {
 import {RFPercentage} from 'react-native-responsive-fontsize';
 
 export default STYLE = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'white'},
+  container: {flex: 1, backgroundColor: Colors.secondary_color},
   authBGContainer: {position: 'relative', left: -wp(4)},
   authBGImage: {
     height: hp(30),
@@ -21,7 +21,7 @@ export default STYLE = StyleSheet.create({
     top: StatusBar.currentHeight + 10,
   },
   topScreenBTn: {
-    color: Colors.Orange,
+    color:Colors.button.primary_button,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(2),
   },
@@ -32,7 +32,7 @@ export default STYLE = StyleSheet.create({
     marginBottom: hp(4),
   },
   txtForgotPassword: {
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontSize: RFPercentage(1.8),
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     textAlign: 'right',
@@ -40,7 +40,7 @@ export default STYLE = StyleSheet.create({
     marginTop: -15,
   },
   orText: {
-    color: '#91909A',
+    color: Colors.secondary_text,
     fontFamily: Fonts.PlusJakartaSans_Regular,
     fontSize: RFPercentage(2),
     marginTop: hp(3),
@@ -67,7 +67,7 @@ export default STYLE = StyleSheet.create({
   screenTitle: {
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(3.2),
-    color: '#1D1D20',
+    color: Colors.primary_text,
     textAlign: 'center',
   },
   screenDesc: {
@@ -91,7 +91,7 @@ export default STYLE = StyleSheet.create({
     alignItems: 'center',
   }, 
   rbSheetHeading: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2),
   },

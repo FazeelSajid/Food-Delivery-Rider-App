@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -22,10 +22,32 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
     const navigation = useNavigation()
 
     // console.log(item.order_id, item.order_status, item.payment_option);
+    // const Colors = ''
+
+
+    const [timer, setTimer] = useState(60); // 1-minute timer
+    const timerRef = useRef(null);
 
 
     const dispatch = useDispatch()
 
+   {!status &&
+    useEffect(() => {
+        timerRef.current = setInterval(() => {
+            setTimer(prev => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current); // Stop the timer
+                    console.log("time end"); // Log when the timer ends
+                    return 0; // Ensure the timer stops at 0
+                }
+                return prev - 1; // Decrement the timer
+            });
+        }, 1000);
+
+        return () => clearInterval(timerRef.current); // Cleanup on component unmount
+    }, []);
+
+   } 
 
     const mapRef = useRef(null);
 
@@ -48,12 +70,6 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
         }
     }, [origin, destination]);
 
-    // console.log(item.order_status);
-    const pickupLocation = { latitude: 51.4545, longitude: -2.5879 }; // Bristol
-    const dropoffLocation = { latitude: 51.3758, longitude: -2.3619 }; // Bath
-
-    // console.log(item.restaurantData);
-
     const openBtmSheet = (obj) => {
         console.log(obj.status);
         
@@ -68,7 +84,8 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
 
     const onpress = () => {
         navigation.navigate('OrdersDetail', {
-            item: item
+            item: item,
+            id: item.order_id
         })
         dispatch(setUpdatedOrder(item))
     }
@@ -134,8 +151,10 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
                 }
             </View>
 
+           
+
             {/* Map View */}
-            <MapView
+          {origin && destination?  <MapView
                 scrollEnabled={false}  // Disable scrolling (panning)
                 zoomEnabled={false}    // Disable zooming
                 rotateEnabled={false}  // Disable rotating
@@ -159,9 +178,9 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
                     destination={destination}
                     apikey={googleMapKey}
                     strokeWidth={3}
-                    strokeColor={Colors.Orange}
+                    strokeColor={Colors.primary_color}
                 />
-            </MapView>
+            </MapView>: null}
 
             {/* Location Details */}
             <View style={styles.locationContainer}>
@@ -207,7 +226,7 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
                             order_Id: item.order_id,
                             status: 'reject'
                         })} style={styles.rejectButton}>
-                            <Text style={styles.rejectButtonText}>Reject (00:60)</Text>
+                            <Text style={styles.rejectButtonText}>Reject {Math.floor(timer / 60)}:{`0${timer % 60}`.slice(-2)}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => openBtmSheet({
                             title: 'Are you sure to Accept this order?',
@@ -227,7 +246,7 @@ const OrderCard = ({ item, status, refe, setBtmSheetValues, alert_RBSheet }) => 
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#fff',
+        backgroundColor: Colors.secondary_color,
         borderRadius: 8,
         padding: wp(3),
         marginVertical: hp(1),
@@ -246,15 +265,15 @@ const styles = StyleSheet.create({
     orderId: {
         fontSize: wp(4),
         fontFamily: Fonts.PlusJakartaSans_Bold,
-        color: Colors.Black
+        color: Colors.primary_text
     },
     price: {
         fontSize: wp(4),
-        color: '#474749',
+        color: Colors.secondary_text,
         fontFamily: Fonts.PlusJakartaSans_Bold
     },
     statusTxt: {
-        color: Colors.OrangeLight,
+        color:Colors.primary_colorLight,
         fontFamily: Fonts.PlusJakartaSans_Medium,
         fontSize: RFPercentage(1.7),
         marginBottom: wp(1),
@@ -276,7 +295,7 @@ const styles = StyleSheet.create({
         minHeight: 30,
         flex: 1,
         borderWidth: 0.8,
-        borderColor: Colors.Orange,
+        borderColor: Colors.primary_color,
         borderStyle: 'dashed',
         width: 0.5,
         // marginLeft: 19,
@@ -290,14 +309,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: hp(0.5),
     },
-    locationIcon: {
-        fontSize: wp(5),
-        color: '#f57c00',
-        marginRight: wp(2),
-    },
+   
     locationText: {
         fontSize: wp(3.5),
-        color: '#333',
+        color: Colors.secondary_text,
         flex: 1,
         fontFamily: Fonts.PlusJakartaSans_Regular,
         marginLeft: wp(2)
@@ -309,12 +324,12 @@ const styles = StyleSheet.create({
         // backgroundColor: 'green'
     },
     rejectButton: {
-        backgroundColor: Colors.White,
+        backgroundColor: Colors.button.secondary_button,
         borderRadius: wp(10),
         // paddingVertical: hp(1.2),
         // paddingHorizontal: wp(5),
         borderWidth: 1,
-        borderColor: Colors.Orange,
+        borderColor: Colors.button.secondary_button_text,
         // flex: 0.5,
         alignItems: 'center',
         width: '45%',
@@ -322,7 +337,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     acceptButton: {
-        backgroundColor: Colors.Orange,
+        backgroundColor: Colors.button.primary_button,
         borderRadius: wp(10),
         // paddingVertical: hp(1.2), 
         // paddingHorizontal: wp(5),
@@ -335,18 +350,24 @@ const styles = StyleSheet.create({
 
     },
     buttonText: {
-        color: Colors.White,
+        color: Colors.button.primary_button_text,
         fontSize: wp(3.5),
         fontFamily: Fonts.PlusJakartaSans_Regular,
         textAlign: 'center'
 
     },
     rejectButtonText: {
-        color: Colors.Orange,
+        color: Colors.button.secondary_button_text,
         fontSize: wp(3.5),
         fontFamily: Fonts.PlusJakartaSans_Regular,
-        textAlign: 'center'
-
+        textAlign: 'center',
+    },
+    timerText: {
+        fontSize: wp(4),
+        color: Colors.secondary_text,
+        textAlign: 'center',
+        marginVertical: hp(1),
+        fontFamily: Fonts.PlusJakartaSans_Bold,
     },
 });
 

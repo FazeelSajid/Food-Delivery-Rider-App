@@ -11,11 +11,15 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 const History = () => {
 
     let { assigned_orders } = useSelector(store => store.order);
+    // const Colors = useSelector(store => store.auth.Colors)
+    // console.log({Colors}, 'sole wq' );
+    
 
-    // const filteredItems = assigned_orders.filter(item => item.order_status === "cancelled" || item.order_status === "delivered")
-    const filteredItems = []
 
-    // console.log(filteredItems);
+    const filteredItems = assigned_orders.filter(item => item.order_status === "cancelled" || item.order_status === "delivered")
+    // const filteredItems = []
+
+    // console.log(assigned_orders);
     
 
 
@@ -43,7 +47,7 @@ export default History
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.White,
+        backgroundColor: Colors.secondary_color,
     },
     ListEmptyComponent:{
         flex:1, 
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
      },
      ListEmptyComponentText: {
        fontSize: RFPercentage(2.5),
-       color: Colors.Black,
+       color: Colors.primary_text,
        fontFamily: Fonts.PlusJakartaSans_SemiBold,
        paddingTop: hp(3),
        textAlign :'center'

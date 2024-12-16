@@ -1,4 +1,6 @@
-export const googleMapKey = 'AIzaSyD2gv4DJD2-xSnjvdfPmdyjhbhFyPgqMrI';
+// export const googleMapKey = 'AIzaSyD2gv4DJD2-xSnjvdfPmdyjhbhFyPgqMrI';
+export const googleMapKey = 'AIzaSyDMy-RD4OIVvTrr0nwbrQy3lyi7cLyvi7Y';
+
 
 export const firebase_server_key =
   'AAAARGSehxU:APA91bG2viSqkARpqskf1Izg4PSBuqHTwxXBS49vU3XCZ4swWfMUDUmhfgpC5NAHXQYQVXL7e9cS80ppZz6EcQb1dJxZmjLouxqzLT6LkeZBRe7vZs48PP71QaNsFCu0vSUkDDxCDKdk';
@@ -11,17 +13,24 @@ export const firebase_server_key =
 // export const BASE_URL_IMAGE = 'http://192.168.57.33:3017/';
 
   // Room
-// export const BASE_URL = 'http://192.168.100.199:3017/';
-// export const BASE_URL_IMAGE = 'http://192.168.100.199:3017/';
+// export const BASE_URL = 'http://192.168.100.118:3017/';
+// export const BASE_URL_IMAGE = 'http://192.168.100.118:3017/';
+
+  // Ayyaz
+// export const BASE_URL = 'http://192.168.8.101:3017/';
+// export const BASE_URL_IMAGE = 'http://192.168.8.101:3017/';
 
 
-export const BASE_URL = 'https://food-delivery-be.caprover-demo.mtechub.com/';
-export const BASE_URL_IMAGE = 'https://food-delivery-be.caprover-demo.mtechub.com/';
+// export const BASE_URL = 'https://food-delivery-be.caprover-demo.mtechub.com/';
+// export const BASE_URL_IMAGE = 'https://food-delivery-be.caprover-demo.mtechub.com/';
+
+export const BASE_URL = 'https://food-delivery-backend-testing.caprover.musuvillc.com/';
+export const BASE_URL_IMAGE = 'https://food-delivery-backend-testing.caprover.musuvillc.com/';
 
 
 // Office
-// export const BASE_URL = 'http://192.168.18.104:3017/';
-// export const BASE_URL_IMAGE = 'http://192.168.18.104:3017/';
+// export const BASE_URL = 'http://192.168.18.37:3017/';
+// export const BASE_URL_IMAGE = 'http://192.168.18.37:3017/';
 
 
 // Home
@@ -30,7 +39,7 @@ export const BASE_URL_IMAGE = 'https://food-delivery-be.caprover-demo.mtechub.co
 
 
 // BackEnd Dev 
-// export const BASE_URL = 'http://192.168.18.120:3017/';
+// export const BASE_URL = 'http://192.168.18.142:3017/';
 // export const BASE_URL_IMAGE = 'http://192.168.18.120:3017/';
 
 // export const BASE_URL = 'https://staging-fooddelivery-be.mtechub.com/';

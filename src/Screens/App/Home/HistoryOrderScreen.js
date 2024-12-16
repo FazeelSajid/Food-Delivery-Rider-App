@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   orderTitle: {
     fontSize: wp(4),
    
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold
 
   },
@@ -229,18 +229,18 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: wp(4),
-    color: Colors.Black,
+    color: Colors.primary_text,
     marginBottom: hp(0.3),
     fontFamily: Fonts.PlusJakartaSans_SemiBold
   },
   subTitle: {
     fontSize: wp(4),
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.Black
+    color: Colors.primary_text
   },
   addressText: {
     fontSize: wp(3.5),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     marginVertical: hp(0.5),
     fontFamily: Fonts.PlusJakartaSans_Regular,
     marginBottom: hp(1.5)
@@ -252,16 +252,16 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: wp(3.5),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
   },
   detailValue: {
     fontSize: wp(3.5),
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.Black,
+    color: Colors.primary_text,
   },
   feedbackText: {
     fontSize: wp(3.5),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     marginBottom: hp(0.8),
     fontFamily: Fonts.PlusJakartaSans_Regular
   },

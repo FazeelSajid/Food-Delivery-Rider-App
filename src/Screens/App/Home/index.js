@@ -176,7 +176,7 @@ const Home = ({navigation, route}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: Colors.White, paddingHorizontal: 20},
+  container: {flex: 1, backgroundColor: Colors.secondary_color, paddingHorizontal: 20},
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',

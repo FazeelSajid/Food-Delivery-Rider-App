@@ -44,8 +44,8 @@ const CustomerCard = ({
         <Avatar.Text
           size={50}
           label={getFirstTwoLettersOfName(showNameProfile)}
-          style={{backgroundColor: Colors.Orange}}
-          labelStyle={{color: Colors.White}}
+          style={{backgroundColor: Colors.primary_color}}
+          labelStyle={{color: Colors.secondary_color}}
         />
       ) : profile ? (
         <Avatar.Image
@@ -128,20 +128,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: Fonts.Inter_Medium,
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
     lineHeight: 25,
   },
   description: {
     fontFamily: Fonts.Inter_Regular,
-    color: '#808D9E',
+    color: Colors.secondary_text,
     fontSize: RFPercentage(1.5),
     lineHeight: 25,
     marginLeft: 10,
   },
   description1: {
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: '#7E8CA0',
+    color: Colors.secondary_text,
     fontSize: RFPercentage(1.5),
     // lineHeight: 25,
     marginLeft: 10,

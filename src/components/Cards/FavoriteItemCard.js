@@ -30,7 +30,7 @@ const FavoriteItemCard = ({image, title, description, price}) => {
           <AntDesign name="heart" color={Colors.Orange} size={20} />
         </View>
         <Text style={styles.nameText}>{description}</Text>
-        <Text style={{...styles.title, color: Colors.Orange}}>$ {price}</Text>
+        <Text style={{...styles.title, color:Colors.primary_color}}>$ {price}</Text>
       </View>
     </View>
   );
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
     lineHeight: 25,
   },
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
     lineHeight: 25,
     marginLeft: 5,

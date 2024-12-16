@@ -6,6 +6,18 @@ import {BASE_URL, firebase_server_key} from './globalVariables';
 import Snackbar from 'react-native-snackbar';
 import api from '../constants/api';
 import { handlePopup } from './helpers/orderApis';
+import { createNavigationContainerRef } from '@react-navigation/native';
+
+
+
+export const navigationRef = createNavigationContainerRef();
+
+export function navigate(name, params) {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(name, params);
+  }
+}
+
 
 export const chooseImageFromCamera = async () => {
   return new Promise(async (resolve, reject) => {
@@ -321,5 +333,110 @@ export const fetchApis = async (endPoint, method, setLoading, header, payload, d
   // finally{
   //   setLoading(false)
   // }
+
+};
+
+
+export const fetchApisGet = async (endPoint, setLoading, dispatch) => {
+
+  setLoading &&setLoading(true)
+  try {
+    const response = await fetch(endPoint, {
+      method: "GET",
+    });
+    // Check if the response is OK (status code 200 or 201)
+    if (response.status === 200) {
+
+      // Successfully processed request
+      const jsonResponse = await response.json();
+      setLoading &&setLoading(false);
+      // console.log('Fetched APIs:', endPoint); // Correctly log the response
+
+      // console.log(jsonResponse.Response.apiResponse, 'jsonResponse');
+
+      return jsonResponse;
+    } else if (response.status === 400) {
+      const errorData = await response.json();
+      setLoading &&setLoading(false)
+      showAlert(`Bad Request: ${errorData.message || 'Invalid data sent.'}`);
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+      console.log(errorData.message);
+
+
+    } else if (response.status === 401) {
+      // Unauthorized - invalid or missing token
+      setLoading &&setLoading(false)
+      // showAlert( 'Unauthorized: Invalid or missing token.');s
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+      // console.log('fetchapi func, Unauthorized: Invalid or missing token');
+
+      throw new Error('Unauthorized: Invalid or missing token.');
+    } else if (response.status === 403) {
+      // showAlert('Forbidden: You do not have permission to perform this action.');
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+      // console.log('fetchapi func, Forbidden: You do not have permission to perform this action.' )
+      setLoading &&setLoading(false)
+
+      // Forbidden - you do not have permission
+      // throw new Error('Forbidden: You do not have permission to perform this actio n.');
+    } else if (response.status === 404) {
+      // console.log(endPoint);
+
+      // showAlert( 'Not Found: The requested resource was not found.');
+      setLoading &&setLoading(false)
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+
+      // console.log('fetchapi func, Not Found: The requested resource was not found.');
+      // console.log(response.payload);
+
+
+      // Not Found - invalid URL
+      // throw new Error('Not Found: The requested resource was not found.');
+    } else if (response.status === 500) {
+      // showAlert( 'Server Error: An error occurred on the server.');
+      setLoading &&setLoading(false)
+      // console.log('Server Error: An error occurred on the server.');
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+      // Internal Server Error - server-side error
+      // throw new Error('Server Error: An error occurred on the server.');
+    } else {
+      // showAlert( `Unexpected error: ${response.statusText}`);
+      handlePopup(dispatch, 'Something is went wrong', 'red')
+      setLoading &&setLoading(false)
+      // Handle other status codes
+      // throw new Error(`Unexpected error: ${response.statusText}`);
+      console.log(`Unexpected error: ${response.statusText}`);
+
+    }
+    // setLoading &&setLoading(false)
+
+
+    // setTimeout(() => {
+    //   showAlert({
+    //     isLoading: false,
+    //     errorPop: false,
+    //     errorPopMsg: ``
+    //   });
+    // }, 1000);z
+
+  } catch (error) {
+    // console.log(error instanceof TypeError);
+    handlePopup(dispatch, 'Something is went wrong', 'red')
+
+    if (error instanceof TypeError && error.TypeError === 'Network request failed') {
+      console.log(error, 'error');
+
+      showAlert(`Please check your internet connection.`);
+      setLoading &&setLoading(false)
+
+
+      return
+    }
+
+
+  }
+  finally{
+    setLoading &&setLoading(false)
+  }
 
 };

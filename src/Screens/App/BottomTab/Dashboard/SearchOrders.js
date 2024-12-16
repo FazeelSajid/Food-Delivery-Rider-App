@@ -40,7 +40,7 @@ import OrderCard from '../../../../components/Cards/OrderCard';
 const SearchOrder = ({ navigation, route }) => {
   const { searchOrders, rider_id } = useSelector(store => store.auth);
   const dispatch = useDispatch()
-  let { assigned_orders } = useSelector(store => store.order);
+  let { assigned_orders, order_requests } = useSelector(store => store.order);
 
   // console.log({assigned_orders});
 
@@ -138,7 +138,7 @@ const SearchOrder = ({ navigation, route }) => {
 
   const [topSearchesList, setTopSearchesList] = useState(searchOrders);
 
-  console.log(topSearchesList);
+  // console.log(topSearchesList);
   
 
   // const handleSearch = query => {
@@ -166,11 +166,14 @@ const SearchOrder = ({ navigation, route }) => {
       //         item?.cart_items_Data[0]?.itemData?.item_name === query),
       //   );
 
-
-      const filteredData = assigned_orders?.filter(item =>
-        item?.order_id?.toString().includes(query)
-      );
-
+      const filteredData = [
+        ...assigned_orders?.filter(item =>
+          item?.order_id?.toString().includes(query)
+        ),
+        ...order_requests?.filter(item =>
+          item?.order_id?.toString().includes(query)
+        )
+      ];
       // console.log('filteredData :  ', filteredData);
       setData(filteredData);
       if (filteredData?.length > 0) {
@@ -249,7 +252,7 @@ const SearchOrder = ({ navigation, route }) => {
   }, [searchQuery]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.White }}>
+    <View style={{ flex: 1, backgroundColor: Colors.secondary_color }}>
       <Loader loading={loading} />
       <ScrollView
         nestedScrollEnabled={true}

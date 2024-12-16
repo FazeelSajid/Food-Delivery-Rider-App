@@ -10,7 +10,7 @@ const PromoCodeCard = ({selected, percentage, expiry_date, code, disabled}) => {
       // onPress={() => handleSelect(item)}
       style={{
         ...styles.card,
-        borderColor: selected ? Colors.Orange : '#DADADA',
+        borderColor: selected ?Colors.primary_color : '#DADADA',
       }}>
       <View>
         <Text style={styles.boldText}>{percentage}%OFF</Text>
@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
   boldText: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.2),
-    color: Colors.Text,
+    color: Colors.primary_text,
   },
   codeText: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.5),
-    color: Colors.Orange,
+    color:Colors.primary_color,
   },
   description: {
     color: '#8D93A1',

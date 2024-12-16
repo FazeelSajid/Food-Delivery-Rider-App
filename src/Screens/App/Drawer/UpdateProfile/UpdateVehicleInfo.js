@@ -135,7 +135,7 @@ const UpdateVehicleInfo = ({navigation, route}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, height: hp(100), backgroundColor: Colors.White}}>
+    <View style={{flex: 1, height: hp(100), backgroundColor: Colors.secondary_color}}>
       <Loader loading={isFetching} />
       <ScrollView
         ref={scrollViewRef}

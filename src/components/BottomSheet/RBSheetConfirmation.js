@@ -14,7 +14,7 @@ import {
 } from 'react-native-responsive-screen';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {useNavigation} from '@react-navigation/native';
-import {Fonts, Images} from '../../constants';
+import {Colors, Fonts, Images} from '../../constants';
 import Lottie from 'lottie-react-native';
 import CButton from '../Buttons/CButton';
 const RBSheetConfirmation = ({
@@ -87,7 +87,7 @@ const RBSheetConfirmation = ({
             {/* </View> */}
             <Text
               style={{
-                color: textColor ? textColor : '#1D1D20',
+                color: textColor ? textColor : Colors.primary_text,
                 fontSize: RFPercentage(2.5),
                 fontFamily: Fonts.PlusJakartaSans_SemiBold,
                 textAlign: 'center',
@@ -97,7 +97,7 @@ const RBSheetConfirmation = ({
             {description && (
               <Text
                 style={{
-                  color: '#595959',
+                  color: Colors.secondary_text,
                   fontSize: RFPercentage(2),
                   fontFamily: Fonts.PlusJakartaSans_Regular,
                   textAlign: 'center',

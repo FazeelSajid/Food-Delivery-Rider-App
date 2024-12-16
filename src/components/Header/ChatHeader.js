@@ -30,7 +30,7 @@ const ChatHeader = ({title, profile, rightIcon}) => {
   return (
     <View style={styles.header}>
       <StatusBar
-        backgroundColor={'#FFFFFF'}
+        backgroundColor={Colors.secondary_color}
         barStyle={'dark-content'}
         translucent={false}
       />
@@ -38,7 +38,7 @@ const ChatHeader = ({title, profile, rightIcon}) => {
         <TouchableOpacity
           onPress={() => navigation?.goBack()}
           style={styles.iconContainer}>
-          <Ionicons name={'chevron-back'} size={hp(3)} color={Colors.Orange} />
+          <Ionicons name={'chevron-back'} size={hp(3)} color={Colors.primary_color} />
         </TouchableOpacity>
         {profile ? (
           <Avatar.Image
@@ -50,8 +50,8 @@ const ChatHeader = ({title, profile, rightIcon}) => {
           <Avatar.Text
             size={40}
             label={getFirstTwoLettersOfName(title)}
-            style={{backgroundColor: Colors.Orange, marginHorizontal: 12}}
-            labelStyle={{color: Colors.White}}
+            style={{backgroundColor: Colors.primary_color, marginHorizontal: 12}}
+            labelStyle={{color: Colors.secondary_color}}
           />
         )}
         <View style={styles.headerTextContainer}>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainText: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.2),
   },

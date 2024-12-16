@@ -13,13 +13,19 @@ import {GetAllNotifications} from '../../../utils/helpers/notificationApis';
 import moment from 'moment';
 import NoDataFound from '../../../components/NotFound/NoDataFound';
 import Loader from '../../../components/Loader';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Empty from '../../../Assets/svg/Empty.svg';
+import { fetchApisGet } from '../../../utils/helpers';
+import api from '../../../constants/api';
+import { setUpdatedOrder } from '../../../redux/OrderSlice';
 
 const Notification = ({navigation, route}) => {
   const { rider_id } = useSelector(store => store.auth)
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
+  const dispatch = useDispatch()
+
 
 //   const [data, setData] = useState([
 
@@ -2518,16 +2524,21 @@ const Notification = ({navigation, route}) => {
   const [data, setData] = useState([])
 
   const getData = async () => {
-    let list = await GetAllNotifications(rider_id);
-    console.log({list});
+    // let list = await GetAllNotifications(rider_id);
+    const response  = await fetchApisGet (api.get_all_notifications + rider_id, setLoading, dispatch )
+    const list = response?.result
+        // console.log({list});
+
     
-    setData(list);
+
+    
+    
+    setData(list.reverse());
     setLoading(false);
     setRefreshing(false);
   };
 
   useEffect(() => {
-    setRefreshing(false);
     getData();
   }, []);
 
@@ -2535,22 +2546,32 @@ const Notification = ({navigation, route}) => {
     setRefreshing(true);
     getData();
   };
+  const onpress = (item) => {
+    navigation.navigate('OrdersDetail', {
+        item: item,
+        id: item.order_id
+    })
+    dispatch(setUpdatedOrder(item))
+}
+
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
-      {/* <Loader loading={loading} /> */}
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
+      {showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
+      <Loader loading={loading} bgColor={'white'} />
+
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            colors={[Colors.Orange]}
+            colors={[Colors.primary_color]}
             onRefresh={() => onRefresh()}
           />
         }
         data={data}
         ListHeaderComponent={() => <StackHeader title={'Notifications'} />}
         ListEmptyComponent={
-         data.length === 0 && refreshing === false ?
+         data?.length === 0 && loading === false ?
              <View style={styles.ListEmptyComponent} >
          <Empty/>
          <Text style={styles.ListEmptyComponentText} >Empty! No Order's Requests</Text>
@@ -2560,10 +2581,7 @@ const Notification = ({navigation, route}) => {
         ItemSeparatorComponent={() => <ItemSeparator style={{width: wp(88)}} />}
       //   contentContainerStyle={{paddingBottom: 30}}
         renderItem={({item, index}) => (
-          <TouchableOpacity onPress={()=> item?.notification_type == 'order' && navigation.navigate('OrdersDetail',{ 
-            item: item.orderData
-          
-        })} style={styles.card}>
+          <TouchableOpacity onPress={()=> item?.notification_type == 'order' && onpress(item.orderData)} style={styles.card}>
             {item?.type == 'request' ||
             item?.orderData?.order_status == 'in_process' ||
             item?.orderData?.order_status == 'order_placed' ||
@@ -2597,7 +2615,13 @@ const Notification = ({navigation, route}) => {
             <View style={styles.iconContainer}>
               <Icons.OrderPlaced />
             </View>
-          ):(
+          ) : item?.type == 'Payments' ||
+          item?.notification_type == 'Payments' ? (
+          <View style={styles.iconContainer}>
+            <Icons.WalletActiveBackground />
+          </View>
+        )
+          :(
               <Avatar.Image
                 source={item?.profile}
                 size={50}
@@ -2640,7 +2664,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: Fonts.Inter_SemiBold,
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontSize: RFPercentage(1.7),
     lineHeight: 30,
   },
@@ -2666,7 +2690,7 @@ const styles = StyleSheet.create({
  },
  ListEmptyComponentText: {
    fontSize: RFPercentage(2.5),
-   color: Colors.Black,
+   color: Colors.primary_text,
    fontFamily: Fonts.PlusJakartaSans_SemiBold,
    paddingTop: hp(3)
  }

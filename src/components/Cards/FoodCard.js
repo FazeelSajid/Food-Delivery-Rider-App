@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontSize: RFPercentage(1.5),
   },
   price: {

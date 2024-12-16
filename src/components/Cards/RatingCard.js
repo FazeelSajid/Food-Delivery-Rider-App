@@ -58,7 +58,7 @@ const RatingCard = ({item}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.secondary_color,
     borderRadius: 10,
     padding: 16,
     marginTop: 2,
@@ -76,18 +76,18 @@ const styles = StyleSheet.create({
   },
   name: {
    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#333333',
+    color: Colors.primary_text,
     fontSize: RFPercentage(1.6),
   },
   CustomerName: {
    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     fontSize: RFPercentage(1.5),
     marginRight: widthPercentageToDP(1)
   },
   date: {
     fontFamily: Fonts.PlusJakartaSans_Regular,
-    color: '#999999',
+    color: Colors.secondary_text,
     fontSize: 12,
   },
   rating: {
@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: 16,
     marginTop: 8,
-    color: '#333333',
+    color: Colors.primary_text,
   },
   review: {
     fontFamily: Fonts.PlusJakartaSans_Regular,
-    color: '#666666',
+    color: Colors.secondary_text,
     // marginTop: 4,
   },
 });

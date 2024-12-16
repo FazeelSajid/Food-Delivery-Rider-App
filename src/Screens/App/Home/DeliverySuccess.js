@@ -58,7 +58,7 @@ const DeliverySuccess = ({ navigation, route }) => {
             if (result.status) {
                 // Assuming the API returns a success status in the response body
                 if (result.status) {
-                    console.log('Payment added successfully:', result);
+                    console.log('Payment Sent To Restaurent successfully:', result);
                     handlePopup(dispatch, result.message, 'green');
                     setLoading(false)
                     setTimeout(() => {
@@ -254,15 +254,15 @@ const DeliverySuccess = ({ navigation, route }) => {
                 //   },
                 // },
                 colors: {
-                    // primary: Colors.Orange,
+                    // primary:Colors.primary_color,
                     // background: '#FFFFFF',
                     // componentBackground: '#FFFFFF',
                     // componentBorder: '#000000',
                     // componentDivider: '#000000',
-                    // primaryText: Colors.Orange,
-                    // secondaryText: Colors.Orange,
-                    // componentText: Colors.Orange,
-                    placeholderText: Colors.White,
+                    // primaryText:Colors.primary_color,
+                    // secondaryText:Colors.primary_color,
+                    // componentText:Colors.primary_color,
+                    placeholderText: Colors.secondary_color,
                 },
             },
 
@@ -318,10 +318,10 @@ const DeliverySuccess = ({ navigation, route }) => {
                     <Text style={styles.label} >Earned Commission</Text>
                     <Text style={styles.Value} >£{route?.params?.commission}</Text>
                 </View>
-                <View style={styles.rowView} >
+                {/* <View style={styles.rowView} >
                     <Text style={styles.label} >Delivery Time</Text>
                     <Text style={styles.Value} >25 min</Text>
-                </View>
+                </View> */}
                 <View style={styles.rowView} >
                     <Text style={styles.label} >Distance Travelled</Text>
                     <Text style={styles.Value} >15 Km</Text>
@@ -329,11 +329,11 @@ const DeliverySuccess = ({ navigation, route }) => {
 
 
                 {route?.params?.payment_option === 'cash' ? <TouchableOpacity onPress={() => onpress()} style={[styles.acceptButton]}>
-                    { loading ? <ActivityIndicator size={"small"} color={Colors.White} /> : <Text style={styles.buttonText}>Transfer payment to restaurant</Text>}
+                    { loading ? <ActivityIndicator size={"small"} color={Colors.secondary_color} /> : <Text style={styles.buttonText}>Transfer payment to restaurant</Text>}
                 </TouchableOpacity>
                     :
                     <TouchableOpacity onPress={() => distributePayment()} style={[styles.acceptButton]}>
-                          { loading ? <ActivityIndicator size={"small"} color={Colors.White} /> : <Text style={styles.buttonText}>Get Commission</Text>}
+                          { loading ? <ActivityIndicator size={"small"} color={Colors.secondary_color} /> : <Text style={styles.buttonText}>Get Commission</Text>}
                     </TouchableOpacity>}
             </View>
 
@@ -350,7 +350,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                         </View>
                         <View style={{ alignItems: 'center' }} >
                             <Alert height={80} />
-                            <Text style={{ marginTop: hp(3), fontSize: RFPercentage(2.4), color: Colors.Black, textAlign: 'center' }}>
+                            <Text style={{ marginTop: hp(3), fontSize: RFPercentage(2.4), color: Colors.primary_text, textAlign: 'center' }}>
                                 You don't have enough amount in wallet</Text>
                         </View>
 
@@ -409,7 +409,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                             <View style={{ paddingHorizontal: 10 }}>
                                 <Text
                                     style={{
-                                        color: Colors.Orange,
+                                        color:Colors.primary_color,
                                         fontFamily: Fonts.PlusJakartaSans_Bold,
                                         fontSize: RFPercentage(2.2),
                                         marginBottom: 6,
@@ -418,7 +418,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                                 </Text>
                                 <Text
                                     style={{
-                                        color: Colors.Orange,
+                                        color:Colors.primary_color,
                                         fontFamily: Fonts.PlusJakartaSans_Bold,
                                         fontSize: RFPercentage(2.2),
                                         marginBottom: 14,
@@ -487,10 +487,10 @@ export default DeliverySuccess
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.White
+        backgroundColor: Colors.secondary_color
     },
     heading: {
-        color: Colors.Black,
+        color: Colors.primary_text,
         fontSize: RFPercentage(3),
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         textAlign: 'center',
@@ -514,19 +514,19 @@ const styles = StyleSheet.create({
         // width: 100
     },
     label: {
-        color: Colors.grayText,
+        color: Colors.secondary_text,
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         fontSize: RFPercentage(2.1),
 
     },
     Value: {
-        color: Colors.Black,
+        color: Colors.primary_text,
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         fontSize: RFPercentage(2),
 
     },
     acceptButton: {
-        backgroundColor: Colors.Orange,
+        backgroundColor:Colors.primary_color,
         paddingVertical: hp(1.8),
         // paddingHorizontal: wp(15),
         borderRadius: wp(10),
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
 
     },
     buttonText: {
-        color: Colors.White,
+        color: Colors.secondary_color,
         fontSize: wp(4),
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         textAlign: 'center',
@@ -556,12 +556,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     rbSheetHeading: {
-        color: Colors.Text,
+        color: Colors.primary_text,
         fontFamily: Fonts.PlusJakartaSans_Bold,
         fontSize: RFPercentage(1.9),
     },
     btmsheettext: {
-        color: '#56585B',
+        color: Colors.secondary_text,
         fontFamily: Fonts.PlusJakartaSans_Regular,
         marginLeft: wp(5),
         fontSize: RFPercentage(1.9),

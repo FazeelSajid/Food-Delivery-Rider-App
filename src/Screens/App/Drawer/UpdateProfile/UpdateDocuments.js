@@ -206,7 +206,7 @@ const UpdateDocuments = ({navigation, route}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={isFetching} />
       <ScrollView
         contentContainerStyle={{flexGrow: 1, paddingBottom: 35}}

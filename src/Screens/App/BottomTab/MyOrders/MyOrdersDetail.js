@@ -280,7 +280,7 @@ const MyOrdersDetail = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}>
         {/* <HeaderImageSlider data={data} /> */}
@@ -291,7 +291,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             <View>
               <Text
                 style={{
-                  color: '#191A26',
+                  color: Colors.primary_text,
                   fontFamily: Fonts.PlusJakartaSans_Bold,
                   fontSize: RFPercentage(2),
                   lineHeight: 30,
@@ -301,7 +301,7 @@ const MyOrdersDetail = ({navigation, route}) => {
               {route?.params?.type == 'cancelled' ? (
                 <Text
                   style={{
-                    color: '#6C6C6C',
+                    color: Colors.secondary_text,
                     fontFamily: Fonts.PlusJakartaSans_Regular,
                     fontSize: RFPercentage(1.7),
                   }}>
@@ -335,7 +335,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                     Order Status:{' '}
                     <Text
                       style={{
-                        color: Colors.Orange,
+                        color:Colors.primary_color,
                         fontFamily: Fonts.PlusJakartaSans_SemiBold,
                         fontSize: RFPercentage(1.7),
                         textTransform: 'capitalize',
@@ -384,7 +384,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   />
                   <Text
                     style={{
-                      color: Colors.Orange,
+                      color:Colors.primary_color,
                       fontFamily: Fonts.PlusJakartaSans_Bold,
                       fontSize: RFPercentage(2),
                       marginLeft: 5,
@@ -408,7 +408,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                     style={{
                       flex: 1,
                       textAlign: 'right',
-                      color: Colors.Orange,
+                      color:Colors.primary_color,
                       fontFamily: Fonts.PlusJakartaSans_SemiBold,
                       fontSize: RFPercentage(2),
                     }}>
@@ -461,7 +461,7 @@ const MyOrdersDetail = ({navigation, route}) => {
           <Text
             style={{
               ...styles.heading,
-              color: Colors.Orange,
+              color:Colors.primary_color,
               marginVertical: 20,
               marginBottom: 20,
             }}>
@@ -481,7 +481,7 @@ const MyOrdersDetail = ({navigation, route}) => {
 
           {orderDetails?.customerData?.customer_id && (
             <View style={{marginBottom: 5}}>
-              <Text style={{...styles.heading, color: Colors.Orange}}>
+              <Text style={{...styles.heading, color:Colors.primary_color}}>
                 Customer’s Details
               </Text>
 
@@ -512,7 +512,7 @@ const MyOrdersDetail = ({navigation, route}) => {
 
           {orderDetails?.restaurantData?.restaurant_id && (
             <View style={{marginBottom: 5}}>
-              <Text style={{...styles.heading, color: Colors.Orange}}>
+              <Text style={{...styles.heading, color:Colors.primary_color}}>
                 Restaurant Details
               </Text>
               <CustomerCard
@@ -562,7 +562,7 @@ const MyOrdersDetail = ({navigation, route}) => {
               />
             </>
           )}
-          {/* <Text style={{...styles.heading, color: Colors.Orange}}>
+          {/* <Text style={{...styles.heading, color:Colors.primary_color}}>
             Other Details
           </Text> */}
 
@@ -651,7 +651,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             <>
               <Text
                 style={{
-                  color: Colors.Orange,
+                  color:Colors.primary_color,
                   fontFamily: Fonts.Inter_Bold,
                   fontSize: RFPercentage(2),
                 }}>
@@ -673,9 +673,9 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <View
                     style={{
                       ...styles.orderCard,
-                      borderColor: selected == 0 ? Colors.Orange : '#A0A0A6',
+                      borderColor: selected == 0 ?Colors.primary_color : Colors.secondary_text,
                       backgroundColor:
-                        selected == 0 ? Colors.Orange : 'transparent',
+                        selected == 0 ?Colors.primary_color : 'transparent',
                     }}>
                     {selected == 0 ? (
                       <Icons.orderDeliveryWhite />
@@ -686,7 +686,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <Text
                     style={{
                       ...styles.orderCardText,
-                      color: selected == 0 ? Colors.Orange : '#A0A0A6',
+                      color: selected == 0 ?Colors.primary_color : Colors.secondary_text,
                     }}>
                     {/* Order Placed */}
                     Out for Delivery
@@ -703,20 +703,20 @@ const MyOrdersDetail = ({navigation, route}) => {
                   <View
                     style={{
                       ...styles.orderCard,
-                      borderColor: selected == 1 ? Colors.Orange : '#A0A0A6',
+                      borderColor: selected == 1 ?Colors.primary_color : Colors.secondary_text,
                       backgroundColor:
-                        selected == 1 ? Colors.Orange : 'transparent',
+                        selected == 1 ?Colors.primary_color : 'transparent',
                     }}>
                     <Ionicons
                       name="checkmark-circle"
-                      color={selected == 1 ? Colors.White : '#A0A0A6'}
+                      color={selected == 1 ? Colors.secondary_color : Colors.secondary_text}
                       size={25}
                     />
                   </View>
                   <Text
                     style={{
                       ...styles.orderCardText,
-                      color: selected == 1 ? Colors.Orange : '#A0A0A6',
+                      color: selected == 1 ?Colors.primary_color : Colors.secondary_text,
                     }}>
                     Order Delivered
                   </Text>
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontFamily: Fonts.PlusJakartaSans_ExtraBold,
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontSize: RFPercentage(2.5),
   },
   heading: {
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: Fonts.Inter_Medium,
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
     lineHeight: 25,
   },
@@ -828,8 +828,8 @@ const styles = StyleSheet.create({
 
   orderCard: {
     borderWidth: 1,
-    borderColor: Colors.Orange,
-    backgroundColor: Colors.Orange,
+    borderColor:Colors.primary_color,
+    backgroundColor:Colors.primary_color,
     borderRadius: 15,
     width: wp(15),
     height: wp(15),
@@ -838,7 +838,7 @@ const styles = StyleSheet.create({
   },
 
   orderCardText: {
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     fontSize: RFPercentage(1.4),
     marginTop: 10,
@@ -870,13 +870,13 @@ const styles = StyleSheet.create({
     minHeight: 45,
     flex: 1,
     borderWidth: 1,
-    borderColor: Colors.Orange,
+    borderColor:Colors.primary_color,
     borderStyle: 'dashed',
     width: 1,
     marginLeft: 19,
   },
   location_heading: {
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontFamily: Fonts.Inter_Medium,
     fontSize: RFPercentage(2),
   },
@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
     minHeight: 47,
     flex: 1,
     borderWidth: 1,
-    borderColor: Colors.Orange,
+    borderColor:Colors.primary_color,
     borderStyle: 'dashed',
     width: 1,
     // marginLeft: 19,
@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
     top: 13,
   },
   location_heading: {
-    color: Colors.Orange,
+    color:Colors.primary_color,
     fontFamily: Fonts.Inter_Medium,
     fontSize: RFPercentage(2),
     width: wp(70),

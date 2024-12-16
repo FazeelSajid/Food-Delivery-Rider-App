@@ -47,21 +47,21 @@ const CButton = ({
         width: width ? width : wp(90),
         padding: padding ? padding : 0,
         borderWidth: transparent ? 1 : 0,
-        borderColor: borderColor? borderColor : Colors.Orange,
+        borderColor: borderColor? borderColor : Colors.button.primary_button,
         backgroundColor: transparent
-          ? 'transparent'
+          ? Colors.button.secondary_button
           : bgColor
           ? bgColor
           : isDarkMode
-          ? Colors.Text
-          : Colors.Orange,
+          ? Colors.primary_text
+          :  Colors.button.primary_button,
         marginTop: marginTop ? marginTop : hp(1.5),
         ...style,
       }}
       onPress={onPress}>
       {loading && (
         <ActivityIndicator
-          color={transparent || isDarkMode ? Colors.Orange : Colors.White}
+          color={transparent || isDarkMode ? Colors.button.primary_button : Colors.button.secondary_button}
           size={'small'}
         />
       )}
@@ -75,13 +75,13 @@ const CButton = ({
               ? color
                 ? color
                 : isDarkMode
-                ? Colors.White
-                : Colors.Orange
+                ? Colors.button.primary_button_text
+                : Colors.button.secondary_button_text
               : color
               ? color
               : isDarkMode
-              ? Colors.White
-              : Colors.White,
+              ? Colors.button.primary_button_text
+              : Colors.button.primary_button_text,
             fontSize: txtSize,
             // textTransform: 'uppercase',
             ...textStyle,
@@ -108,7 +108,7 @@ export default CButton;
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: '#10A37F',
+    // backgroundColor: '#10A37F',
     // padding: hp(2),
     alignItems: 'center',
     justifyContent: 'center',
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   btnText: {
-    color: '#fff',
+    // color: '#fff',
     fontSize: 14,
     fontWeight: '500',
     marginHorizontal: wp(3),

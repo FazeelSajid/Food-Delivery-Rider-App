@@ -13,10 +13,14 @@ export const GetAllNotifications = async (rider_id) => {
         .then(response => response.json())
         
         .then(response => {
-          
+          console.log({response}, "Notification");
+
           if (response?.status == false) {
+            console.log({response});
             resolve([]);
           } else {
+            console.log(response);
+            
             let list = response?.result ? response?.result : [];
             resolve(list?.reverse());
           }

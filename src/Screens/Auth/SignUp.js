@@ -68,6 +68,7 @@ const SignUp = ({navigation, route}) => {
 
 
   const clearFields = () => {
+    setUserName('')
     setShowPass(false);
     setUserEmail('');
     setPhone_no('');
@@ -133,7 +134,13 @@ const SignUp = ({navigation, route}) => {
     return true;
   };
   
-
+  useEffect(() => {
+    GoogleSignin.configure({
+      androidClientId:
+        '293745886997-4i5fm6s806fpea20r9qq7383pdtedl65.apps.googleusercontent.com',
+      iosClientId: '',
+    });
+  }, []);
   
 
   const handleSignUp = async () => {
@@ -271,7 +278,7 @@ const SignUp = ({navigation, route}) => {
   };
 
   const handleGoogleSignUp = async () => {
-    console.log('handleGoogleSignIn');
+    // console.log('handleGoogleSignIn');
     try {
       await GoogleSignin.signOut();
 
@@ -294,6 +301,7 @@ const SignUp = ({navigation, route}) => {
           email: email,
           user_name: user_name,
           fcm_token: fcm_token,
+          rest_ID: "res_4074614",
           // password: password,
         };
         console.log('data  :  ', data);
@@ -312,36 +320,21 @@ const SignUp = ({navigation, route}) => {
               handlePopup(dispatch,response?.message);
               // handlePopup(dispatch,'Invalid Credentials');
             } else {
-              handlePopup(dispatch,response?.message, 'green');
               let wallet = await createRiderWallet(response?.result?.rider_id);
               console.log({wallet});
-
-              // navigation?.popToTop();
-              // navigation?.navigate('EmailVerification', {
-              //   response: response,
-              //   customer_id: response?.result?.customer_id,
-              //   email: email,
-              // });
-              let isUpdateVerificationStatus = await updateVerificationStatus(
-                response?.result?.customer_id,
-              );
-              console.log({isUpdateVerificationStatus});
-              if (!isUpdateVerificationStatus) {
-                return;
-              }
-              await AsyncStorage.setItem(
-                'customer_id',
-                response?.result?.customer_id?.toString(),
-              );
-              await AsyncStorage.setItem(
-                'customer_detail',
-                JSON.stringify(response?.result),
-              );
-
+              dispatch(setRiderId(response?.result?.rider_id))
+              console.log(response?.result?.rider_id);
               
-              navigation.navigate('EnableLocation', {
-                customer_id: response?.result?.customer_id,
-              });
+              dispatch(setRiderDetails(response?.result))
+
+              handlePopup(dispatch,response?.message, 'green')
+              setTimeout(()=>{
+                navigation.navigate('RegistrationForm', {
+                  user_name: user_name,
+                  // phone_no: countryCode + phone_no,
+                  email: email
+                });
+              }, 1000)
               clearFields();
             }
           })
@@ -456,7 +449,7 @@ const SignUp = ({navigation, route}) => {
             width={wp(88)}
             leftIcon={<Google  />}
             borderColor={Colors.borderGray}
-            color={Colors.Black}
+            color={Colors.primary_text}
             onPress={() => handleGoogleSignUp()}
           />
           </View>

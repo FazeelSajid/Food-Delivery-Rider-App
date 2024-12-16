@@ -88,7 +88,7 @@ function DashboardTabs() {
               style={{
                 fontSize: RFPercentage(1.4),
                 fontFamily: Fonts.PlusJakartaSans_Regular,
-                color: '#FF5722',
+                color:Colors.primary_color,
               }}>
               {route?.name}
             </Text>
@@ -136,16 +136,12 @@ const CustomDrawerContent = props => {
       {...props}
       style={{}}
       showsVerticalScrollIndicator={false}>
-      {/* <StatusBar
-        translucent={false}
-        barStyle={'dark-content'}
-        backgroundColor={Colors.White}
-      /> */}
+    
       <ConfirmationModal visible={visible} setVisible={setVisible} />
       <View
         style={{
           height: hp(100),
-          backgroundColor: Colors.White,
+          backgroundColor: Colors.secondary_color,
         }}>
         <View
           style={{
@@ -242,14 +238,14 @@ const CustomDrawerContent = props => {
               style={{
                 width: wp(60),
                 height: 40,
-                backgroundColor: Colors.Orange,
+                backgroundColor: Colors.button.primary_button,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 20,
                 flexDirection: 'row',
               }}>
               <Icons.LogoutIcon />
-              <Text style={{color: 'white', marginLeft: 10}}>Logout</Text>
+              <Text style={{color: Colors.button.primary_button_text, marginLeft: 10}}>Logout</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -277,12 +273,12 @@ const drawerItemStyles = StyleSheet.create({
     marginBottom: -5,
   },
   label: {
-    color: '#0A212B',
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     marginLeft: -15,
   },
   label1: {
-    color: '#0A212B',
+    color:Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     marginLeft: -6,
   },
@@ -334,11 +330,7 @@ function Router() {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
-      <Stack.Screen
-        name="RegistrationDocuments"
-        component={RegistrationDocuments}
-      />
-
+      <Stack.Screen name="RegistrationDocuments"component={RegistrationDocuments}/>
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="Verification" component={Verification} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
@@ -352,14 +344,9 @@ function Router() {
       <Stack.Screen name="UpdateVehicleInfo" component={UpdateVehicleInfo} />
       <Stack.Screen name="Conversation" component={Conversation} />
       <Stack.Screen name="DeliverySuccess" component={DeliverySuccess} />
-      {/* --------------------- app stack --------------------------------- */}
-      {/* <Stack.Screen name="Home" component={Home} /> */}
-      {/* <Stack.Screen name="Home" component={DashboardTabs} /> */}
       <Stack.Screen name="Drawer" component={DrawerNavigation} />
-
       <Stack.Screen name="ComplaintDetail" component={ComplaintDetail} />
       <Stack.Screen name="SearchOrder" component={SearchOrder} />
-
       <Stack.Screen name="CardForTopUp" component={CardForTopUp} />
       <Stack.Screen name="CardForWithdraw" component={CardForWithdraw} />
       <Stack.Screen name="Messages" component={Messages} />

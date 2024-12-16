@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StatusBar,
   useWindowDimensions,
+  Modal,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
@@ -28,127 +29,39 @@ import messaging from '@react-native-firebase/messaging';
 import { BASE_URL } from '../../../../utils/globalVariables';
 import moment from 'moment';
 import { io } from 'socket.io-client';
+import CButton from '../../../../components/Buttons/CButton';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-date-picker';
+import MonthPicker from 'react-native-month-year-picker';
+
 
 
 const Dashboard = ({ navigation, route }) => {
-  const { rider_details, userAppOpenLocation, totalWalletAmount, rider_id, contacts } = useSelector(store => store.auth)
+  const { rider_details, userAppOpenLocation, totalWalletAmount, rider_id, contacts, } = useSelector(store => store.auth)
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
   const [riderInfo, setRiderInfo] = useState(null);
   const [showDorpDown, setShowDropDown] = useState(false)
-  const [selectedOption, setSelectedOption] = useState('Today')
+  const [selectedOption, setSelectedOption] = useState('Daily')
   const [index, setIndex] = React.useState(0);
   const layout = useWindowDimensions();
   const [totalEarning, setTotalEarning] = useState(0)
   const dispatch = useDispatch()
+  const [showModal, setShowModal] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  // const Colors
 
-  // console.log(contacts);
+  console.log(userAppOpenLocation);
 
-  
-
-  const socketUrl = 'https://food-delivery-be.caprover-demo.mtechub.com/';
-
-
-  useEffect(() => {
-    const newSocket = io(BASE_URL);
-    // setSocket(newSocket);
-
-    // Fetch contacts on socket connection
-    newSocket.on('connect', () => {
-        newSocket.emit('getContacts', { rider_id }); 
-    });
-
-    // Listen for contacts data
-    newSocket.on('contacts', (contactsData) => {
-        dispatch(setContacts(contactsData));  
-
-        // console.log({contactsData});
-        
-
-        
-    });
-
-    // Listen for room join confirmation
-    // newSocket.on('roomJoined', ({ roomId }) => {
-    //     setRoomId(roomId);
-    //     console.log(`Joined room: ${roomId}`);
-    // });
-
-    // Listen for previous messages
-    // newSocket.on('previousMessages', ({ messages }) => {
-    //     setMessages(messages);
-    //     console.log('Previous messages loaded:', messages);
-    // });
-
-    // newSocket.emit('joinRoom', customer_id);
-    // newSocket.on('roomJoined', ({ roomId }) => {
-    //     setRoomId(roomId);
-    //     console.log(`Joined room: ${roomId}`);
-    // });
+  // console.log({ selectedDate });
 
 
-    // if (rest_ID || customer_id) {
-    //     const initialContact = {
-    //         customer_id,
-    //         // rider_id,
-    //         rest_ID
-    //     };
 
-    //     // Automatically join the room or create a new room based on available IDs
-    //     newSocket.emit('joinRoom', initialContact);
-    //     newSocket.on('roomJoined', ({ roomId }) => {
-    //         setRoomId(roomId);
-    //         console.log(`Joined room: ${roomId}`);
-    //     });
 
-    //     // Fetch previous messages for the room if available
-    //     newSocket.on('previousMessages', ({ messages }) => {
-    //         setMessages(messages);
-    //         console.log('Previous messages loaded:', messages);
-    //     });
-    // }
 
-    // Listen for new messages
-    
-    // newSocket.on('newMessage', ({ sender_type, senderId, message }) => {
 
-    //     console.log(sender_type, senderId, message);
 
-    //     setMessages((prevMessages) => [
-    //         ...prevMessages,
-    //         { sender_type, senderId, message },
-    //     ]);
 
-    //     // Update the contacts list by moving the contact to the top
-    //     setContacts((prevContacts) => {
-    //         // Find the contact that received the new message
-    //         const updatedContacts = prevContacts.map(contact => {
-    //             if (contact.customer_id === senderId) {
-    //                 return {
-    //                     ...contact,
-    //                     message: message,
-    //                     last_message_time: new Date().toISOString() // Update the last message time
-    //                 };
-    //             }
-    //             return contact;
-    //         });
-    //         // Sort contacts to bring the one with the latest message to the top
-    //         return updatedContacts.sort((a, b) => new Date(b.last_message_time) - new Date(a.last_message_time));
-    //     });
-    // });
 
-    // Handle errors
-    
-    
-    newSocket.on('error', (error) => {
-        console.error('Socket Error:', error.message);
-    });
-
-    // Cleanup on component unmount
-    return () => {
-        newSocket.disconnect();
-    };
-}, []);
-  
 
 
   // const getData = async () => {
@@ -208,7 +121,7 @@ const Dashboard = ({ navigation, route }) => {
   });
 
   const [routes] = React.useState([
-    { key: 'first', title: 'Request' },
+    { key: 'first', title: 'Requests' },
     { key: 'second', title: 'In Progress' },
     { key: 'third', title: 'History' },
   ]);
@@ -216,6 +129,7 @@ const Dashboard = ({ navigation, route }) => {
   const handleDropDownSelect = (option) => {
     setSelectedOption(option)
     setShowDropDown(false)
+    setShowModal(true)
   }
 
   // const func = async ()=> {
@@ -228,41 +142,59 @@ const Dashboard = ({ navigation, route }) => {
     // func()
   }, []);
 
- 
-       
-  const dateString = new Date()
-  const date = moment(dateString);
 
-  const year = date.year();
-  const month = date.month() + 1;
-  const day = date.date();
+
+  // const dateString = new Date()
+  // const date = moment(dateString);
+
+  // const year = date.year();
+  // const month = date.month() + 1;
+  // const day = date.date();
 
   const fetchPayments = async () => {
+
+    const date = moment(selectedDate);
+
+    // Extract year, month, day
+    const startOfMonth = date.clone().startOf('month'); // Get the start of the month
+    const weekOfMonth = date.diff(startOfMonth, 'weeks') + 1;
+
+    // Extract year, month, and day
+    const year = date.year();
+    const month = date.month() + 1; // Months are zero-indexed, so add 1
+    const day = date.date();
     // setIsLoading(true);
+    setShowModal(false)
+
     let InsertAPIURL = `${BASE_URL}wallet/ViewAllPaymentsAndEarning_rider?rider_id=${rider_id}`;
-
-
-    if (selectedOption === "Today") {
-
-     
-      InsertAPIURL += `&getBy=day&year=${year}&month=${month}&day=${day}`;
-
-    } 
-    else if (selectedOption === "Weekly") {
-      // const dateString = new Date()
-      // const date = moment(dateString);
-      // const weekOfYear = date.week(); 
-      // InsertAPIURL += `&getBy=week&year=${"year"}&week=${weekOfYear}`;
-   
-
-      InsertAPIURL += `&getBy=day&year=${year}&month=${month}&day=${day}`;
-    }
-    else if (selectedOption === "Monthly") {
  
 
+
+    if (selectedOption === "Daily") {
+
+
+      InsertAPIURL += `&getBy=day&year=${year}&month=${month}&day=${day}`;
+      console.log(InsertAPIURL);
+
+
+    }
+    else if (selectedOption === "Weekly") {
+
+
+      InsertAPIURL += `&getBy=week&year=${year}&week=${weekOfMonth}&month=${month}`;
+      console.log(InsertAPIURL)
+
+
+    }
+    else if (selectedOption === "Monthly") {
+
+
       InsertAPIURL += `&getBy=month&year=${year}&month=${month}`;
-    } 
-    
+
+      console.log(InsertAPIURL);
+
+    }
+
 
     var headers = {
       'Accept': 'application/json',
@@ -277,23 +209,31 @@ const Dashboard = ({ navigation, route }) => {
       .then(response => {
         // setIsLoading(false);
         if (response.status) {
-          // console.log(response?.result?.total_earnings);
-          
+          console.log(response);
+
           setTotalEarning(response?.result?.total_earnings || 0);
         }
+      })
+      .finally(()=>{
+       
       })
       .catch(error => {
         // setIsLoading(false);
         // // toast.error(error.message);
       });
+      
+      
   };
 
   // console.log(rider_details);
 
+  // console.log({ showModal });
 
-useEffect(()=>{
-  fetchPayments()
-},[selectedOption])
+
+  useEffect(() => {
+    fetchPayments()
+  }, [])
+
 
 
   return (
@@ -304,13 +244,13 @@ useEffect(()=>{
 
         <StatusBar
           translucent={false}
-          backgroundColor={'white'}
+          backgroundColor={Colors.secondary_color}
           barStyle={'dark-content'}
         />
 
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation?.openDrawer()}>
-            <Icons.MenuActive width={23} />
+            <Feather name="menu" size={RFPercentage(3.2)} color={Colors.primary_color} />
           </TouchableOpacity>
           <Text style={styles.headerLocation} ellipsizeMode='tail' numberOfLines={1} >{userAppOpenLocation?.shortAddress}</Text>
 
@@ -319,7 +259,7 @@ useEffect(()=>{
               style={{ marginRight: 20 }}
               onPress={() => navigation.navigate('SearchOrder')}
             >
-              <Feather name="search" size={RFPercentage(2.8)} color={Colors.Orange} />
+              <Feather name="search" size={RFPercentage(2.8)} color={Colors.primary_color} />
 
             </TouchableOpacity>
             <TouchableOpacity
@@ -338,11 +278,11 @@ useEffect(()=>{
             <View>
               <TouchableOpacity onPress={() => setShowDropDown(!showDorpDown)} style={styles.DropDownBtn} >
                 <Text style={styles.DropDownBtnText} >{selectedOption}</Text>
-                <Feather name="chevron-down" size={RFPercentage(2.3)} color={Colors.White} />
+                <Feather name="chevron-down" size={RFPercentage(2.3)} color={Colors.button.primary_button_text} />
               </TouchableOpacity>
               {
                 showDorpDown && <View style={styles.DropDownContainer} >
-                  <TouchableOpacity onPress={() => handleDropDownSelect('Today')} ><Text style={styles.DropDownOptionText} >Today</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleDropDownSelect('Daily')} ><Text style={styles.DropDownOptionText} >Daily</Text></TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDropDownSelect('Weekly')} ><Text style={styles.DropDownOptionText}>Weekly</Text></TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDropDownSelect('Monthly')} ><Text style={styles.DropDownOptionText}>Monthly</Text></TouchableOpacity>
                 </View>
@@ -356,22 +296,22 @@ useEffect(()=>{
           renderScene={renderScene}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
-          sceneContainerStyle={{ backgroundColor: Colors.White }}
+          // sceneContainerStyle={{ backgroundColor: 'green' }}
           // pagerStyle={{backgroundColor: 'red'}}
           swipeEnabled={true}
           renderTabBar={props => (
             <TabBar
               {...props}
               style={{
-                backgroundColor: Colors.White,
+                backgroundColor: Colors.secondary_color,
                 elevation: 4,
               }}
               tabStyle={{ alignItems: 'center', alignContent: 'center', }}
               renderLabel={({ route, focused, color }) => (
                 <Text
                   style={{
-                    color: focused ? Colors.Black : '#979797',
-                    fontSize: hp(1.8),
+                    color: focused ? Colors.primary_text : Colors.secondary_text,
+                    fontSize: RFPercentage(1.5),
                     fontFamily: focused
                       ? Fonts.PlusJakartaSans_Bold
                       : Fonts.PlusJakartaSans_Regular,
@@ -382,24 +322,75 @@ useEffect(()=>{
                   {route.title}
                 </Text>
               )}
-              activeColor={'#fff'}
+              // activeColor={'green'}
 
               indicatorStyle={{
                 padding: 1.5,
                 alignSelf: 'center',
-                backgroundColor: Colors.Orange
+                backgroundColor: Colors.primary_color
 
               }}
             />
           )}
-          pressColor="white"
+          // pressColor="white"
           // pressOpacity={0}
-          activeColor={'#fff'}
+          // activeColor={'green'}
           indicatorContainerStyle={{
             backgroundColor: 'transparent',
           }}
           style={{ height: hp(83.7) }}
         />
+
+
+        <Modal visible={showModal} animationType="slide" transparent>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContentContainer}>
+              <View style={styles.rowView}>
+                {/* <Text style={styles.filterHeading}>Filter</Text> */}
+                <TouchableOpacity onPress={() => setShowModal(false)} >
+                  <Feather name="x" size={RFPercentage(2.8)} color={Colors.button.icon} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ alignItems: 'center' }} >
+                {/* <Text style={[styles.filterHeading, { fontSize: RFPercentage(2) }]}>Year</Text> */}
+                {/* <DateTimePicker
+                testID="dateTimePicker"
+                value={ new Date()}
+                mode={'date'}
+                display="default"
+                // locale="es-ES"
+                themeVariant="light"
+                onChange={setSelectedDate}
+                maximumDate={new Date()}
+                positiveButton={{label: 'Apply', textColor: Colors.primary_color}}
+
+                style={{
+                  shadowColor: '#fff',
+                  shadowRadius: 0,
+                  shadowOpacity: 1,
+                  shadowOffset: { height: 0, width: 0 },
+                  color: '#1669F',
+                  textColor: '#1669F',
+                }}
+              /> */}
+
+                <DatePicker mode="date" theme='light' date={selectedDate} onDateChange={setSelectedDate} minimumDate={new Date("2023-01-01")} dividerColor={Colors.primary_color} />
+
+                {/* <MonthPicker
+          onChange={setSelectedDate}
+          value={new Date()}
+          autoTheme={false}
+        /> */}
+
+                <CButton title='Apply' width={wp(50)} height={hp(5)} onPress={fetchPayments}   />
+
+              </View>
+
+
+            </View>
+          </View>
+        </Modal>
+
 
 
       </View>
@@ -410,7 +401,7 @@ useEffect(()=>{
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.White, paddingHorizontal: 20 },
+  container: { flex: 1, backgroundColor: Colors.secondary_color, paddingHorizontal: 20 },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -418,7 +409,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   headerLocation: {
-    color: Colors.Black,
+    color: Colors.primary_text,
     width: wp(60),
     fontFamily: Fonts.PlusJakartaSans_Medium,
     textAlign: "center",
@@ -427,28 +418,28 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: '#02010E',
+    color: Colors.primary_text,
     fontSize: RFPercentage(2.4),
     letterSpacing: 0.5,
     marginBottom: 6,
   },
   EarningText: {
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: '#02010E',
+    color: Colors.primary_text,
     fontSize: RFPercentage(2.2),
     letterSpacing: 0.5,
     marginBottom: 6,
   },
   amountText: {
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: '#02010E',
+    color: Colors.primary_text,
     fontSize: RFPercentage(3.3),
     letterSpacing: 0.5,
     marginBottom: 6,
   },
   nameText: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#02010E',
+    color: Colors.primary_text,
     fontSize: RFPercentage(2.6),
     letterSpacing: 1,
   },
@@ -459,7 +450,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerText: {
-    color: '#02010E',
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(1.9),
     letterSpacing: 0.45,
@@ -468,16 +459,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // backgroundColor: 'green'
   },
-  viewAllText: {
-    color: '#FF5722',
-    fontSize: RFPercentage(1.8),
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    textDecorationLine: 'underline',
-  },
-  container2: { flex: 1, backgroundColor: 'red', alignItems: 'flex-end' },
   DropDownBtn: {
-    backgroundColor: Colors.Orange,
+    backgroundColor: Colors.button.primary_button,
     paddingHorizontal: wp(4),
     paddingVertical: hp(1.2),
     borderRadius: wp(10),
@@ -487,14 +472,14 @@ const styles = StyleSheet.create({
     width: wp(25)
   },
   DropDownBtnText: {
-    color: Colors.White,
+    color: Colors.button.primary_button_text,
     marginRight: wp(2)
   },
   DropDownContainer: {
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.secondary_color,
     borderRadius: wp(3),
-    borderColor: '#EBEBEB',
-    borderWidth: wp(0.3),
+    borderColor: Colors.secondary_text,
+    borderWidth: wp(0.1),
     marginTop: hp(0.5),
     paddingBottom: wp(1),
     position: 'absolute',
@@ -506,10 +491,24 @@ const styles = StyleSheet.create({
   },
   DropDownOptionText: {
     fontFamily: Fonts.PlusJakartaSans_Regular,
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     fontSize: RFPercentage(1.8),
     textAlign: 'center',
-    // letterSpacing: 0.5,
     marginVertical: 4,
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent black for the backdrop
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContentContainer: {
+    backgroundColor: Colors.White,
+    padding: 20, // Adjust padding as needed
+    borderRadius: 10, // Optional for rounded corners
+    width: '80%', // Adjust width as needed
+    // alignItems: 'center',
+  },
+
+  filterHeading: { color: Colors.primary_text, fontFamily: Fonts.PlusJakartaSans_SemiBold, fontSize: RFPercentage(2.5), textAlign: 'center' }
 });

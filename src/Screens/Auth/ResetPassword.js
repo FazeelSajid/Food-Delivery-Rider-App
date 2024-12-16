@@ -118,7 +118,7 @@ const ResetPassword = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled"
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   underlineStyleBase: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: 24,
     fontFamily: Fonts.Inter_Medium,
     width: 60,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F6FA',
   },
   underlineStyleHighLighted: {
-    borderColor: Colors.Orange,
+    borderColor:Colors.primary_color,
     borderRadius: 30,
     borderWidth: 1,
   },

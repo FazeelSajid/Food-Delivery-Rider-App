@@ -68,7 +68,7 @@ import { setContacts } from '../../../../redux/AuthSlice';
       // const [message, setMessage] = useState(`Hey testing message from cutomer  (${customer_id}) to restaurent from app`);
       const [messages, setMessages] = useState([]);
       const [roomId, setRoomId] = useState(null);
-      // const [contacts, setContacts] = useState([]); // State to hold contacts list
+     
   
       
   
@@ -167,7 +167,6 @@ import { setContacts } from '../../../../redux/AuthSlice';
       //     };
       // }, []);
   
-      // const contac = { "customer_id": customer_id,  "receiver_id": customer_id, "receiver_type": "customer", "restaurant_id": null, "rider_id": rider_id, "room_id": null, "sender_id": rider_id, "sender_type": "rider", 'restaurant_name': 'Grill Out' }
   
   
   
@@ -338,9 +337,9 @@ import { setContacts } from '../../../../redux/AuthSlice';
   
   
     return (
-      <View style={{flex: 1, backgroundColor: Colors.White}}>
+      <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
         <StackHeader title={'My Chats'} />
-        <View style={{paddingHorizontal: wp(0)}} >
+        <View style={{paddingHorizontal: wp(0), backgroundColor: `${Colors.primary_color}50`}} >
 
       
       <TouchableOpacity style={styles.rowView} onPress={()=> handleSelectContact(RestaruantContact)} >
@@ -356,7 +355,7 @@ import { setContacts } from '../../../../redux/AuthSlice';
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: 30}}
           renderItem={({item, index}) => {
-            console.log(item);
+            console.log({item});
             
             return(
             <ChatCard
@@ -381,14 +380,14 @@ import { setContacts } from '../../../../redux/AuthSlice';
   
   const styles = StyleSheet.create({
     card: {flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20},
-    iconContainer: {
-      height: 50,
-      width: 50,
-      borderRadius: 50 / 2,
-      backgroundColor: '#FF572233',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+    // iconContainer: {
+    //   height: 50,
+    //   width: 50,
+    //   borderRadius: 50 / 2,
+    //   backgroundColor: '#FF572233',
+    //   alignItems: 'center',
+    //   justifyContent: 'center',
+    // },
     rowViewSB: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -397,31 +396,31 @@ import { setContacts } from '../../../../redux/AuthSlice';
     rowView: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: Colors.OrangeExtraLight,
+      
       paddingHorizontal: wp(6.5),
       paddingVertical: hp(2),
-      elevation: 7,
+      // elevation: 7,
       justifyContent: 'space-between',
     },
-    title: {
-      fontFamily: Fonts.Inter_SemiBold,
-      color: Colors.Black,
-      fontSize: RFPercentage(2),
-      lineHeight: 30,
-    },
+    // title: {
+    //   fontFamily: Fonts.Inter_SemiBold,
+    //   color: Colors.primary_text,
+    //   fontSize: RFPercentage(2),
+    //   lineHeight: 30,
+    // },
     timeText: {
       fontFamily: Fonts.Inter_Medium,
-      color: '#595959',
+      color: Colors.secondary_text,
       fontSize: RFPercentage(1.5),
     },
-    description: {
-      fontFamily: Fonts.Inter_Regular,
-      color: '#595959',
-      fontSize: RFPercentage(1.5),
-      flex: 0.9,
-    },
+    // description: {
+    //   fontFamily: Fonts.Inter_Regular,
+    //   color: '#595959',
+    //   fontSize: RFPercentage(1.5),
+    //   flex: 0.9,
+    // },
     restaurant_name:{
-      color: Colors.darkTextColor,
+      color: Colors.secondary_text,
       fontFamily: Fonts.PlusJakartaSans_SemiBold,
       fontSize: RFPercentage(2.8),
       textAlign: 'center',

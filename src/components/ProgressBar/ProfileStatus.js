@@ -55,7 +55,7 @@ const ProfileStatus = ({ profile }) => {
        <Feather
                 name={'chevron-right'}
                 size={25}
-                color={Colors.grayText}
+                color={Colors.secondary_text}
               />
        </TouchableOpacity>
       </View>
@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
   Ptitle: {
     fontSize:  RFPercentage(2),
     fontWeight: 'bold',
-    color: Colors.Black,
+    color: Colors.primary_text,
   },
   percentage: {
     fontSize: RFPercentage(2),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     marginTop: hp(1)
   },
   progressBar: {

@@ -16,7 +16,7 @@ const TopSearchesList = ({data, onRemove, onPress, text}) => {
     <View style={{paddingHorizontal: 30, marginTop: -15}}>
       <Text
         style={{
-          color: Colors.Orange,
+          color:Colors.primary_color,
           fontFamily: Fonts.PlusJakartaSans_Bold,
           marginBottom: 10,
         }}>

@@ -17,7 +17,7 @@ const CPaperInput = props => {
       fontFamily: Fonts.Inter_Medium,
     },
     paperInputThemeColor: {
-      primary: Colors.Orange,
+      primary:Colors.primary_color,
       // surface: 'red',
       text: '#fff',
 

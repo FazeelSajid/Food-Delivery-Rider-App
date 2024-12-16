@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 const HistoryOrderCard = ({item}) => {
   const navigation = useNavigation()
   // console.log({item});
+  
 
   return (
     <TouchableOpacity onPress={()=> navigation.navigate('HistoryOrderDetailScreen', {
@@ -49,9 +50,9 @@ const styles = StyleSheet.create({
     paddingVertical: wp('2.5%'),
     paddingHorizontal: wp('4%'),
     borderRadius: wp('2%'),
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    backgroundColor: '#FFF',
+    borderWidth: wp(0.1),
+    borderColor: Colors.secondary_text,
+    backgroundColor: Colors.secondary_color,
     width: wp('85%'),
     alignSelf: 'center',
     marginVertical: hp('1%'),
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   orderText: {
     fontSize: wp('4.5%'),
     fontWeight: '700',
-    color: '#1C1C1C',
+    color: Colors.primary_text,
   },
   statusContainer: {
     backgroundColor: '#F2FFB9',
@@ -88,21 +89,21 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: RFPercentage(1.9),
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.Black,
+    color: Colors.primary_text,
     textAlign: 'center',
   },
   itemsText: {
     fontSize: wp('3.2%'),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     fontFamily: Fonts.PlusJakartaSans_Regular,
   },
   dateText: {
     fontSize: wp('3.8%'),
-    color: '#808080',
+    color: Colors.secondary_text,
   },
   dot: {
     fontSize: wp('4%'),
-    color: '#808080',
+    color: Colors.secondary_text,
     marginHorizontal: wp('1%'),
     fontWeight: 'bold'
   },
@@ -113,7 +114,8 @@ const styles = StyleSheet.create({
   },
   earningsText: {
     fontSize: wp('3.8%'),
-    color: '#808080',
+    color: Colors.secondary_text,
+    fontFamily: Fonts.PlusJakartaSans_Regular,
   },
   starIcon: {
     width: wp('4%'),
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: wp('3.8%'),
-    color: '#808080',
+    color: Colors.secondary_text,
     marginLeft: wp('1%'),
   },
 });

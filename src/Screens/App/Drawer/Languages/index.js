@@ -98,7 +98,7 @@ const Languages = ({navigation, route}) => {
 
   return (
     <ScrollView
-      style={{flex: 1, backgroundColor: Colors.White}}
+      style={{flex: 1, backgroundColor: Colors.secondary_color}}
       keyboardShouldPersistTaps="handled">
       <StackHeader
         onBackPress={() =>
@@ -120,7 +120,7 @@ const Languages = ({navigation, route}) => {
                   <TextInput
                     style={styles.input}
                     placeholder="Search here"
-                    placeholderTextColor={Colors.Black}
+                    placeholderTextColor={Colors.primary_text}
                     value={searchQuery}
                     onChangeText={handleSearch}
                   />
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 0.9,
     fontFamily: Fonts.PlusJakartaSans_Regular,
-    color: Colors.Black,
+    color: Colors.primary_text,
   },
   searchContainer: {
     flexDirection: 'row',

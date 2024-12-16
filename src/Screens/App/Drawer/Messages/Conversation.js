@@ -30,12 +30,13 @@ const Conversation = ({ navigation, route }) => {
 
 
 
-  // console.log({ rider_id });
+
+  console.log({ contact });
 
 
 
 
-  const socketUrl = 'https://food-delivery-be.caprover-demo.mtechub.com/';
+  // const socketUrl = 'https://food-delivery-be.caprover-demo.mtechub.com/';
 
   // const socketUrl = 'http://192.168.18.120:3017/';
   // const customer_id = 202028;
@@ -151,6 +152,8 @@ const Conversation = ({ navigation, route }) => {
             console.log(`Joined room: ${roomId}, conversation Screen`);
             setRoomId(roomId);
           });
+          // console.log('dsasda');
+          
           // console.log('else from customer conversation screen useeffect unexpectedly');
         }
   });
@@ -170,6 +173,11 @@ const Conversation = ({ navigation, route }) => {
         ...msg,
         createdAt: new Date(msg.created_at),
       }));
+      // console.log('adasos');
+
+      // console.log({messages});
+      
+      
       setMessages(formattedMessages.reverse());
     });
 
@@ -200,6 +208,7 @@ const Conversation = ({ navigation, route }) => {
           receiver_type: contact.customer_id ? 'customer' : 'restaurant',
           receiverId: contact.customer_id || contact.restaurant_id,
           message,
+          timestamp : new Date().toISOString()
         });
       setMessage('');
       setImage(null)
@@ -246,7 +255,7 @@ const Conversation = ({ navigation, route }) => {
             <Text
               style={[
                 styles.messageText,
-                isRider ? { color: Colors.White } : { color: Colors.Black },
+                isRider ? { color: Colors.secondary_color } : { color: Colors.secondary_text },
               ]}
             >
               {item.message}
@@ -256,7 +265,10 @@ const Conversation = ({ navigation, route }) => {
 
         {/* Timestamp */}
         <Text style={styles.timestamp}>
-          {new Date(item.created_at).toLocaleTimeString([], {
+          { item.created_at ? new Date(item.created_at).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }) : new Date(item.timestamp).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
           })}
@@ -264,6 +276,9 @@ const Conversation = ({ navigation, route }) => {
       </View>
     );
   };
+
+
+  // const Colors:
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <ChatHeader
@@ -286,11 +301,11 @@ const Conversation = ({ navigation, route }) => {
           placeholder="Write message..."
           value={message}
           onChangeText={(text) => setMessage(text)}
-          placeholderTextColor={Colors.grayText}
+          placeholderTextColor={Colors.secondary_text}
         />
     
     <TouchableOpacity style={{marginHorizontal: wp('2%'),}} onPress={()=> cameraBtmSheetRef?.current?.open()} >
-        <Ionicons name="camera" size={wp('9')} color={Colors.Orange} />
+        <Ionicons name="camera" size={wp('9')} color={Colors.button.primary_button} />
 
         </TouchableOpacity>
         <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
@@ -331,30 +346,32 @@ const styles = StyleSheet.create({
     maxWidth: wp('70%'),
     borderRadius: wp('3%'),
     padding: wp('1%'),
-    overflow:'hidden'
+    overflow:'hidden',
   },
   customerBubble: {
-    backgroundColor: Colors.Orange,
+    backgroundColor:Colors.primary_color,
     borderTopRightRadius: 0,
     width: wp(62)
-    // borderColor: Colors.Orange,
+    // borderColor:Colors.primary_color,
     // borderWidth: wp(1)
   },
   restaurantBubble: {
     backgroundColor: '#EDEDED',
     borderTopLeftRadius: 0,
-    width: wp(62)
+    width: wp(62),
+    
   },
   messageText: {
     fontSize: wp('4%'),
-    color: '#333333',
+    color: Colors.primary_text,
     marginBottom: hp('0.5%'),
     marginTop: hp('0.5%'),
+    marginLeft: wp('1%'),
     // width: wp(80)
   },
   timestamp: {
     fontSize: wp('3.2%'),
-    color: '#888888',
+    color: Colors.secondary_text,
     marginTop: hp('0.5%'),
   },
   // Image Styling
@@ -392,18 +409,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('4%'),
     backgroundColor: '#F9F9F9',
     fontSize: wp('4%'),
-    color: Colors.Black,
+    color: Colors.primary_text,
   },
   sendButton: {
     marginLeft: wp('2%'),
-    backgroundColor: Colors.Orange,
+    backgroundColor: Colors.button.primary_button,
     borderRadius: wp('5%'),
     padding: wp('3%'),
     justifyContent: 'center',
     alignItems: 'center',
   },
   sendText: {
-    color: '#FFFFFF',
+    color: Colors.button.primary_button_text,
     fontSize: wp('5%'),
     fontWeight: 'bold',
   },

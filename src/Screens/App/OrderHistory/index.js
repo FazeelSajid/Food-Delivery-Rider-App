@@ -188,7 +188,7 @@ const OrderHistory = ({navigation, route}) => {
   }, [isOrderUpdate]);
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
       <ScrollView
         refreshControl={

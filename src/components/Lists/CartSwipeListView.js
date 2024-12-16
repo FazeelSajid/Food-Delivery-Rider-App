@@ -42,7 +42,7 @@ const CartSwipeListView = ({data, onDecrement, onIncrement, onDelete}) => {
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.nameText}>{item.description}</Text>
             <View style={styles.rowViewSB}>
-              <Text style={{...styles.title, color: Colors.Orange}}>
+              <Text style={{...styles.title, color:Colors.primary_color}}>
                 ${item.price}
               </Text>
               <View style={styles.rowView}>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   countText: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     marginHorizontal: 8,
     fontFamily: Fonts.PlusJakartaSans_Bold,
   },

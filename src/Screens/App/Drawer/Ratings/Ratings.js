@@ -10,6 +10,8 @@ import { handlePopup } from '../../../../utils/helpers/orderApis'
 import PopUp from '../../../../components/Popup/PopUp'
 import { useFocusEffect } from '@react-navigation/native'
 import { RefreshControl } from 'react-native-gesture-handler'
+import DayNightToggle from '../../../../components/Switch/Switch'
+import CounterButton from '../../../../components/Buttons/CounterButton'
 
 const Ratings = () => {
   const [ratings, setRatings] = useState([])
@@ -56,14 +58,18 @@ const refresh = () => {
       {showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
       <FlatList  
       contentContainerStyle={styles.FlatList}
-      refreshControl={<RefreshControl refreshing={loading} colors={[Colors.Orange]} onRefresh={refresh} />}  data={ratings} renderItem={({item})=> {
-        console.log(item);
+      refreshControl={<RefreshControl refreshing={loading} colors={[Colors.primary_color]} onRefresh={refresh} />}  data={ratings} renderItem={({item})=> {
+        // console.log(item);
         
         return <RatingCard  item={item}  />
       }}  />
         {/* <RatingCard/>
         <RatingCard/>
         <RatingCard/> */}
+
+        {/* <CounterButton/> */}
+
+        {/* <DayNightToggle/> */}
     </View>
   )
 }
@@ -73,8 +79,10 @@ export default Ratings
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.White,
-        paddingHorizontal: widthPercentageToDP(4)
+        backgroundColor: Colors.secondary_color,
+        paddingHorizontal: widthPercentageToDP(4),
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     FlatList:{
       paddingHorizontal: widthPercentageToDP(3)

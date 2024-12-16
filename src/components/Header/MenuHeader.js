@@ -21,7 +21,7 @@ const MenuHeader = ({title, rightIcon, translucent}) => {
   return (
     <View style={styles.header}>
       <StatusBar
-        backgroundColor={'#FFFFFF'}
+        backgroundColor={Colors.secondary_color}
         barStyle={'dark-content'}
         translucent={translucent ? translucent : false}
       />
@@ -33,7 +33,7 @@ const MenuHeader = ({title, rightIcon, translucent}) => {
         <TouchableOpacity
           onPress={() => navigation?.toggleDrawer()}
           style={styles.iconContainer}>
-          <Feather name="menu" size={hp(3)} color={Colors.Orange} />
+          <Feather name="menu" size={hp(3)} color={Colors.primary_color} />
         </TouchableOpacity>
         <View style={styles.headerTextContainer}>
           <Text style={styles.mainText}>{title}</Text>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainText: {
-    color: Colors.Orange,
+    color: Colors.primary_color,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     fontSize: RFPercentage(2.5),
     textAlign: 'center',

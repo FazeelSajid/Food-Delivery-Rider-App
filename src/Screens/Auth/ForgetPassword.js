@@ -240,12 +240,12 @@ const ForgetPassword = ({navigation, route}) => {
     }
   };
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled"
         ref={scrollViewRef}>
-        <StackHeader title={''} backIconColor={'#1D1D20'} />
+        <StackHeader title={''} backIconColor={Colors.primary_text} />
         <View
           style={{
             flex: 1,

@@ -461,7 +461,7 @@ const UpdateProfile = ({ navigation }) => {
 
           if (response.error === false) {
             dispatch(setShowPopUp(true))
-            dispatch(setPopUpColor(Colors.Orange))
+            dispatch(setPopUpColor(Colors.primary_color))
             dispatch(setPopUpMesage(response?.message))
             setTimeout(() => {
               dispatch(setShowPopUp(false))
@@ -532,7 +532,7 @@ const UpdateProfile = ({ navigation }) => {
   
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.White, }}>
+    <View style={{ flex: 1, backgroundColor: Colors.secondary_color, }}>
       <Loader loading={loading} />
       {showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
       <ScrollView
@@ -547,7 +547,7 @@ const UpdateProfile = ({ navigation }) => {
             <Feather
               name={'chevron-left'}
               size={25}
-              color={Colors.Orange}
+              color={Colors.primary_color}
             /></TouchableOpacity>
 
       <Text style={styles.header} >{index == 1 ? 'Vehicle Details' : 'Update Profile'}</Text>
@@ -598,7 +598,7 @@ const UpdateProfile = ({ navigation }) => {
               {FrontLicenseImage?.path && <TouchableOpacity style={styles.iconBtn} onPress={() => setFrontLicenseImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
 
@@ -612,7 +612,7 @@ const UpdateProfile = ({ navigation }) => {
                
                   <Image source={{ uri: FrontLicenseImage?.path?.startsWith('file://')
                       ? FrontLicenseImage?.path
-                      : BASE_URL_IMAGE + FrontLicenseImage}} style={styles.image} />
+                      : FrontLicenseImage}} style={styles.image} />
               
               </TouchableOpacity>
 
@@ -622,7 +622,7 @@ const UpdateProfile = ({ navigation }) => {
               {BackLicenseImage?.path && <TouchableOpacity style={styles.iconBtn} onPress={() => setBackLicenseImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
               <TouchableOpacity
@@ -634,7 +634,7 @@ const UpdateProfile = ({ navigation }) => {
                 
                   <Image source={{  uri: BackLicenseImage?.path?.startsWith('file://')
                       ? BackLicenseImage?.path
-                      : BASE_URL_IMAGE + BackLicenseImage }} style={styles.image} />
+                      : BackLicenseImage }} style={styles.image} />
                 
               </TouchableOpacity>
             </View>
@@ -718,7 +718,7 @@ const UpdateProfile = ({ navigation }) => {
               {FrontIDImage?.path && <TouchableOpacity style={styles.iconBtn} onPress={() => setFrontIDImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
 
@@ -732,7 +732,7 @@ const UpdateProfile = ({ navigation }) => {
                
                     <Image source={{  uri: FrontIDImage?.path?.startsWith('file://')
                       ? FrontIDImage?.path
-                      : BASE_URL_IMAGE + FrontIDImage }} style={styles.image} />
+                      : FrontIDImage }} style={styles.image} />
                 
               </TouchableOpacity>
 
@@ -742,7 +742,7 @@ const UpdateProfile = ({ navigation }) => {
               {BackIDImage?.path && <TouchableOpacity style={styles.iconBtn} onPress={() => setBackIDImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
               <TouchableOpacity
@@ -754,7 +754,7 @@ const UpdateProfile = ({ navigation }) => {
                
                   <Image source={{ uri: BackIDImage?.path?.startsWith('file://')
                       ? BackIDImage?.path
-                      : BASE_URL_IMAGE + BackIDImage}} style={styles.image} />
+                      : BackIDImage}} style={styles.image} />
             
               </TouchableOpacity>
             </View>
@@ -780,8 +780,8 @@ const UpdateProfile = ({ navigation }) => {
                   shadowRadius: 0,
                   shadowOpacity: 1,
                   shadowOffset: { height: 0, width: 0 },
-                  color: '#1669F',
-                  textColor: '#1669F',
+                  // color: '#1669F',
+                  // textColor: '#1669F',
                 }}
               />
             )}
@@ -806,7 +806,7 @@ const UpdateProfile = ({ navigation }) => {
             <Feather
               name={'x'}
               size={20}
-              color={Colors.Black}
+              color={Colors.primary_text}
             /></TouchableOpacity>
         </View>
 
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.5),
-    color: Colors.Orange,
+    color: Colors.primary_color,
     textAlign: 'center',
     // alignSelf: 'center',
     flex: 1
@@ -867,11 +867,7 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  description: {
-    color: '#979797',
-    fontFamily: Fonts.Inter_Regular,
-    marginVertical: 10,
-  },
+
   rowView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -879,7 +875,7 @@ const styles = StyleSheet.create({
   },
   addDate: {
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
 
   },
@@ -887,9 +883,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 10,
-    borderColor: Colors.Orange,
+    borderColor: Colors.primary_color,
     borderWidth: wp(0.3),
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.secondary_color,
     borderRadius: wp(20)
   }
 

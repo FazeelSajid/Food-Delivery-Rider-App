@@ -38,7 +38,7 @@ const Profile = ({navigation, route}) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const {rider_id, rider_details} = useSelector(store => store.auth)
 
-  console.log(rider_id);
+  // console.log(rider_id);
   
   
 
@@ -98,7 +98,7 @@ const Profile = ({navigation, route}) => {
   };
   
   
-  console.log(rider_details?.address);
+  // console.log(rider_details?.address);
   
 
   const onRefresh = async () => {
@@ -117,13 +117,15 @@ const Profile = ({navigation, route}) => {
     }, []),
   );
 
+  // const Colors;;
+  
   return (
     <ScrollView
-      style={{backgroundColor: Colors.White, flex: 1}}>
+      style={{backgroundColor: Colors.secondary_color, flex: 1}}>
       <Loader loading={loading} />
       <StatusBar
         translucent={false}
-        backgroundColor={Colors.Orange}
+        backgroundColor={Colors.primary_color}
         barStyle={'light-content'}
       />
 
@@ -212,7 +214,7 @@ const Profile = ({navigation, route}) => {
 
       <View style={styles.headerView}>
         <TouchableOpacity onPress={() => navigation?.openDrawer()}>
-          <Icons.Menu />
+          <Icons.Menu   />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation?.openDrawer()}>
           <Icons.Edit width={wp(13)} height={hp(5)} />
@@ -225,7 +227,7 @@ const Profile = ({navigation, route}) => {
           source={{uri: rider_details?.photo}}
           size={wp(20)}
           style={{
-            backgroundColor: Colors.Orange,
+            backgroundColor: Colors.primary_color,
           }}
         />
         <Text style={styles.nameText}>{rider_details?.name}</Text>
@@ -233,82 +235,88 @@ const Profile = ({navigation, route}) => {
 
       <View style={styles.contentContainer}>
         <View style={styles.section}>
-          <View style={styles.rowView}>
+          {rider_details?.email &&  <View style={styles.rowView}>
             <Text style={styles.heading1}>Email Address</Text>
             <Text style={styles.description}> {rider_details?.email} </Text>
-          </View>
-          <View style={styles.rowView}>
+          </View> }
+         
+          {
+            rider_details?.phone && <View style={styles.rowView}>
             <Text style={styles.heading1}>Phone Number</Text>
             <Text style={styles.description}>{rider_details?.phone}</Text>
           </View>
-          <View style={styles.rowView}>
+          }
+
+          {
+            rider_details?.dob && <View style={styles.rowView}>
             <Text style={styles.heading1}>Date of Birth</Text>
             <Text style={styles.description}>{moment(rider_details?.dob).format('DD/MM/YYYY')}</Text>
           </View>
-          <View style={styles.rowView}>
+          }
+          {
+            rider_details?.gender && <View style={styles.rowView}>
             <Text style={styles.heading1}>Gender</Text>
             <Text style={styles.description}>{rider_details?.gender}</Text>
           </View>
-          <View style={styles.rowView}>
+          }
+          {
+            rider_details?.cnic && <View style={styles.rowView}>
             <Text style={styles.heading1}>CNIC</Text>
             <Text style={styles.description}>{rider_details?.cnic}</Text>
           </View>
-          {/* <View style={styles.rowView}>
-            <Text style={styles.heading1}>Location</Text>
-            <Text style={styles.description}>{rider_details?.location}</Text>
-          </View> */}
+          }
+          
         </View>
         <ItemSeparator style={{marginVertical: 0}} />
         <View style={styles.section}>
           <Text style={styles.heading}>Documents</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.ScrollView}>
-            <View style={styles.documentContainer}>
+            {rider_details?.id_card_front_image && <View style={styles.documentContainer}>
               <Image
                 // source={Images.idCardFront}
                 source={{uri:rider_details?.id_card_front_image}}
                 style={styles.documentImage}
               />
-            </View>
-            <View style={styles.documentContainer}>
+            </View>}
+           {rider_details?.id_card_back_image && <View style={styles.documentContainer}>
               <Image
                 // source={Images.idCardBack}
                 source={{uri:rider_details?.id_card_back_image}}
                 style={styles.documentImage}
               />
-            </View>
-            <View style={styles.documentContainer}>
+            </View>}
+            {rider_details?.license_front_image&& <View style={styles.documentContainer}>
               <Image
-                // source={Images.drivingLicense}
                 source={{uri:rider_details?.license_front_image}}
                 style={styles.documentImage}
               />
-            </View>
-            <View style={styles.documentContainer}>
+            </View>}
+            {rider_details?.license_back_image && <View style={styles.documentContainer}>
               <Image
                 // source={Images.drivingLicense}
                 source={{uri:rider_details?.license_back_image}}
                 style={styles.documentImage}
               />
-            </View>
+            </View>}
           </ScrollView>
         </View>
         <ItemSeparator style={{marginVertical: 0}} />
         <View style={styles.section}>
           <Text style={styles.heading}>Vehicle Information</Text>
-          <View style={styles.rowView}>
+        {rider_details?.vehicle_name &&  <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle name</Text>
             <Text style={styles.description}>{rider_details?.vehicle_name}</Text>
-          </View>
-          <View style={styles.rowView}>
+          </View>}
+        {rider_details?.vehicle_model &&  <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle model</Text>
             <Text style={styles.description}>{rider_details?.vehicle_model}</Text>
-          </View>
-          <View style={styles.rowView}>
+          </View>}
+       { rider_details?.vehicle_ownership &&  <View style={styles.rowView}>
             <Text style={styles.heading1}>Vehicle ownership</Text>
             <Text style={styles.description}>
               {rider_details?.vehicle_ownership}
             </Text>
-          </View>
+          </View>}
         </View>
         <View style={styles.Pcontainer}>
       <View style={styles.Pheader}>
@@ -317,11 +325,11 @@ const Profile = ({navigation, route}) => {
        <Feather
                 name={'chevron-right'}
                 size={25}
-                color={Colors.grayText}
+                color={Colors.secondary_text}
               />
        </TouchableOpacity>
       </View>
-      <ProgressBar progress={completion / 100} color={Colors.Orange} style={styles.progressBar} />
+      <ProgressBar progress={completion / 100} color={Colors.primary_color} style={styles.progressBar} />
       <Text style={styles.percentage}>{Math.round(completion)}%</Text>
     </View>
   
@@ -336,7 +344,7 @@ export default Profile;
 const styles = StyleSheet.create({
   headerView: {
     height: hp(15),
-    backgroundColor: Colors.Orange,
+    backgroundColor: Colors.primary_color,
     padding: 20,
     paddingLeft: 30,
     flexDirection :'row',
@@ -350,7 +358,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {paddingHorizontal: 23},
   nameText: {
-    color: Colors.Orange,
+    color: Colors.primary_color,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.2),
     textAlign: 'center',
@@ -371,17 +379,17 @@ const styles = StyleSheet.create({
     marginVertical: 6.5,
   },
   heading1: {
-    color: '#191A26',
+    color: Colors.primary_text,
     fontFamily: Fonts.Inter_SemiBold,
     fontSize: RFPercentage(1.72),
   },
   description: {
-    color: '#808D9E',
+    color: Colors.secondary_text,
     fontFamily: Fonts.Inter_Regular,
     fontSize: RFPercentage(1.5),
   },
   heading: {
-    color: Colors.Orange,
+    color: Colors.primary_color,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2),
     marginBottom: 10,
@@ -411,11 +419,11 @@ const styles = StyleSheet.create({
   Ptitle: {
     fontSize:  RFPercentage(2),
     fontWeight: 'bold',
-    color: Colors.Black,
+    color: Colors.primary_text,
   },
   percentage: {
     fontSize: RFPercentage(2),
-    color: Colors.grayText,
+    color: Colors.secondary_text,
     marginTop: hp(1)
   },
   progressBar: {

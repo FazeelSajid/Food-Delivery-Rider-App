@@ -41,7 +41,7 @@ const SuccessModal = ({visible, setVisible, onOK, title, description}) => {
       <Text
         style={{
           fontFamily: Fonts.PlusJakartaSans_Bold,
-          color: Colors.Orange,
+          color:Colors.primary_color,
           fontSize: RFPercentage(2.5),
           lineHeight: 30,
           marginBottom: 10,

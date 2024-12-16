@@ -1,7 +1,8 @@
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import {googleMapKey} from '../globalVariables';
 import { setUserAppOpenLocation } from '../../redux/AuthSlice';
+import { handlePopup } from './orderApis';
 
 const removePlusCode = (address) => {
   
@@ -21,46 +22,131 @@ const removePlusCode = (address) => {
   // Join the remaining parts back into a single address string
   return addressParts.join(',').trim();
 };
-export const getCurrentLocation = async (dispatch) => {
-  try {
-    const info = await new Promise((resolve, reject) => {
-      Geolocation.getCurrentPosition(resolve, reject);
-    });
+export const getOrWatchUserPosition = (dispatch) => {
 
-    const latitude = info.coords.latitude;
-    const longitude = info.coords.longitude;
 
-    // Initialize the Geocoder if not already initialized
-    if (!Geocoder.isInit) {
-      Geocoder.init(googleMapKey);
+  
+  let watchId;
+
+  const getCurrentLocation = async () => {
+    try {
+      const info = await new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+        });
+      });
+
+
+
+      const latitude = info.coords.latitude;
+      const longitude = info.coords.longitude;
+
+      // Initialize the Geocoder if not already initialized
+      if (!Geocoder.isInit) {
+        Geocoder.init(googleMapKey);
+      }
+
+      const json = await Geocoder.from(latitude, longitude);
+      const fullAddress = json.results[0]?.formatted_address;
+
+      // Remove the plus code if present
+      const filteredAddress = removePlusCode(fullAddress);
+      const shortAddress = removePlusCode(json.results[2]?.formatted_address);
+
+      const locationData = {
+        latitude: latitude,
+        longitude: longitude,
+        address: filteredAddress || '',
+        shortAddress: shortAddress || '',
+      };
+
+      // Dispatch the location data to update state
+      if (dispatch) {
+        dispatch(setUserAppOpenLocation(locationData));
+      }
+
+      console.log('Fetched current location:', locationData);
+      return locationData;
+    } catch (error) {
+      console.log(error.message );
+      
+      if (error.message === 'Location permission not granted.') {
+        handlePopup(dispatch, "Please Enable Location Permission", 'red')
+      }
+      console.log('Error getting current location:', error);
+      return {
+        latitude: 0.0,
+        longitude: 0.0,
+        address: '',
+      };
     }
+  };
 
-    const json = await Geocoder.from(latitude, longitude);
-    const fullAddress = json.results[0].formatted_address;
+  const startWatchingPosition = () => {
+    try {
+      // Start watching the user's position
+      watchId = Geolocation.watchPosition(
+        async (info) => {
+          const latitude = info.coords.latitude;
+          const longitude = info.coords.longitude;
 
-    // Remove the plus code if present
-    const filteredAddress = removePlusCode(fullAddress);
-    const shortAddress = removePlusCode(json.results[2].formatted_address);
+          // Initialize the Geocoder if not already initialized
+          if (!Geocoder.isInit) {
+            Geocoder.init(googleMapKey);
+          }
 
-    const locationData = {
-      latitude: latitude,
-      longitude: longitude,
-      address: filteredAddress,
-      shortAddress: shortAddress,
-    };
-    // console.log(locationData, 'googleMap');
-    dispatch && dispatch(setUserAppOpenLocation(locationData))
+          const json = await Geocoder.from(latitude, longitude);
+          const fullAddress = json.results[0]?.formatted_address;
 
-    return locationData;
-  } catch (error) {
-    console.log('Error:', error);
-    return {
-      latitude: 0.0,
-      longitude: 0.0,
-      address: '',
-    };
-  }
+          // Remove the plus code if present
+          const filteredAddress = removePlusCode(fullAddress);
+          const shortAddress = removePlusCode(json.results[2]?.formatted_address);
+
+          const locationData = {
+            latitude: latitude,
+            longitude: longitude,
+            address: filteredAddress || '',
+            shortAddress: shortAddress || '',
+          };
+
+          // Dispatch the location data to update state
+          if (dispatch) {
+            dispatch(setUserAppOpenLocation(locationData));
+          }
+
+          // console.log('Updated location via watch:', locationData);
+        },
+        async (error) => {
+          console.log('Error watching position:', error);
+
+          // Fallback to getCurrentPosition if watchPosition fails
+          await getCurrentLocation();
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 10, // Update only if the user moves at least 10 meters
+        }
+      );
+    } catch (error) {
+      console.log('Error starting watch position:', error);
+    }
+  };
+
+  // Initialize by getting the current location immediately
+  getCurrentLocation();
+
+  // Start watching position changes
+  startWatchingPosition();
+
+  // Return a function to stop watching the position
+  return () => {
+    if (watchId !== null) {
+      Geolocation.clearWatch(watchId);
+      console.log('Stopped watching position');
+    }
+  };
 };
+
 
 
 export const startLocationTracking = (onLocationUpdate) => {

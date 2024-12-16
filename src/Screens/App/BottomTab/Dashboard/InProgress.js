@@ -59,7 +59,7 @@ const InProgress = () => {
 
 
     //   const filteredItems = []
-    const filteredItems = []
+    const filteredItems = assigned_orders.filter(order => order.order_status !== 'cancelled' && order.order_status !== 'delivered');
     //   console.log({filteredItems});
 
     // console.log(assigned_orders);
@@ -768,13 +768,14 @@ const InProgress = () => {
             <FlatList refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
-                    colors={[Colors.Orange]}
+                    colors={[Colors.primary_color]}
                     onRefresh={onRefresh}
                 />
             }
                 contentContainerStyle={{ paddingVertical: hp(2) }}
-                data={assigned_orders}
+                data={filteredItems}
                 renderItem={({ item }) => {
+                    console.log(item.order_id)
                     return (
                         < OrderCard item={item} status={item.accepted_by_rider} refe={ref_RBSheet} setBtmSheetValues={setBtmSheetValues} alert_RBSheet = {alert_RBSheet} />
                     )
@@ -861,7 +862,7 @@ const InProgress = () => {
                         </View>
                         <View style={{ alignItems: 'center' }} >
                             <Alert height={80} />
-                            <Text style={{ marginTop: hp(3), fontSize: RFPercentage(2.4), color: Colors.Black, textAlign: 'center' }}>
+                            <Text style={{ marginTop: hp(3), fontSize: RFPercentage(2.4), color: Colors.primary_text, textAlign: 'center' }}>
                                 You don't have enough amount in wallet</Text>
                         </View>
 
@@ -907,7 +908,7 @@ export default InProgress
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.White
+        backgroundColor: Colors.secondary_color
     },
     ListEmptyComponent: {
         flex: 1,
@@ -916,7 +917,7 @@ const styles = StyleSheet.create({
     },
     ListEmptyComponentText: {
         fontSize: RFPercentage(2.5),
-        color: Colors.Black,
+        color: Colors.primary_text,
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         paddingTop: hp(3),
         textAlign: 'center'

@@ -2572,12 +2572,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:^7.4.1":
-  version: 7.7.0
-  resolution: "@react-native-community/datetimepicker@npm:7.7.0"
+"@react-native-community/datetimepicker@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@react-native-community/datetimepicker@npm:8.2.0"
   dependencies:
     invariant: ^2.2.4
-  checksum: c4bb18fea0a34124fe8ccc5f85f7d2a71224eeda716a4e38f4876c2e237bc82a9addd5f1889dc6037fdc8a9f3bd249d6dcf7c746f116f83d20fa323c8dbbbf33
+  peerDependencies:
+    expo: ">=50.0.0"
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: 3adc9346f8948abed246da3bfa3a223e44c2c5903070178a82e583ce6f8273607fe5a542af834b3a27aff81980c555e5f72bf0e87c85e3f00856a0de21525374
   languageName: node
   linkType: hard
 
@@ -5726,7 +5736,7 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.19.3
     "@react-native-community/checkbox": ^0.5.16
     "@react-native-community/clipboard": ^1.5.1
-    "@react-native-community/datetimepicker": ^7.4.1
+    "@react-native-community/datetimepicker": ^8.2.0
     "@react-native-community/eslint-config": ^3.2.0
     "@react-native-community/geolocation": ^3.1.0
     "@react-native-firebase/app": ^18.3.0
@@ -5756,6 +5766,7 @@ __metadata:
     prettier: ^2.4.1
     react: 18.2.0
     react-native: 0.72.4
+    react-native-android-location-enabler: ^2.0.1
     react-native-country-picker-modal: ^2.0.0
     react-native-date-picker: ^5.0.7
     react-native-document-picker: ^9.0.1
@@ -5770,6 +5781,7 @@ __metadata:
     react-native-linear-gradient: ^2.6.2
     react-native-maps: 1.10.0
     react-native-maps-directions: ^1.9.0
+    react-native-month-year-picker: ^1.9.0
     react-native-pager-view: ^6.2.0
     react-native-paper: ^5.9.0
     react-native-push-notification: ^8.1.1
@@ -9259,6 +9271,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-android-location-enabler@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "react-native-android-location-enabler@npm:2.0.1"
+  peerDependencies:
+    react: ">= 18.2.0"
+    react-native: ">= 0.71.0"
+  checksum: 077d5367def5d9a4186701c8b8427911f631323db5b954ac9262abbf5af5260e6b64f193f45f7777fe59130c4d980e307298af34e81d4ae9331dba745ce06a92
+  languageName: node
+  linkType: hard
+
 "react-native-communications@npm:2.2.1":
   version: 2.2.1
   resolution: "react-native-communications@npm:2.2.1"
@@ -9459,6 +9481,19 @@ __metadata:
     react-native-web:
       optional: true
   checksum: fa451a6c1d8bd69c1f2185d409b4e7c64d12a23d75e8af35cf519ef87dc86804f120e72ca4e3cf2b53c998a634f67fcdb31dd0e6364558f4d614fb37aacfe28b
+  languageName: node
+  linkType: hard
+
+"react-native-month-year-picker@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "react-native-month-year-picker@npm:1.9.0"
+  dependencies:
+    invariant: ^2.2.4
+    moment: ^2.29.4
+  peerDependencies:
+    react: ">= 16.11.0"
+    react-native: ">= 0.60.0"
+  checksum: 751291652cf1f1aa5198bc794c2855be52b50567b09086c60ad791db25939750cbe0c3d079023343728d3e45e14d073ee69d573ffa0065c562f29e26c91134d9
   languageName: node
   linkType: hard
 

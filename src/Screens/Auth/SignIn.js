@@ -28,36 +28,28 @@ import CRBSheetComponent from '../../components/BottomSheet/CRBSheetComponent';
 import { setRiderDetails, setSignUpWith, setRiderId } from '../../redux/AuthSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import Google from '../../Assets/svg/Googlee.svg';
 import messaging from '@react-native-firebase/messaging';
 import PopUp from '../../components/Popup/PopUp';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { handlePopup } from '../../utils/helpers/orderApis';
 
 const SignIn = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
-  const btmSheetRef = useRef()
+  // const btmSheetRef = useRef()
   const { signUpWith } = useSelector(store => store.auth)
   const dispatch = useDispatch();
   const [showPopUp, setShowPopUp] = useState(false)
   const [popUpColor, setPopUpColor] = useState('')
   const [PopUpMesage, setPopUpMesage] = useState('')
 
-  const showBtmSheet = () => {
-    btmSheetRef?.current?.open()
-  }
-  const closeBtmSheet = () => {
-    btmSheetRef?.current?.close()
-  }
-
-  const ItemSeparator = () => (
-    <View
-      style={{
-        height: hp(0.1),
-        marginVertical: 10,
-        backgroundColor: '#00000026',
-      }}
-    />
-  );
+  // const showBtmSheet = () => {
+  //   btmSheetRef?.current?.open()
+  // }
+  // const closeBtmSheet = () => {
+  //   btmSheetRef?.current?.close()
+  // }
 
 
   useEffect(() => {
@@ -65,28 +57,28 @@ const SignIn = ({navigation, route}) => {
     scrollViewRef.current?.scrollTo({y: 150});
   }, [keyboardHeight]);
 
-  const toggleSelection = (param) => {
-    if (param === 'phone'){
-      signUpWith === param ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
-      navigation.navigate('SignUpWithPhone')
-      closeBtmSheet()
-    }
-    if (param === 'email'){
-      signUpWith === 'email' ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
-      navigation.navigate('SignUpWithEmail')
-      closeBtmSheet()
-    }
-  }
+  // const toggleSelection = (param) => {
+  //   if (param === 'phone'){
+  //     signUpWith === param ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
+  //     navigation.navigate('SignUpWithPhone')
+  //     closeBtmSheet()
+  //   }
+  //   if (param === 'email'){
+  //     signUpWith === 'email' ? dispatch(setSignUpWith('')) : dispatch(setSignUpWith(param))
+  //     navigation.navigate('SignUpWithEmail')
+  //     closeBtmSheet()
+  //   }
+  // }
 
   const ref_RBSheet = useRef();
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const [riderId, setRiderid] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [count, setCount] = useState(1);
 
   const validate = () => {
-    if (riderId?.length == 0) {
+    if (email?.length == 0) {
       showAlert('Please Enter a valid rider id');
       return false;
     } else if (password?.length == 0) {
@@ -125,14 +117,14 @@ const SignIn = ({navigation, route}) => {
       const phoneRegex = /^\+?[0-9\s-]+$/;
     
 
-      if (emailRegex.test(riderId)) {
+      if (emailRegex.test(email)) {
         Keyboard.dismiss();
         setLoading(true);
         const fcmToken = await messaging().getToken();
         console.log(fcmToken, 'token');
   
         const body = {
-          email: riderId.toLocaleLowerCase(),
+          email: email.toLocaleLowerCase(),
           password: password,
           fcm_token: fcmToken,
           signup_type: 'email',
@@ -140,6 +132,8 @@ const SignIn = ({navigation, route}) => {
 
         }
 
+        console.log();
+        
       
 
         fetch(api.login, {
@@ -211,9 +205,11 @@ const SignIn = ({navigation, route}) => {
         console.log(fcmToken, 'token');
 
        const body = {
-          email:  riderId,
+          phone:  email,
           password: password,
           fcm_token: fcmToken,
+          signup_type: 'phone_no',
+          rest_ID: "res_4074614",
         }
         console.log(body ,'Phone ');
         fetch(api.login, {
@@ -282,6 +278,126 @@ const SignIn = ({navigation, route}) => {
     }
   };
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '499293962734-j707393fo8gbhl4r3offkknvgmc5scid.apps.googleusercontent.com', // Replace with your Web Client ID
+      offlineAccess: true, // Enables server-side access
+    });
+  }, []);
+
+  const handleGoogleSignUp = async () => {
+    console.log('handleGoogleSignIn');
+    try {
+      await GoogleSignin.signOut();
+
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      let user_email = userInfo?.user?.email;
+      let user_name = userInfo?.user?.name;
+
+      // console.log('user email : ', user_email);
+      // let fcm_token = await getUserFcmToken();
+      if (user_email) {
+        Keyboard.dismiss();
+        setLoading(true);
+        const fcmToken = await messaging().getToken();
+        console.log(fcmToken, 'token');
+  
+        const body = {
+          email: user_email,
+          // password: password,
+          fcm_token: fcmToken,
+          signup_type: 'google',
+          rest_ID: "res_4074614",
+
+        }
+
+        console.log(body);
+        
+      
+
+        fetch(api.login, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+          .then(response => response.json())
+          .then(async response => {
+            console.log('response  :  ', response);
+            console.log({body});
+            
+            if (response?.error == true) {
+              setShowPopUp(true)
+              setPopUpColor('red')
+              setPopUpMesage(response?.message)
+              setTimeout(()=>{
+                setShowPopUp(false)
+              }, 1000)
+              // showAlert(response?.message);
+              // showAlert('Invalid Credentials');
+            } else {
+              // console.log(response);
+              
+              console.log(response);
+              
+              setShowPopUp(true)
+              setPopUpMesage('Logged in Successfully')
+              setPopUpColor('green')
+              setTimeout(()=>{
+                setShowPopUp(false)
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Drawer'}],
+                });
+              }, 1000)
+              // // showAlert(response.message, 'green');
+              dispatch(setRiderId(response?.rider?.rider_id))
+              dispatch(setRiderDetails(response?.rider))
+              // await AsyncStorage.setItem('rider_id', response?.result?.rider_id);
+              // await AsyncStorage.setItem(
+              //   'rider_detail',
+              //   JSON.stringify(response?.result),
+              // );
+              let wallet = await createRiderWallet(response?.rider?.rider_id);
+              console.log('wallet  :  ', wallet);
+             
+            
+            }
+          })
+          .catch(err => {
+            console.log('Error in Login :  ', err);
+            // showAlert('Something went wrong');
+            setShowPopUp(true)
+            setPopUpColor('red')
+            setPopUpMesage('Something went wrong');
+            setTimeout(()=>{
+              setShowPopUp(false)
+            }, 1000)
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    } catch (error) {
+      console.log('Error Message', error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        //alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        //alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        //alert('Play Services Not Available or Outdated');
+      } else {
+        handlePopup(dispatch,'Something went wrong!');
+      }
+    }
+  };
+
   return (
     <View style={STYLE.container}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
@@ -303,8 +419,8 @@ const SignIn = ({navigation, route}) => {
 
           <CInput
             placeholder="Email/Phone Number"
-            value={riderId}
-            onChangeText={text => setRiderid(text)}
+            value={email}
+            onChangeText={text => setEmail(text)}
           />
 
           <CInput
@@ -326,7 +442,7 @@ const SignIn = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => {
                 navigation.navigate('ForgetPassword', {
-                  rider_id: riderId,
+                  rider_id: email,
                 });
             }}
             style={{
@@ -359,19 +475,20 @@ const SignIn = ({navigation, route}) => {
             }}
           />
 
-          {/* <Text style={STYLE.orText}>
-            —— Or ——
-          </Text>
-          <View style={STYLE.socialIconContainer}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={STYLE.googleIconContainer}>
-              <Image source={Images.google} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Icons.Facebook width={wp(13)} />
-            </TouchableOpacity>
-          </View> */}
+<Text style={STYLE.orText}>-- Or --</Text>
+          <View style={{paddingBottom: 20}} >
+          <CButton
+            title="SignIn with Google"
+            height={hp(6.2)}
+            // marginTop={hp(10)}
+            transparent={true}
+            width={wp(88)}
+            leftIcon={<Google  />}
+            borderColor={Colors.borderGray}
+            color={Colors.primary_text}
+            onPress={() => handleGoogleSignUp()}
+          />
+          </View>
         </View>
       </ScrollView>
 

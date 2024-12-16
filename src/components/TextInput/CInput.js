@@ -70,7 +70,7 @@ const CInput = props => {
               : '#B0B0B0'
           }
           style={{
-            color: Colors.Text,
+            color: Colors.primary_text,
             flex: 1,
             fontFamily: Fonts.PlusJakartaSans_Regular,
           }}

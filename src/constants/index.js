@@ -1,27 +1,19 @@
-import {Dimensions, StatusBar} from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
+import { MYStore } from '../redux/MyStore';
 
 export const bottombarHeight =
   Dimensions.get('screen').height == Dimensions.get('window').height
     ? Dimensions.get('screen').height -
-      Dimensions.get('window').height +
-      StatusBar.currentHeight
+    Dimensions.get('window').height +
+    StatusBar.currentHeight
     : StatusBar.currentHeight;
 
-export const Colors = {
-  //UI Neutrals
 
-  // background
-  darkTextColor: '#545151',
-  Orange: '#FF5722',
-  OrangeLight: '#F99145',
-  White: '#FFFFFF',
-  Black: '#000000',
-  Text: '#0A212B',
-  AvatarBG: '#FF572233',
-  Border: '#B0B0B0',
-  grayText: '#56585B',
-  OrangeExtraLight: '#FFF6F3',
-};
+    const apiCalll = () =>{
+      
+    }
+
+    export const Colors = MYStore.getState().auth.Colors;
 
 export const Fonts = {
   PlusJakartaSans_Bold: 'PlusJakartaSans-Bold',
@@ -168,6 +160,7 @@ import orderPreparing from '../Assets/svg/orderPreparing.svg';
 import Lock from '../Assets/svg/lock.svg';
 import Check from '../Assets/svg/check.svg';
 import Refresh from '../Assets/svg/refresh.svg';
+import BlackCamera from '../Assets/svg/blackCamera.svg';
 
 //
 
@@ -202,6 +195,8 @@ import Close from '../Assets/svg/close.svg';
 
 import MapPinActive from '../Assets/svg/MapPinActive.svg';
 import Chat from '../Assets/svg/chat.svg';
+import Gallery from '../Assets/svg/gallery.svg';
+import { useSelector } from 'react-redux';
 
 export const Icons = {
   SearchIcon,
@@ -289,5 +284,7 @@ export const Icons = {
   EditProfile,
   Note,
   LockBlack,
-  Chat
+  Chat,
+  BlackCamera,
+  Gallery
 };

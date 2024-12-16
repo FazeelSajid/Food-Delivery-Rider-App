@@ -95,7 +95,7 @@ const Verification = ({navigation, route}) => {
     }
   };
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <StackHeader title={''} backIconColor={'#1D1D20'} />
       <Loader loading={loading} />
       <ScrollView
@@ -130,7 +130,7 @@ const Verification = ({navigation, route}) => {
               }}
               autoFocusOnLoad={false}
               placeholderCharacter={''}
-              placeholderTextColor={'#ABA7AF'}
+              placeholderTextColor={Colors.secondary_text}
               codeInputFieldStyle={styles.underlineStyleBase}
               codeInputHighlightStyle={{
                 ...styles.underlineStyleHighLighted,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   underlineStyleBase: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontSize: 24,
     fontFamily: Fonts.Inter_Medium,
     width: 60,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F6FA',
   },
   underlineStyleHighLighted: {
-    borderColor: Colors.Orange,
+    borderColor:Colors.primary_color,
     borderRadius: 30,
     borderWidth: 1,
   },

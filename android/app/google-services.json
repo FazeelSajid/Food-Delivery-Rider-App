@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "499293962734",
     "project_id": "fooddeliverycustomer-34358",
-    "storage_bucket": "fooddeliverycustomer-34358.appspot.com"
+    "storage_bucket": "fooddeliverycustomer-34358.firebasestorage.app"
   },
   "client": [
     {
@@ -50,6 +50,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "499293962734-te87ic7q3meai8871duuks03uore0l2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fooddeliverymtechubrider",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "499293962734-j707393fo8gbhl4r3offkknvgmc5scid.apps.googleusercontent.com",
           "client_type": 3

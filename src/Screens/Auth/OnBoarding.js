@@ -47,7 +47,7 @@ const OnBoarding = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.secondary_color,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(3),
   },
   heading: {
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(3),
     width: wp(100),
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   description: {
     textAlign: 'center',
-    color: '#393939B2',
+    color: Colors.secondary_text,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     width: wp(90),
     lineHeight: 20,

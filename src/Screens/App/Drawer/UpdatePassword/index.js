@@ -15,6 +15,7 @@ import Loader from '../../../../components/Loader';
 import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
+import { Colors } from '../../../../constants';
 
 const UpdatePassword = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
@@ -144,7 +145,7 @@ const UpdatePassword = ({navigation, route}) => {
                 <Feather
                   name={!visibleNewPass ? 'eye' : 'eye-off'}
                   size={15}
-                  color={'#B0B0B0'}
+                  color={Colors.secondary_text}
                 />
               </TouchableOpacity>
             }
@@ -161,7 +162,7 @@ const UpdatePassword = ({navigation, route}) => {
                 <Feather
                   name={!visibleConfirmPass ? 'eye' : 'eye-off'}
                   size={15}
-                  color={'#B0B0B0'}
+                  color={Colors.secondary_text}
                 />
               </TouchableOpacity>
             }

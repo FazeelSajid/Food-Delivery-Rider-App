@@ -10,6 +10,12 @@ import PushNotification, {Importance} from 'react-native-push-notification';
 
 import messaging from '@react-native-firebase/messaging';
 import Add from './src/Assets/svg/add.svg';
+import { BASE_URL } from './src/utils/globalVariables';
+import { useDispatch } from 'react-redux';
+import { MYStore } from './src/redux/MyStore';
+import { navigate } from './src/utils/helpers';
+
+
 
 
 
@@ -30,7 +36,7 @@ import Add from './src/Assets/svg/add.svg';
 messaging().onMessage(async remoteMessage => {
   // Display the notification manually
   // You can use your UI components here
-  console.log('remoteMessage  :  ', remoteMessage);
+  console.log('remoteMessage rider :  ', remoteMessage);
 });
 
 PushNotification.configure({
@@ -55,6 +61,43 @@ PushNotification.configure({
   onNotification: function (notification) {
     let data = notification?.data;
     console.log('notification  ::: ', notification);
+    if (notification.userInteraction) {
+      // Navigate to the Notifications screen and pass the title and message
+      if (data.type === 'order') {
+        navigate('OrdersDetail', {
+            // type: 'all',
+            id: data?.orderId,
+            // item: ,
+          });
+        
+      } else if (data.type === 'wallet') {
+        navigate('MyWallet', {
+          title: notification.title,
+          message: notification.message,
+        });
+      } 
+      if (data.type === 'chat'){
+    
+        if (/^\d/.test(data.senderId)) {
+          const contac = { "customer_id": data.senderId,  "receiver_id":data.senderId,  "rider_id": MYStore.getState().auth.rider_id, "room_id": data.roomId, "sender_id": MYStore.getState().store.rider_id, "sender_type": "customer",'restaurant_id': null }
+          navigate('Conversation', {
+            contact: contac,
+            name: data.senderName,
+          });
+        }
+        else if (data.senderId.startsWith('res')) {
+          const contac = { "customer_id": null,  "receiver_id":data.senderId,  "rider_id": MYStore.getState().store.rider_id, 'restaurant_id' : data.senderId , "room_id": data.roomId, "sender_id": MYStore.getState().store.rider_id, "sender_type": "rider", }
+          navigate('Conversation', {
+            contact: contac,
+            name: data.senderName,
+          });
+        }
+        // navigate('Conversation'{
+      
+        // })
+      }
+      
+    }
   },
   //   requestPermissions: Platform.OS === 'ios',
 
@@ -65,6 +108,8 @@ PushNotification.configure({
 
     // process the action
   },
+
+  
 
   // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
   onRegistrationError: function (err) {
@@ -91,5 +136,61 @@ PushNotification.configure({
    */
   requestPermissions: true,
 });
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage.data);
+const data = remoteMessage.data
+if (data.type === 'order') {
+  navigate('OrdersDetail', {
+      // type: 'all',
+      id: data?.orderId,
+      // item: ,
+    });
+  
+} else if (data.type === 'wallet') {
+  navigate('MyWallet', {
+    title: data.title,
+    message: data.message,
+  });
+}else  if (data.type === 'chat'){
+    
+  if (/^\d/.test(data.senderId)) {
+    const contac = { "customer_id": data.senderId,  "receiver_id":data.senderId,  "rider_id": MYStore.getState().auth.rider_id, "room_id": data.roomId, "sender_id": MYStore.getState().store.rider_id, "sender_type": "customer",'restaurant_id': null }
+    navigate('Conversation', {
+      contact: contac,
+      name: data.senderName,
+    });
+  }
+  else if (data.senderId.startsWith('res')) {
+    const contac = { "customer_id": null,  "receiver_id":data.senderId,  "rider_id": MYStore.getState().store.rider_id, 'restaurant_id' : data.senderId , "room_id": data.roomId, "sender_id": MYStore.getState().store.rider_id, "sender_type": "rider", }
+    navigate('Conversation', {
+      contact: contac,
+      name: data.senderName,
+    });
+  }
+  // navigate('Conversation'{
+
+  // })
+}
+
+;
+    
+
+  
+
+
+
+  // yaha par Handle background notification navigation here
+  // navigate('NotificationUser', {notificationData: remoteMessage.data});
+  
+  // console.log('setBackgroundMessageHandler', remoteMessage.data);
+  
+  // if (remoteMessage) {
+  //   navigate('NotificationUser', {
+  //     title: remoteMessage.notification.title,
+  //     body: remoteMessage.notification.body,
+  //   });
+  // }
+});
+
 
 AppRegistry.registerComponent(appName, () => App);

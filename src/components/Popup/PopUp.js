@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
       // alignItems: 'center',
       
       zIndex: 1,
-        backgroundColor: Colors.White,
+        backgroundColor: Colors.primary_color,
         flexDirection: 'row',
         // flex:1,
         borderRadius: wp('2.5%'),
@@ -62,6 +62,6 @@ const styles = StyleSheet.create({
       text:{
         fontFamily: Fonts.PlusJakartaSans_SemiBold,
         fontSize: wp('3.5%'),
-        color: Colors.White,
+        color: Colors.secondary_color,
       }
 })

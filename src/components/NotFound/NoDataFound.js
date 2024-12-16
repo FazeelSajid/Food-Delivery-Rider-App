@@ -35,7 +35,7 @@ export default NoDataFound;
 const styles = StyleSheet.create({
   txtStyle : {
     fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.darkTextColor,
+    color: Colors.primary_text,
     fontSize: RFPercentage(1.7),
     marginTop: hp(2)
     

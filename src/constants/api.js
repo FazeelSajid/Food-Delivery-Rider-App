@@ -27,7 +27,7 @@ const api = {
 
   update_order_status: BASE_URL + 'orders/updateOrderStatus',
   updateOrderStatusByRider: BASE_URL + 'orders/updateOrderStatusByRider',
-  get_all_orders : BASE_URL + 'orders/getAllOrders?page=1&limit=10&order_status=placed',
+  get_all_orders : BASE_URL + 'orders/getAllOrders?order_status=placed&restaurant_id=res_4074614&rider_id=rider_1673186',
   distribute_payment_order : BASE_URL + `wallet/distribute?order_id=`,
 
   // wallet

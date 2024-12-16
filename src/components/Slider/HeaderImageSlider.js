@@ -47,7 +47,7 @@ const HeaderImageSlider = ({
       width: dotSize,
       height: dotSize,
       borderRadius: dotSize / 2,
-      backgroundColor: Colors.Orange,
+      backgroundColor:Colors.primary_color,
       margin: 0,
       marginHorizontal: 3,
     },
@@ -55,9 +55,9 @@ const HeaderImageSlider = ({
       width: dotSize,
       height: dotSize,
       borderRadius: dotSize,
-      backgroundColor: Colors.White,
+      backgroundColor: Colors.secondary_color,
       borderWidth: 1,
-      borderColor: Colors.Orange,
+      borderColor:Colors.primary_color,
       opacity: 0.7,
       marginHorizontal: 3,
     },
@@ -106,7 +106,7 @@ const HeaderImageSlider = ({
         <Ionicons
           name={'chevron-back'}
           size={hp(3)}
-          color={backIconColor ? backIconColor : Colors.White}
+          color={backIconColor ? backIconColor : Colors.button.icon}
         />
       </TouchableOpacity>
     </View>

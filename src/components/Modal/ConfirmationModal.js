@@ -38,7 +38,7 @@ const ConfirmationModal = ({
       <Text
         style={{
           fontFamily: Fonts.PlusJakartaSans_Bold,
-          color: Colors.Orange,
+          color:Colors.primary_color,
           fontSize: RFPercentage(2.5),
           lineHeight: 30,
         }}>

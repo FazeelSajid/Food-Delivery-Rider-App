@@ -20,7 +20,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 const LATITUDE_DELTA = 0.009;
 const LONGITUDE_DELTA = 0.009;
-const ARRIVAL_THRESHOLD = 1; // 50 meters in km for haversine function
+const ARRIVAL_THRESHOLD = 0.5; // 50 meters in km for haversine function
 
 const OrderMapScreen = ({ navigation, route }) => {
   const { rider_id, userAppOpenLocation } = useSelector((store) => store.auth);
@@ -29,20 +29,22 @@ const OrderMapScreen = ({ navigation, route }) => {
     latitude: userAppOpenLocation.latitude,
     longitude: userAppOpenLocation.longitude,
   });
-  const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [distanceTravelled, setDistanceTravelled] = useState(0);
-  const [hasArrivedAtPickup, setHasArrivedAtPickup] = useState(false);
-  const [deliveryStartTime, setDeliveryStartTime] = useState(null); // For delivery time calculation
-  const [deliveryDuration, setDeliveryDuration] = useState(null); // Store the total delivery time
+  // const [routeCoordinates, setRouteCoordinates] = useState([]);
+  // const [distanceTravelled, setDistanceTravelled] = useState(0);
+  // const [hasArrivedAtPickup, setHasArrivedAtPickup] = useState(updatedOrder.order_status === 'out_for_delivery');
+  // const [deliveryStartTime, setDeliveryStartTime] = useState(null); // For delivery time calculation
+  // const [deliveryDuration, setDeliveryDuration] = useState(null); // Store the total delivery time
+  const [atPickup, setAtPickup] = useState(updatedOrder.order_status === 'out_for_delivery');
+
   const ref_RBSheet = useRef()
   const [BtmSheetValues, setBtmSheetValues] = useState({
-      title: '',
-      btnText: '',
-      order_Id: 0,
-      status: '',
-      restaurantId: '',
-      amountToTransfer: 0,
-      payment_option: ''
+    title: '',
+    btnText: '',
+    order_Id: 0,
+    status: '',
+    restaurantId: '',
+    amountToTransfer: 0,
+    payment_option: ''
   })
 
 
@@ -50,7 +52,16 @@ const OrderMapScreen = ({ navigation, route }) => {
     ref_RBSheet?.current?.open()
     setBtmSheetValues(obj)
 
-}
+  }
+  // console.log({ hasArrivedAtPickup });
+
+
+
+  // const isOutForDelivery = updatedOrder.order_status === 'out_for_delivery'
+  // const isdelivered = updatedOrder.order_status === 'delivered'
+  // console.log(isOutForDelivery, );
+
+
 
   const dispatch = useDispatch();
 
@@ -74,62 +85,221 @@ const OrderMapScreen = ({ navigation, route }) => {
     })
   ).current;
 
-  useEffect(() => {
-    const watchID = Geolocation.watchPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const newCoordinate = { latitude, longitude };
+  // useEffect(() => {
 
-        if (Platform.OS === "android" && markerRef.current) {
-          markerRef.current.animateMarkerToCoordinate(newCoordinate, 500);
-        } else {
-          coordinate.timing(newCoordinate).start();
-        }
+  //       if (Platform.OS === "android" && markerRef.current) {
+  //         markerRef.current.animateMarkerToCoordinate({
+  //   latitude: userAppOpenLocation.latitude,
+  //   longitude: userAppOpenLocation.longitude,
+  // }, 500);
+  //       } else {
+  //         coordinate.timing({
+  //   latitude: userAppOpenLocation.latitude,
+  //   longitude: userAppOpenLocation.longitude,
+  // }).start();
+  //       }
 
-        setRouteCoordinates((prev) => [...prev, newCoordinate]);
-        setDistanceTravelled((prev) => prev + haversine(prev, newCoordinate) || 0);
-        setUserCurrentLocation(newCoordinate);
+  //       setRouteCoordinates((prev) => [...prev, {
+  //   latitude: userAppOpenLocation.latitude,
+  //   longitude: userAppOpenLocation.longitude,
+  // }]);
+  //       // setDistanceTravelled((prev) => prev + haversine(prev, newCoordinate) || 0);
+  //       // setUserCurrentLocation(newCoordinate);
 
-        // Start timing if it's the first move
-        if (!deliveryStartTime) setDeliveryStartTime(Date.now());
+  //       // Start timing if it's the first move
+  //       if (!deliveryStartTime) setDeliveryStartTime(Date.now());
 
-        // Check if user has arrived at pickup or drop-off
-        if (!hasArrivedAtPickup) {
-          checkArrival(latitude, longitude, pickupLocation, ()=> setHasArrivedAtPickup(true));
-        } else {
-          checkArrival(latitude, longitude, dropOffLocation, () => {
-            const duration = ((Date.now() - deliveryStartTime) / 1000 / 60).toFixed(2);
-            setDeliveryDuration(duration); // Set total time in minutes
-            Alert.alert("Delivery Complete", `Delivery took ${duration} minutes.`);
-          });
-        }
-      },
-      (error) => console.log(error),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000,
-        distanceFilter: 10,
-      }
-    );
+  //       // Check if user has arrived at pickup or drop-off
+  //       if (!hasArrivedAtPickup) {
+  //         checkArrival(userAppOpenLocation.latitude, userAppOpenLocation.longitude, pickupLocation, ()=> setHasArrivedAtPickup(true));
+  //       } else {
+  //         checkArrival(userAppOpenLocation.latitude, userAppOpenLocation.longitude, dropOffLocation, () => {
+  //           const duration = ((Date.now() - deliveryStartTime) / 1000 / 60).toFixed(2);
+  //           setDeliveryDuration(duration); // Set total time in minutes
+  //           // Alert.alert("Delivery Complete", `Delivery took ${duration} minutes.`);
+  //           console.log('Delivery Complete');
 
-    return () => {
-      Geolocation.clearWatch(watchID);
+  //         });
+  //       }
+
+  //   console.log({
+  //   latitude: userAppOpenLocation.latitude,
+  //   longitude: userAppOpenLocation.longitude,
+  // });
+
+
+  //   return () => {
+  //     // Geolocation.clearWatch(watchID);
+  //   };
+  // }, [userAppOpenLocation]);
+
+  // console.log({hasArrivedAtPickup});
+
+const [hasLeftPickup, setHasLeftPickup] = useState(false);
+
+useEffect(() => {
+  const distanceToPickup = haversine(userAppOpenLocation, pickupLocation);
+  const distanceToDropOff = haversine(userAppOpenLocation, dropOffLocation);
+
+  if (!atPickup && distanceToPickup < ARRIVAL_THRESHOLD) {
+    setAtPickup(true);
+    console.log("Rider has reached the pickup location.");
+  }
+
+  // Avoid toggling atPickup back to false once it's true
+  if (atPickup && !hasLeftPickup && distanceToPickup > ARRIVAL_THRESHOLD) {
+    setHasLeftPickup(true);
+    console.log("Rider has left the pickup location.");
+  }
+
+  if (hasLeftPickup && distanceToDropOff < ARRIVAL_THRESHOLD) {
+    console.log("Rider has reached the drop-off location.");
+  }
+
+  console.log({
+    // currentLocation: userAppOpenLocation,
+    distanceToPickup,
+    distanceToDropOff,
+    atPickup,
+    hasLeftPickup,
+  });
+}, [userAppOpenLocation, atPickup, hasLeftPickup, pickupLocation, dropOffLocation]);
+
+
+  // const checkArrival = (latitude, longitude, location, callback) => {
+  //   const distance = haversine({ latitude, longitude }, location);
+  //   if (distance < ARRIVAL_THRESHOLD) {
+  //     callback();
+  //     console.log({ distance });
+
+  //   }
+  // };
+
+  // const handleButtonAction = (status) => {
+  //   const actions = {
+  //     accept: () =>
+  //       handelAcceptRejectOrder(
+  //         'accept',
+  //         BtmSheetValues.order_Id,
+  //         rider_id,
+  //         dispatch,
+  //         isOrderUpdate
+  //       ),
+  //     reject: () =>
+  //       handelAcceptRejectOrder(
+  //         'reject',
+  //         BtmSheetValues.order_Id,
+  //         rider_id,
+  //         dispatch,
+  //         isOrderUpdate
+  //       ),
+  //     out_for_delivery: () =>
+  //       updateOrderDeliveryStatus(
+  //         'out_for_delivery',
+  //         BtmSheetValues.order_Id,
+  //         rider_id,
+  //         dispatch,
+  //         isOrderUpdate
+  //       ),
+  //     delivered: () =>
+  //       updateOrderDeliveryStatus(
+  //         'delivered',
+  //         BtmSheetValues.order_Id,
+  //         rider_id,
+  //         dispatch,
+  //         isOrderUpdate,
+  //         () =>
+  //           navigation.navigate('DeliverySuccess', {
+  //             commission: BtmSheetValues?.commission,
+  //             amount: BtmSheetValues?.amount,
+  //             restaurantId: BtmSheetValues?.restaurantId,
+  //             amountToTransfer: BtmSheetValues?.amountToTransfer,
+  //             order_Id: BtmSheetValues?.order_Id,
+  //             payment_option: BtmSheetValues?.payment_option,
+  //           })
+  //       ),
+  //   };
+
+  //   // Execute the corresponding action based on the status
+  //   actions[status]?.();
+  // };
+  
+  const handleButtonAction = (status) => {
+    const actions = {
+      accept: () =>
+        openBtmSheet({
+          title: 'Are you sure to Accept this order?',
+          btnText: 'Accept',
+          order_Id: updatedOrder?.order_id,
+          status: 'accept',
+        }),
+      reject: () =>
+        openBtmSheet({
+          title: 'Are you sure to Reject this order?',
+          btnText: 'Reject',
+          order_Id: updatedOrder?.order_id,
+          status: 'reject',
+        }),
+      out_for_delivery: () =>
+        openBtmSheet({
+          title: 'Out For Delivery',
+          btnText: 'Out For Delivery',
+          order_Id: updatedOrder?.order_id,
+          status: 'out_for_delivery',
+        }),
+      delivered: () =>
+        openBtmSheet({
+          title: 'Delivered',
+          btnText: 'Delivered',
+          order_Id: updatedOrder?.order_id,
+          status: 'delivered',
+          amount: updatedOrder?.total_amount,
+          restaurantId: updatedOrder?.restaurant_id,
+          amountToTransfer: updatedOrder?.gst + updatedOrder?.sub_total,
+          commission: updatedOrder?.delivery_charges,
+          payment_option: updatedOrder?.payment_option,
+        }),
     };
-  }, [hasArrivedAtPickup]);
 
-  console.log({hasArrivedAtPickup});
+    actions[status]?.();
+  };
+
+  console.log({atPickup});
   
 
-  const checkArrival = (latitude, longitude, location, callback) => {
-    const distance = haversine({ latitude, longitude }, location);
-    if (distance < ARRIVAL_THRESHOLD) {
-      callback();
-    }
-  };
 
   return (
     <View style={styles.container}>
+      {/* <MapView
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showUserLocation
+        followUserLocation
+        loadingEnabled
+        region={{
+          
+    latitude: userAppOpenLocation.latitude,
+    longitude: userAppOpenLocation.longitude,
+  
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        }}
+      >
+        <MapViewDirections
+          origin={{
+    latitude: userAppOpenLocation.latitude,
+    longitude: userAppOpenLocation.longitude,
+  }}
+          destination={hasArrivedAtPickup ? dropOffLocation : pickupLocation}
+          apikey={googleMapKey}
+          strokeWidth={5}
+          strokeColor={Colors.primary_color}
+        />
+        <Marker.Animated coordinate={pickupLocation} title={"Pickup Location"} pinColor="blue" />
+        <Marker.Animated coordinate={dropOffLocation} title={"Drop Location"} pinColor="green" />
+        <Marker.Animated ref={markerRef} coordinate={coordinate} title={"Your Current Location"} pinColor={Colors.primary_color} />
+      </MapView> */}
+
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
@@ -137,24 +307,63 @@ const OrderMapScreen = ({ navigation, route }) => {
         followUserLocation
         loadingEnabled
         region={{
-          ...userCurrentLocation,
+          latitude: userAppOpenLocation.latitude,
+          longitude: userAppOpenLocation.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }}
       >
-        <MapViewDirections
-          origin={userCurrentLocation}
-          destination={hasArrivedAtPickup ? dropOffLocation : pickupLocation}
-          apikey={googleMapKey}
-          strokeWidth={5}
-          strokeColor={Colors.Orange}
+        {!atPickup && (
+          <>
+            <MapViewDirections
+              origin={{
+                latitude: userAppOpenLocation.latitude,
+                longitude: userAppOpenLocation.longitude,
+              }}
+              destination={pickupLocation}
+              apikey={googleMapKey}
+              strokeWidth={5}
+              strokeColor={Colors.primary_color}
+            />
+            <Marker.Animated
+              coordinate={pickupLocation}
+              title={"Pickup Location"}
+              pinColor="blue"
+            />
+          </>
+        )}
+        {atPickup && (
+          <>
+            <MapViewDirections
+              origin={{
+                latitude: userAppOpenLocation.latitude,
+                longitude: userAppOpenLocation.longitude,
+              }}
+              destination={dropOffLocation}
+              apikey={googleMapKey}
+              strokeWidth={5}
+              strokeColor={Colors.primary_color}
+            />
+            <Marker.Animated
+              coordinate={dropOffLocation}
+              title={"Drop-off Location"}
+              pinColor="green"
+            />
+          </>
+        )}
+        <Marker.Animated
+          ref={markerRef}
+          coordinate={{
+            latitude: userAppOpenLocation.latitude,
+            longitude: userAppOpenLocation.longitude,
+          }}
+          title={"Your Current Location"}
+          pinColor={Colors.primary_color}
         />
-        <Marker.Animated coordinate={pickupLocation} title={"Pickup Location"} pinColor="blue" />
-        <Marker.Animated coordinate={dropOffLocation} title={"Drop Location"} pinColor="green" />
-        <Marker.Animated ref={markerRef} coordinate={coordinate} title={"Your Current Location"} />
       </MapView>
 
-      <View style={styles.btncontainer} >
+
+      {/* <View style={styles.btncontainer} >
         {
           updatedOrder?.accepted_by_rider ?
             <View style={{}} >
@@ -198,9 +407,45 @@ const OrderMapScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
         }
+      </View> */}
+      <View style={styles.btncontainer}>
+        {updatedOrder?.accepted_by_rider ? (
+          <View>
+            <TouchableOpacity
+              onPress={() =>
+                updatedOrder?.order_status === 'placed'
+                  ? handleButtonAction('out_for_delivery')
+                  : handleButtonAction('delivered')
+              }
+              style={[styles.acceptButton]}
+            >
+              <Text style={styles.buttonText}>
+                {updatedOrder?.order_status === 'placed' ? 'Out For Delivery' : 'Delivered'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleButtonAction('accept')}
+              style={styles.acceptButton}
+            >
+              <Text style={styles.buttonText}>Accept</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleButtonAction('reject')}
+              style={styles.rejectButton}
+            >
+              <Text style={styles.rejectButtonText}>Reject</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-     
-      <RBSheetConfirmation
+
+
+      {/* <RBSheetConfirmation
                 refRBSheet={ref_RBSheet}
                 title={BtmSheetValues.title}
                 // description={'Do you want to logout?'}
@@ -230,7 +475,46 @@ const OrderMapScreen = ({ navigation, route }) => {
                     }
 
                 }}
-            />
+            /> */}
+
+      <RBSheetConfirmation
+        refRBSheet={ref_RBSheet}
+        title={BtmSheetValues.title}
+        okText={BtmSheetValues.btnText}
+        height={360}
+        onOk={async () => {
+          ref_RBSheet?.current?.close();
+          const { status, order_Id, commission, amount, restaurantId, amountToTransfer, payment_option } = BtmSheetValues;
+
+          switch (status) {
+            case 'reject':
+              await handelAcceptRejectOrder('reject', order_Id, rider_id, dispatch, isOrderUpdate);
+              break;
+            case 'accept':
+              await handelAcceptRejectOrder('accept', order_Id, rider_id, dispatch, isOrderUpdate);
+              break;
+            case 'out_for_delivery':
+              await updateOrderDeliveryStatus('out_for_delivery', order_Id, rider_id, dispatch, isOrderUpdate);
+              break;
+            case 'delivered':
+              await updateOrderDeliveryStatus('delivered', order_Id, rider_id, dispatch, isOrderUpdate, () =>
+                navigation.navigate('DeliverySuccess', {
+                  commission,
+                  amount,
+                  restaurantId,
+                  amountToTransfer,
+                  order_Id,
+                  payment_option,
+                })
+              );
+              break;
+            default:
+              console.warn('Unknown action');
+              break;
+          }
+        }}
+      />
+
     </View>
   );
 };
@@ -253,7 +537,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   btncontainer: {
-    backgroundColor: Colors.White, // Background color of the container
+    backgroundColor: Colors.secondary_color, // Background color of the container
     borderTopRightRadius: wp(10), // Rounded corners for the container
     borderTopLeftRadius: wp(10), // Rounded corners for the container
     paddingVertical: hp(2), // Vertical padding inside the container
@@ -270,21 +554,21 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   acceptButton: {
-    backgroundColor: Colors.Orange,
+    backgroundColor: Colors.primary_color,
     paddingVertical: hp(1.5),
     paddingHorizontal: wp(25),
     borderRadius: wp(5),
     marginBottom: hp(1),
   },
   rejectButton: {
-    borderColor: Colors.Orange,
+    borderColor: Colors.primary_color,
     borderWidth: 2,
     paddingVertical: hp(1.5),
     paddingHorizontal: wp(25),
     borderRadius: wp(5),
   },
   buttonText: {
-    color: Colors.White,
+    color: Colors.secondary_color,
     fontSize: wp(4),
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     textAlign: 'center',
@@ -292,7 +576,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green'
   },
   rejectButtonText: {
-    color: Colors.Orange,
+    color: Colors.primary_color,
     fontSize: wp(4),
     fontWeight: '600',
     textAlign: 'center',

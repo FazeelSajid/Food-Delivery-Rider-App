@@ -105,7 +105,7 @@ const Complaints = ({navigation, route}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
       <FlatList
         data={data}

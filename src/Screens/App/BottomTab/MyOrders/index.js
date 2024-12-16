@@ -286,9 +286,9 @@ const MyOrders = ({navigation, route}) => {
                     onPress={() => setSelectedTab(item?.id)}
                     style={{
                       borderColor:
-                        item?.id == selectedTab ? Colors.Orange : '#E8EFF3',
+                        item?.id == selectedTab ?Colors.primary_color : Colors.secondary_color,
                       backgroundColor:
-                        item?.id == selectedTab ? Colors.Orange : 'transparent',
+                        item?.id == selectedTab ?Colors.primary_color : 'transparent',
                       borderWidth: 1,
                       borderRadius: 20,
                       paddingVertical: 10,
@@ -310,14 +310,14 @@ const MyOrders = ({navigation, route}) => {
                             backgroundColor:
                               item?.id == selectedTab
                                 ? colors.white
-                                : Colors.Orange,
+                                :Colors.primary_color,
                             marginRight: 5,
                           }}></View>
                       )} */}
                       <Text
                         style={{
                           color:
-                            item?.id == selectedTab ? Colors.White : '#2C406E',
+                            item?.id == selectedTab ? Colors.secondary_color : '#2C406E',
                           fontFamily: Fonts.PlusJakartaSans_Medium,
                           fontSize: RFPercentage(1.8),
                           marginTop: -2,

@@ -778,7 +778,7 @@ const styles = StyleSheet.create({
     opacity: 0.95,
   },
   rbSheetHeading: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2),
   },
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
 
   },
   transactionId:{
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(1.8),
     marginLeft: 10,

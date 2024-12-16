@@ -234,7 +234,7 @@ const RegistrationDocuments = ({navigation, route}) => {
     }
   };
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
 
       <ScrollView
@@ -246,7 +246,7 @@ const RegistrationDocuments = ({navigation, route}) => {
           <Text
             style={{
               marginLeft: 20,
-              color: '#0A212B',
+              color: Colors.primary_text,
               fontFamily: Fonts.PlusJakartaSans_Medium,
               fontSize: RFPercentage(2),
               letterSpacing: 0.6,
@@ -341,7 +341,7 @@ export default RegistrationDocuments;
 
 const styles = StyleSheet.create({
   description: {
-    color: '#979797',
+    color: Colors.secondary_text,
     fontFamily: Fonts.Inter_Regular,
     marginVertical: 10,
   },

@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, Platform, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Colors, Fonts } from '../../../../constants'
 import OrderCard from '../../../../components/Cards/OrderCard'
@@ -11,13 +11,15 @@ import PopUp from '../../../../components/Popup/PopUp';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { getAllOrders, handelAcceptRejectOrder } from '../../../../utils/helpers/orderApis';
 import { useFocusEffect } from '@react-navigation/native';
-import { getCurrentLocation } from '../../../../utils/helpers/location';
+import { getOrWatchUserPosition } from '../../../../utils/helpers/location';
 import { setUserAppOpenLocation } from '../../../../redux/AuthSlice';
 import RBSheetConfirmation from '../../../../components/BottomSheet/RBSheetConfirmation';
 import { useNavigation } from '@react-navigation/native';
 import NoOrderReq from '../../../../Assets/svg/NoOrderReq.svg';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { GetWalletAmount } from '../../../../utils/helpers/walletApis';
+import { isLocationEnabled, promptForEnableLocationIfNeeded } from 'react-native-android-location-enabler';
+import Geolocation from 'react-native-geolocation-service';
 
 const Requests = () => {
   const navigation = useNavigation()
@@ -33,12 +35,13 @@ const Requests = () => {
     status: ''
   })
 
-  // console.log(order_requests);
+  // console.log({userAppOpenLocation});
   const onRefresh = () => {
     setRefreshing(true);
     getAllOrders(dispatch, null, setRefreshing)
-    getCurrentLocation(dispatch)
+   handleEnabledPressed()
     GetWalletAmount(rider_id, dispatch)
+    // handleEnabledPressed()
   };
 // console.log({order_requests});
 
@@ -229,19 +232,45 @@ const Requests = () => {
   //   }
 
   useEffect(() => {
-    setRefreshing(true);
-    getAllOrders(dispatch, null, setRefreshing)
-    getCurrentLocation(dispatch)
+    setRefreshing(false);
+    getAllOrders(dispatch, null, setRefreshing) 
     GetWalletAmount(rider_id, dispatch)
+   handleEnabledPressed()
   }, [isOrderUpdate])
 
-
+  async function handleCheckPressed() {
+    if (Platform.OS === 'android') {
+      const checkEnabled = await isLocationEnabled();
+      console.log('checkEnabled', checkEnabled)
+    }
+  }
+  async function handleEnabledPressed() {
+    if (Platform.OS === 'android') {
+      try {
+        const enableResult = await promptForEnableLocationIfNeeded();
+        console.log('enableResult', enableResult);
+        getOrWatchUserPosition(dispatch)
+   
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+          // The user has not accepted to enable the location services or something went wrong during the process
+          // "err" : { "code" : "ERR00|ERR01|ERR02|ERR03", "message" : "message"}
+          // codes :
+          //  - ERR00 : The user has clicked on Cancel button in the popup
+          //  - ERR01 : If the Settings change are unavailable
+          //  - ERR02 : If the popup has failed to open
+          //  - ERR03 : Internal error
+        }
+      }
+    }
+  }
   return (
     <View style={styles.container} >
       <FlatList refreshControl={
         <RefreshControl
           refreshing={refreshing}
-          colors={[Colors.Orange]}
+          colors={[Colors.primary_color]}
           onRefresh={onRefresh}
         />
       }
@@ -265,7 +294,6 @@ const Requests = () => {
       <RBSheetConfirmation
         refRBSheet={ref_RBSheet}
         title={BtmSheetValues.title}
-        // description={'Do you want to logout?'}
         okText={BtmSheetValues.btnText}
         height={360}
         onOk={async () => {
@@ -287,7 +315,7 @@ export default Requests
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.secondary_color,
     // paddingTop: hp(4)
   },
   ListEmptyComponent:{
@@ -299,7 +327,7 @@ const styles = StyleSheet.create({
   },
   ListEmptyComponentText: {
     fontSize: RFPercentage(2.5),
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     paddingTop: hp(3)
   }

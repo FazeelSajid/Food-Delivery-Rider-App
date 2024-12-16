@@ -64,7 +64,7 @@ const ComplaintDetail = ({navigation, route}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.White}}>
+    <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
       <StackHeader title={'Details'} />
       {!loading && (
@@ -73,8 +73,8 @@ const ComplaintDetail = ({navigation, route}) => {
             <Avatar.Text
               size={50}
               label={getFirstTwoLettersOfName(detail?.customer?.user_name)}
-              style={{backgroundColor: Colors.Orange}}
-              labelStyle={{color: Colors.White}}
+              style={{backgroundColor:Colors.primary_color}}
+              labelStyle={{color: Colors.secondary_color}}
             />
             <Text style={styles.name}>{detail?.customer?.user_name}</Text>
           </View>

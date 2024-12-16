@@ -41,6 +41,7 @@ import PopUp from '../../components/Popup/PopUp';
 const RegistrationForm = ({ navigation, route }) => {
   const cameraSheet_ref = useRef();
   const datePicker_ref = useRef();
+  const Verification_ref = useRef();
   const dispatch = useDispatch();
   const showBtmSheet = () => {
     datePicker_ref?.current?.open()
@@ -48,16 +49,11 @@ const RegistrationForm = ({ navigation, route }) => {
   const closeBtmSheet = () => {
     datePicker_ref?.current?.close()
   }
-
   const { rider_id } = useSelector(store => store.auth)
   const [showPopUp, setShowPopUp] = useState(false)
   const [popUpColor, setPopUpColor] = useState('')
   const [PopUpMesage, setPopUpMesage] = useState('')
-
-
-  const ref_RBSheet = useRef();
   const textInput_HEIGHT = 45;
-
   const [index, setIndex] = useState(0); //0 for other and 1 for vehicle info
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
@@ -146,13 +142,13 @@ const RegistrationForm = ({ navigation, route }) => {
 
   };
 
-  const onDatePick = (event, selectedDate) => {
-    console.log('event  :   ', event);
-    setShowDatePicker(false);
-    if (event?.type == 'set') {
-      setDOB(selectedDate);
-    }
-  };
+  // const onDatePick = (event, selectedDate) => {
+  //   console.log('event  :   ', event);
+  //   setShowDatePicker(false);
+  //   if (event?.type == 'set') {
+  //     setDOB(selectedDate);
+  //   }
+  // };
 
   const handleUploadProfileImage = (img) => {
     return new Promise(async (resolve, reject) => {
@@ -323,9 +319,9 @@ const RegistrationForm = ({ navigation, route }) => {
               setTimeout(()=>{
                 setShowPopUp(false)
               }, 1000)
-              dispatch(setRiderId(response?.result?.rider_id))
-              dispatch(setRiderDetails(response?.result))
-              navigation.navigate('Drawer')
+              // dispatch(setRiderId(response?.result?.rider_id))
+              // dispatch(setRiderDetails(response?.result))
+              Verification_ref?.current?.open()
             }else {
               setShowPopUp(true)
               setPopUpColor('red')
@@ -356,7 +352,7 @@ const RegistrationForm = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.White, }}>
+    <View style={{ flex: 1, backgroundColor: Colors.secondary_color, }}>
       <Loader loading={loading} />
       { showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
       <ScrollView
@@ -493,6 +489,8 @@ const RegistrationForm = ({ navigation, route }) => {
                 <Avatar.Image
                   source={{ uri: profileImage?.path }}
                   size={wp(25)}
+                  style={{backgroundColor: 'white', alignItems: 'center', }}
+
                 />
               ) : (
                 <Icons.Profile1 />
@@ -601,7 +599,7 @@ const RegistrationForm = ({ navigation, route }) => {
               onPress={() => handleGoNext()}
             />
 
-            {showDatePicker && (
+             {/* {showDatePicker && (
               <DateTimePicker
                 testID="dateTimePicker"
                 value={DOB || new Date()}
@@ -620,7 +618,7 @@ const RegistrationForm = ({ navigation, route }) => {
                   textColor: '#1669F',
                 }}
               />
-            )}
+            )} */}
           </View>
         )}
       </ScrollView>
@@ -634,15 +632,34 @@ const RegistrationForm = ({ navigation, route }) => {
           img && handleUploadImage(img);
         }}
       />
-      <CRBSheetComponent height={310} refRBSheet={datePicker_ref} content={<View>
+      <CRBSheetComponent refRBSheet={Verification_ref} height={hp(40)} 
+      content={<View style={{flex:1}} >
+        <View style={{backgroundColor: Colors.primary_color, paddingVertical: hp(3),paddingHorizontal: hp(3.5), borderRadius: wp(20), alignItems: 'center', justifyContent: 'center', width: wp(23), alignSelf: 'center'}} >
+          <Icons.Send width={wp(9)} />
+        </View>
+        <Text style={{color: Colors.secondary_text, width: wp(80), fontSize: RFPercentage(2.3), textAlign: 'center', marginTop: hp(4), lineHeight: hp(3.2), alignSelf: 'center'}} >Your request has been sent to the Admin for verification. You will be notified when it's complete.</Text>
+        <CButton
+          title="Okay"
+          height={hp(6.2)}
+          // marginTop={hp(5)}
+          width={wp(88)}
+          // onPress={() => navigation?.navigate('Verification')}
+          onPress={()=> {Verification_ref.current.close()
+            setTimeout(() => {
+              navigation.goBack();
+            }, 300);
+          }}
+          loading={loading}
+        />
+        </View>} />
+      <CRBSheetComponent height={hp(40)} refRBSheet={datePicker_ref} content={<View>
         <View style={styles.rowView}>
           <Text style={styles.addDate} >Add Date</Text>
-          <Text>Add Date</Text>
           <TouchableOpacity onPress={closeBtmSheet} >
             <Feather
               name={'x'}
               size={20}
-              color={Colors.Black}
+              color={Colors.primary_text}
             /></TouchableOpacity>
         </View>
         <DatePicker mode="date" theme='light' date={DOB || new Date()} onDateChange={setDOB} dividerColor={Colors.Orange} style={{}} />
@@ -678,7 +695,7 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.5),
-    color: Colors.Orange,
+    color:Colors.primary_color,
     textAlign: 'center',
     // alignSelf: 'center',
     flex: 1
@@ -714,7 +731,7 @@ const styles = StyleSheet.create({
   },
   addDate: {
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontSize: RFPercentage(2),
 
   },
@@ -722,9 +739,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 10,
-    borderColor: Colors.Orange,
+    borderColor:Colors.primary_color,
     borderWidth: wp(0.3),
-    backgroundColor: Colors.White,
+    backgroundColor: Colors.secondary_color,
     borderRadius: wp(20)
   }
 

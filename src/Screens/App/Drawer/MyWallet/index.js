@@ -105,8 +105,8 @@ const MYWallet = ({ navigation, route }) => {
         "description": "This is the payment description.",
         "redirect_urls": {
             
-            "return_url": "http://localhost:8085/success",
-            "cancel_url": "http://localhost:8085/return"
+            "return_url": "https://food-delivery-restaurant-portal.netlify.app/success",
+            "cancel_url": "https://food-delivery-restaurant-portal.netlify.app/return"
         }
     }
       const CreatePayment = await  fetchApis(BASE_URL+'payment/createPayment', 'POST', setLoading,{"Content-Type": "application/json"},body ,dispatch )
@@ -174,7 +174,7 @@ const MYWallet = ({ navigation, route }) => {
         if (payPalPayoutCheck.status) {
           console.log(payPalPayoutCheck.status);
 
-          setWithdrawAmount(0)
+          setWithdrawAmount('0')
           handlePopup(dispatch, 'Withdrawl Successfull', 'green')
           
           
@@ -391,7 +391,7 @@ const MYWallet = ({ navigation, route }) => {
   const getTransactions = async () => {
     setLoading(true);
     try {
-      let amount = await GetWalletAmount(rider_id);
+      let amount = await GetWalletAmount(rider_id ,dispatch);
       dispatch(setWalletTotalAmount(amount));
   
       const response = await fetch(api.getRiderTransactionHistory + rider_id);
@@ -491,15 +491,15 @@ const MYWallet = ({ navigation, route }) => {
         //   },
         // },
         colors: {
-          // primary: Colors.Orange,
+          // primary:Colors.primary_color,
           // background: '#FFFFFF',
           // componentBackground: '#FFFFFF',
           // componentBorder: '#000000',
           // componentDivider: '#000000',
-          // primaryText: Colors.Orange,
-          // secondaryText: Colors.Orange,
-          // componentText: Colors.Orange,
-          placeholderText: Colors.White,
+          // primaryText:Colors.primary_color,
+          // secondaryText:Colors.primary_color,
+          // componentText:Colors.primary_color,
+          placeholderText: Colors.secondary_color,
         },
       },
 
@@ -534,17 +534,17 @@ const MYWallet = ({ navigation, route }) => {
   const handleNavigationStateChange = (navState) => {
     console.log(navState.url, 'hvhvh');
     
-    if (navState.url.includes('http://localhost:5173/wallet')) {
-      WithDrawPayment(connectedAccountId)
+    if (navState.url.includes('https://food-delivery-restaurant-portal.netlify.app/wallet')) {
+      // WithDrawPayment(connectedAccountId)
       console.log('vhg');
       setAccountLinkUrl(null)
 
       
       setAccountLinkUrl(null)
-    } else if (navState.url.includes('http://localhost:5173/return')) {
+    } else if (navState.url.includes('https://food-delivery-restaurant-portal.netlify.app/return')) {
       navigation.navigate('MyWallet');
       setAccountLinkUrl(null)
-      // WithDrawPayment(connectedAccountId)
+      WithDrawPayment(connectedAccountId)
     }
   };
 
@@ -552,15 +552,15 @@ const MYWallet = ({ navigation, route }) => {
   
 // console.log(accountLinkUrl);
 
-  const SUCCESS_URL = "http://192.168.100.199:8081/account-setup-complete"; // Page to redirect to after successful onboarding
-const REFRESH_URL = "http://192.168.100.199:8081/account-setup-refresh"; 
+//   const SUCCESS_URL = "http://192.168.100.199:8081/account-setup-complete"; // Page to redirect to after successful onboarding
+// const REFRESH_URL = "http://192.168.100.199:8081/account-setup-refresh"; 
 
 // console.log({rider_id});
 
 const handleNavigationStateChangePaypal = async (navState) => {
   console.log('Navigated URL:', navState.url);
 
-  if (navState.url.includes('http://localhost:8085/success')) {
+  if (navState.url.includes('https://food-delivery-restaurant-portal.netlify.app/success')) {
     // Call your withdrawal payment function
     // WithDrawPayment(connectedAccountId);
     setAccountLinkUrl(null);
@@ -605,7 +605,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
 
     // Perform necessary state updates or actions
   }
-   else if (navState.url.includes('http://localhost:8085/return')) {
+   else if (navState.url.includes('https://food-delivery-restaurant-portal.netlify.app/return')) {
     // Navigate to 'MyWallet' screen
     navigation.navigate('MyWallet');
     
@@ -618,7 +618,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
   return (
 
     
-    <View style={{ flex: 1, backgroundColor: Colors.White }}>
+    <View style={{ flex: 1, backgroundColor: Colors.secondary_color }}>
        {
         accountLinkUrl ? <WebView
         source={{ uri: accountLinkUrl }}
@@ -635,15 +635,15 @@ const handleNavigationStateChangePaypal = async (navState) => {
       /> : <View>
            {/* <Loader loading={loading} /> */}
       {showPopUp && <PopUp color={popUpColor} message={PopUpMesage} />}
-      <ScrollView refreshControl={<RefreshControl refreshing={loading} colors={[Colors.Orange]} onRefresh={() => {
+      <ScrollView refreshControl={<RefreshControl refreshing={loading} colors={[Colors.primary_color]} onRefresh={() => {
         getTransactions()
       }} />} contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}>
         <View style={styles.headerContainer}>
           <StackHeader
             title={'My Wallet'}
-            titleColor={'white'}
-            backIconColor={'white'}
-            statusBarBG={Colors.Orange}
+            titleColor={Colors.secondary_color}
+            backIconColor={Colors.secondary_color}
+            statusBarBG={Colors.primary_color}
             statusBarStyle={'light-content'}
             headerView={{ marginTop: 10 }}
           />
@@ -666,7 +666,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <Text
                 style={{
                   fontFamily: Fonts.Inter_SemiBold,
-                  color: Colors.White,
+                  color: Colors.secondary_color,
                   fontSize: RFPercentage(4),
                   lineHeight: 45,
                 }}>
@@ -675,7 +675,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <Text
                 style={{
                   fontFamily: Fonts.PlusJakartaSans_Medium,
-                  color: Colors.White,
+                  color: Colors.secondary_color,
                   fontSize: RFPercentage(1.5),
                   opacity: 0.95,
                 }}>
@@ -685,22 +685,22 @@ const handleNavigationStateChangePaypal = async (navState) => {
             <View>
               <CButton
                 title="Withdraw"
-                bgColor="#FFF"
+                bgColor={Colors.button.secondary_button}
                 width={100}
                 height={35}
                 marginTop={-1}
-                textStyle={{ color: Colors.Orange, textTransform: 'none' }}
+                textStyle={{ color: Colors.button.secondary_button_text, textTransform: 'none' }}
                 onPress={() => {
                   setIsWithdraw(true)
                   ref_RBWithdrawSheet?.current?.open()}}
               />
               <CButton
                 title="Top-up"
-                bgColor="#FFF"
+                bgColor={Colors.button.secondary_button}
                 width={100}
                 height={35}
                 marginTop={10}
-                textStyle={{ color: Colors.Orange, textTransform: 'none' }}
+                textStyle={{ color: Colors.button.secondary_button_text, textTransform: 'none' }}
                 onPress={() => ref_RBTopUpSheet?.current?.open()}
               />
             </View>
@@ -744,7 +744,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <View style={{ ...styles.rowViewSB, marginBottom: 20 }}>
                 <Text
                   style={{
-                    color: '#0A212B',
+                    color: Colors.primary_text,
                     fontFamily: Fonts.PlusJakartaSans_Bold,
                     fontSize: RFPercentage(2.5),
                   }}>
@@ -752,7 +752,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
                 </Text>
                 <Text
                   style={{
-                    color: Colors.Orange,
+                    color: Colors.primary_color,
                     fontFamily: Fonts.PlusJakartaSans_Bold,
                     fontSize: RFPercentage(2.2),
                     marginTop: 10,
@@ -817,7 +817,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <View style={{ ...styles.rowViewSB, marginBottom: 20 }}>
                 <Text
                   style={{
-                    color: '#0A212B',
+                    color: Colors.primary_text,
                     fontFamily: Fonts.PlusJakartaSans_Bold,
                     fontSize: RFPercentage(2.5),
                   }}>
@@ -827,7 +827,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <View style={{ paddingHorizontal: 10 }}>
                 <Text
                   style={{
-                    color: Colors.Orange,
+                    color: Colors.primary_color,
                     fontFamily: Fonts.PlusJakartaSans_Bold,
                     fontSize: RFPercentage(2.2),
                     marginBottom: 14,
@@ -902,12 +902,12 @@ const handleNavigationStateChangePaypal = async (navState) => {
               <Text style={styles.rbSheetHeading}>Select an option</Text>
               <TouchableOpacity
                 onPress={() => closeBtmSheet()}>
-                <Ionicons name={'close'} size={22} color={'#1E2022'} />
+                <Ionicons name={'close'} size={22} color={Colors.primary_text} />
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity style={styles.rowView} onPress={() => isWithDraw ? toggleSelectionWithDraw('stripe'):  toggleSelection('stripe')} >
-              <RadioButton color={Colors.Orange} uncheckedColor={Colors.Orange} status={selectedPaymentMethod === 'stripe' ? 'checked' : 'unchecked'} onPress={() => toggleSelection('stripe')} />
+              <RadioButton color={Colors.primary_color} uncheckedColor={Colors.primary_color} status={selectedPaymentMethod === 'stripe' ? 'checked' : 'unchecked'} onPress={() => toggleSelection('stripe')} />
               <Text
                 style={{
                   color: '#56585B',
@@ -921,7 +921,7 @@ const handleNavigationStateChangePaypal = async (navState) => {
             </TouchableOpacity  >
             <ItemSeparator />
             <TouchableOpacity style={styles.rowView} onPress={() => isWithDraw? toggleSelectionWithDraw('paypal') : toggleSelection('paypal')}>
-              <RadioButton color={Colors.Orange} uncheckedColor={Colors.Orange} status={selectedPaymentMethod === 'paypal' ? 'checked' : 'unchecked'} onPress={() => toggleSelection('paypal')} />
+              <RadioButton color={Colors.primary_color} uncheckedColor={Colors.primary_color} status={selectedPaymentMethod === 'paypal' ? 'checked' : 'unchecked'} onPress={() => toggleSelection('paypal')} />
               <Text
                 style={{
                   color: '#56585B',
@@ -949,34 +949,34 @@ export default MYWallet;
 
 const styles = StyleSheet.create({
   heading1: {
-    color: Colors.Orange,
+    color: Colors.primary_color,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2.3),
     marginHorizontal: 20,
     marginTop: hp(3),
     marginBottom: hp(1.4),
   },
-  headerContainer: { backgroundColor: Colors.Orange, height: hp(23) },
+  headerContainer: { backgroundColor: Colors.primary_color, height: hp(23) },
   header: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: 20,
   },
-  priceText: {
-    fontFamily: Fonts.Inter_SemiBold,
-    color: Colors.White,
-    fontSize: RFPercentage(4),
-    lineHeight: 45,
-  },
+  // priceText: {
+  //   fontFamily: Fonts.Inter_SemiBold,
+  //   color: Colors.White,
+  //   fontSize: RFPercentage(4),
+  //   lineHeight: 45,
+  // },
   totalAmount: {
     fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: Colors.White,
+    color: Colors.secondary_color,
     fontSize: RFPercentage(1.5),
     opacity: 0.95,
   },
   rbSheetHeading: {
-    color: Colors.Text,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_Bold,
     fontSize: RFPercentage(2),
   },
@@ -992,8 +992,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   transactionsContianer:{
-    borderColor:'#EBEBEB',
-    borderWidth: 1,
+    borderColor: Colors.secondary_text,
+    borderWidth: wp(0.1),
     borderRadius: 10,
     marginHorizontal: wp(5),
     marginVertical: hp(0),
@@ -1003,13 +1003,13 @@ const styles = StyleSheet.create({
 
   },
   transactionId:{
-    color: Colors.Black,
+    color: Colors.primary_text,
     fontFamily: Fonts.PlusJakartaSans_SemiBold,
     fontSize: RFPercentage(1.8),
     marginLeft: 10,
   },
   transactionType:{
-    color: Colors.darkTextColor,
+    color: Colors.secondary_text,
     fontFamily: Fonts.PlusJakartaSans_Medium,
     fontSize: RFPercentage(1.7),
     marginLeft: 10,

@@ -14,7 +14,7 @@ const CDropDown = ({heading, data, value, setValue, placeholder}) => {
       {heading && (
         <Text
           style={{
-            color: Colors.Black,
+            color: Colors.primary_text,
             fontFamily: Fonts.Inter_Bold,
             fontSize: RFPercentage(1.9),
             marginHorizontal: 10,

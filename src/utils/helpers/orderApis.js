@@ -84,10 +84,14 @@ export const GetRiderOrders = id => {
 export const getAllOrders = async (dispatch, setLoading, setRefreshing) => {
   try {
     const response = await fetch(api.get_all_orders);
-    const data = await response.json();
+    console.log(api.get_all_orders,'---------------------');
 
+    const data = await response.json();
+    
     if (data.error) {
       handlePopup(dispatch, 'Something went wrong', 'red');
+      console.log({data});
+      
     } else {
       const filteredOrders = (data?.result || []).filter(
         (item) =>
@@ -151,11 +155,13 @@ export const getAssignedOrders = async (rider_id, dispatch, setLoading, setRefre
         // console.log({list});
         const filteredOrders = list.filter(order => order.order_status !== 'cancelled');
 
-        dispatch(setAssignedOrders(filteredOrders));
+        dispatch(setAssignedOrders(list));
       }
     })
     .catch(err => {
       console.log(err, 'errr in getAssignedOrders');
+      console.log(api.get_rider_assigned_orders + rider_id);
+      
       handlePopup(dispatch, 'Something went wrong', 'red');
     })
     .finally(() => {
@@ -199,19 +205,6 @@ export const handelAcceptRejectOrder = async (status, order_id, rider_id, dispat
         dispatch(setIsOrderUpdate(!isOrderUpdate))
         callBack && callBack()
         dispatch(setUpdatedOrdr(response?.result))
-    
-        // const orderResponse = await fetch(api.get_order_by_id + order_id);
-        // const orderResult = await orderResponse.json();
-  
-        // if (!orderResult.error) {
-        //   // Process order data (update state, Redux, etc. as needed)
-        //   // e.g., dispatch(updateOrderData(orderResult.result));
-        //   // console.log('Updated order data:', orderResult.result);
-        //   dispatch(setUpdatedOrder(orderResult.result));
-        //   return orderResult.result
-        // } else {
-        //   console.log('Failed to fetch updated order data.');
-        // }
                   
       
       }
