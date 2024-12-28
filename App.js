@@ -55,8 +55,17 @@ const FetchColors = () =>{
   }
 
   React.useEffect(() => {
-    getColorsByRestaurant("res_4074614");
-  }, []);
+    // Function to be called repeatedly
+    const fetchColors = () => {
+      getColorsByRestaurant("res_4074614");
+    };
+
+    // Set up the interval
+    const intervalId = setInterval(fetchColors, 6000); // 60000ms = 1 minute
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
+  }, [dispatch]); 
   return null
 }
 const AppContent = () => {

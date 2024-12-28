@@ -14,6 +14,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {useNavigation} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 const FoodCard = ({
   image,
   title,
@@ -25,6 +26,52 @@ const FoodCard = ({
   imageStyle,
 }) => {
   const navigation = useNavigation();
+  const  {Colors } = useSelector(store => store.auth)
+
+  const styles = StyleSheet.create({
+    card1: {
+      borderWidth: 1,
+      borderColor: '#E6E7EB',
+      // height: hp(23),
+      paddingVertical: 7,
+      flex: 0.47,
+      borderRadius: hp(3),
+      alignItems: 'center',
+    },
+    textContainer: {
+      justifyContent: 'center',
+      marginTop: 6,
+      alignItems: 'center',
+    },
+    imageContainer: {
+      width: hp(17),
+      height: hp(11),
+      borderRadius: 15,
+      overflow: 'hidden',
+      alignItems: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'contain',
+    },
+    title: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      color: '#0A212B',
+      fontSize: RFPercentage(1.5),
+      lineHeight: 30,
+    },
+    description: {
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+      color:Colors.primary_color,
+      fontSize: RFPercentage(1.5),
+    },
+    price: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      color: '#0A212B',
+      fontSize: RFPercentage(2.5),
+    },
+  });
   return (
     <TouchableOpacity
       disabled={disabled ? disabled : false}
@@ -58,47 +105,4 @@ const FoodCard = ({
 
 export default FoodCard;
 
-const styles = StyleSheet.create({
-  card1: {
-    borderWidth: 1,
-    borderColor: '#E6E7EB',
-    // height: hp(23),
-    paddingVertical: 7,
-    flex: 0.47,
-    borderRadius: hp(3),
-    alignItems: 'center',
-  },
-  textContainer: {
-    justifyContent: 'center',
-    marginTop: 6,
-    alignItems: 'center',
-  },
-  imageContainer: {
-    width: hp(17),
-    height: hp(11),
-    borderRadius: 15,
-    overflow: 'hidden',
-    alignItems: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
-  title: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#0A212B',
-    fontSize: RFPercentage(1.5),
-    lineHeight: 30,
-  },
-  description: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color:Colors.primary_color,
-    fontSize: RFPercentage(1.5),
-  },
-  price: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#0A212B',
-    fontSize: RFPercentage(2.5),
-  },
-});
+

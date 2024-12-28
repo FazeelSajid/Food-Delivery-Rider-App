@@ -11,7 +11,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Colors} from '../../constants';
+import { useSelector } from 'react-redux';
 
 const CButton = ({
   title = '',
@@ -36,6 +36,7 @@ const CButton = ({
 }) => {
   let isDarkMode = false;
   // console.log({marginTop});
+    const  {Colors } = useSelector(store => store.auth)
   
   return (
     <TouchableOpacity
@@ -81,7 +82,7 @@ const CButton = ({
               ? color
               : isDarkMode
               ? Colors.button.primary_button_text
-              : Colors.button.primary_button_text,
+              : Colors.button.secondary_button_text,
             fontSize: txtSize,
             // textTransform: 'uppercase',
             ...textStyle,

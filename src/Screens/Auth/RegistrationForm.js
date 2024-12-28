@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import StackHeader from '../../components/Header/StackHeader';
-import { Colors, Fonts, Icons, Images } from '../../constants';
+import { Fonts, Icons, Images } from '../../constants';
 import CInput from '../../components/TextInput/CInput';
 import CButton from '../../components/Buttons/CButton';
 import {
@@ -18,8 +18,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Avatar } from 'react-native-paper';
 import {
-  chooseImageFromCamera,
-  showAlert,
+
   uploadImage,
 } from '../../utils/helpers';
 import moment from 'moment';
@@ -35,6 +34,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import api from '../../constants/api';
 import { setRiderDetails, setRiderId } from '../../redux/AuthSlice';
 import PopUp from '../../components/Popup/PopUp';
+import { handlePopup } from '../../utils/helpers/orderApis';
 
 
 
@@ -49,10 +49,10 @@ const RegistrationForm = ({ navigation, route }) => {
   const closeBtmSheet = () => {
     datePicker_ref?.current?.close()
   }
-  const { rider_id } = useSelector(store => store.auth)
-  const [showPopUp, setShowPopUp] = useState(false)
-  const [popUpColor, setPopUpColor] = useState('')
-  const [PopUpMesage, setPopUpMesage] = useState('')
+  const { rider_id,  Colors, } = useSelector(store => store.auth)
+      const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
+  
+
   const textInput_HEIGHT = 45;
   const [index, setIndex] = useState(0); //0 for other and 1 for vehicle info
   const [loading, setLoading] = useState(false);
@@ -195,38 +195,38 @@ const RegistrationForm = ({ navigation, route }) => {
 
   const validate = () => {
     if (profileImage == null) {
-      showAlert('Please Upload Profile Image');
+      handlePopup(dispatch,'Please Upload Profile Image','red');
       return false;
     }
     // else if (email.length == 0) {
-    //   showAlert('Please Enter email address');
+    //   handlePopup(dispatch,'Please Enter email address');
     //   return false;
     // } 
     else if (CNIC.length == 0) {
-      showAlert('Please Enter CNIC');
+      handlePopup(dispatch,'Please Enter CNIC','red');
       return false;
     }
     // else if (country.length == 0) {
-    //   showAlert('Please Enter Country');
+    //   handlePopup(dispatch,'Please Enter Country');
     //   return false;
     // } 
     else if (address.length == 0) {
-      showAlert('Please Enter Address');
+      handlePopup(dispatch,'Please Enter Address','red');
       return false;
     }
     else if (DOB.length == 0) {
-      showAlert('Please Select Date Of Birth');
+      handlePopup(dispatch,'Please Select Date Of Birth','red');
       return false;
     } else if (gender.length == 0) {
-      showAlert('Please Enter Gender');
+      handlePopup(dispatch,'Please Enter Gender','red');
       return false;
     }
     else if (FrontIDImage == null) {
-      showAlert('Please Upload Front ID Card Image');
+      handlePopup(dispatch,'Please Upload Front ID Card Image','red');
       return false;
     }
     else if (BackIDImage == null) {
-      showAlert('Please Upload Front ID Card Image');
+      handlePopup(dispatch,'Please Upload Front ID Card Image','red');
       return false;
     }
 
@@ -237,26 +237,26 @@ const RegistrationForm = ({ navigation, route }) => {
 
   const validate2 = () => {
     if (vehicle?.reg?.length == 0) {
-      showAlert('Please Enter Registration Number');
+      handlePopup(dispatch,'Please Enter Registration Number','red');
       return false;
     } else if (vehicle?.ownerName?.length == 0) {
-      showAlert('Please Enter Vehicle Model');
+      handlePopup(dispatch,'Please Enter Vehicle Model','red');
       return false;
     } 
      else if (vehicle?.modal?.length == 0) {
-      showAlert('Please Enter Vehicle Model');
+      handlePopup(dispatch,'Please Enter Vehicle Model','red');
       return false;
     } 
     else if (vehicle?.name?.length == 0) {
-      showAlert('Please Enter Vehicle Name');
+      handlePopup(dispatch,'Please Enter Vehicle Name','red');
       return false;
     } 
     else if (FrontLicenseImage === null) {
-      showAlert('Please Upload Front License Image');
+      handlePopup(dispatch,'Please Upload Front License Image','red');
       return false;
     } 
     else if (BackLicenseImage === null) {
-      showAlert('Please Upload Back License Image');
+      handlePopup(dispatch,'Please Upload Back License Image','red');
       return false;
     } 
     else {
@@ -313,33 +313,20 @@ const RegistrationForm = ({ navigation, route }) => {
             console.log({response});
             
             if (response.error === false) {
-              setShowPopUp(true)
-              setPopUpColor('green')
-              setPopUpMesage(response?.message)
-              setTimeout(()=>{
-                setShowPopUp(false)
-              }, 1000)
-              // dispatch(setRiderId(response?.result?.rider_id))
-              // dispatch(setRiderDetails(response?.result))
+              handlePopup(dispatch, response?.message,'green')
+             
               Verification_ref?.current?.open()
             }else {
-              setShowPopUp(true)
-              setPopUpColor('red')
-              setPopUpMesage(response?.message)
-              setTimeout(()=>{
-                setShowPopUp(false)
-              }, 1000)
+              handlePopup(dispatch, response?.message,'red')
+
+             
             }
           })
           .catch(err => {
             console.log('Error in Login :  ', err);
-            // showAlert('Something went wrong');
-            setShowPopUp(true)
-            setPopUpColor('red')
-            setPopUpMesage('Something went wrong');
-            setTimeout(()=>{
-              setShowPopUp(false)
-            }, 1000)
+            handlePopup(dispatch,'Something went wrong', 'red');
+           
+           
           })
           .finally(() => {
             setLoading(false);
@@ -350,6 +337,74 @@ const RegistrationForm = ({ navigation, route }) => {
       setLoading(false);
     }
   };
+
+
+  const styles = StyleSheet.create({
+    profileImage: {
+      borderWidth: 1,
+      borderColor: Colors.Border,
+      width: wp(25),
+      height: wp(25),
+      borderRadius: wp(25) / 2,
+      alignSelf: 'center',
+      marginBottom: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    header: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(2.5),
+      color:Colors.primary_color,
+      textAlign: 'center',
+      // alignSelf: 'center',
+      flex: 1
+    },
+    fileContainer: {
+      width: wp(90),
+      height: hp(23),
+      flex: 1,
+      borderWidth: 1,
+      borderColor: Colors.Border,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // marginVertical: 35,
+      marginBottom: 15,
+      overflow: 'hidden',
+      alignSelf: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+    },
+    description: {
+      color:Colors.secondary_text,
+      fontFamily: Fonts.Inter_Regular,
+      marginVertical: 10,
+    },
+    rowView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      // marginBottom: hp(1),
+    },
+    addDate: {
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2),
+  
+    },
+    iconBtn: {
+      position: 'absolute',
+      top: 0,
+      right: 10,
+      borderColor:Colors.primary_color,
+      borderWidth: wp(0.3),
+      backgroundColor: Colors.secondary_color,
+      borderRadius: wp(20)
+    }
+  
+  });
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.secondary_color, }}>
@@ -368,7 +423,7 @@ const RegistrationForm = ({ navigation, route }) => {
               <Feather
                 name={'chevron-left'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>
           }
           
@@ -418,7 +473,7 @@ const RegistrationForm = ({ navigation, route }) => {
               {FrontLicenseImage && <TouchableOpacity style={styles.iconBtn} onPress={() => setFrontLicenseImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
 
@@ -445,7 +500,7 @@ const RegistrationForm = ({ navigation, route }) => {
               {BackLicenseImage && <TouchableOpacity style={styles.iconBtn} onPress={() => setBackLicenseImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
               <TouchableOpacity
@@ -496,12 +551,7 @@ const RegistrationForm = ({ navigation, route }) => {
                 <Icons.Profile1 />
               )}
             </TouchableOpacity>
-            {/* <CInput
-              placeholder="Email Address"
-              keyboardType="email-address"
-              value={email}
-              onChangeText={text => setEmail(text)}
-            /> */}
+           
             <CInput
               placeholder="CNIC Number"
               keyboardType="numeric"
@@ -510,22 +560,14 @@ const RegistrationForm = ({ navigation, route }) => {
               height={textInput_HEIGHT}
               
             />
-            {/* <CInput
-              placeholder="Country"
-              value={country}
-              onChangeText={text => setCountry(text)}
-            /> */}
+          
             <CInput
               placeholder="Address"
               value={address}
               onChangeText={text => setAddress(text)}
               height={textInput_HEIGHT}
             />
-            {/* <CInput
-              placeholder="Location"
-              value={location}
-              onChangeText={text => setLocation(text)}
-            /> */}
+          
             <CInput
               placeholder="Date of Birth"
               value={DOB ? moment(DOB).format('DD/MM/YYYY') : ''}
@@ -546,7 +588,7 @@ const RegistrationForm = ({ navigation, route }) => {
               {FrontIDImage && <TouchableOpacity style={styles.iconBtn} onPress={() => setFrontIDImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
 
@@ -573,7 +615,7 @@ const RegistrationForm = ({ navigation, route }) => {
               {BackIDImage && <TouchableOpacity style={styles.iconBtn} onPress={() => setBackIDImage(null)}><Feather
                 name={'x'}
                 size={25}
-                color={Colors.Orange}
+                color={Colors.primary_color}
               /></TouchableOpacity>}
 
               <TouchableOpacity
@@ -599,26 +641,6 @@ const RegistrationForm = ({ navigation, route }) => {
               onPress={() => handleGoNext()}
             />
 
-             {/* {showDatePicker && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={DOB || new Date()}
-                mode={'date'}
-                display="default"
-                locale="es-ES"
-                themeVariant="light"
-                onChange={onDatePick}
-                maximumDate={new Date()}
-                style={{
-                  shadowColor: '#fff',
-                  shadowRadius: 0,
-                  shadowOpacity: 1,
-                  shadowOffset: { height: 0, width: 0 },
-                  color: '#1669F',
-                  textColor: '#1669F',
-                }}
-              />
-            )} */}
           </View>
         )}
       </ScrollView>
@@ -662,7 +684,7 @@ const RegistrationForm = ({ navigation, route }) => {
               color={Colors.primary_text}
             /></TouchableOpacity>
         </View>
-        <DatePicker mode="date" theme='light' date={DOB || new Date()} onDateChange={setDOB} dividerColor={Colors.Orange} style={{}} />
+        <DatePicker mode="date" theme='light' date={DOB || new Date()} onDateChange={setDOB} dividerColor={Colors.primary_color} style={{}} />
         <CButton
           title="Confirm"
           height={hp(6.2)}
@@ -680,69 +702,4 @@ const RegistrationForm = ({ navigation, route }) => {
 
 export default RegistrationForm;
 
-const styles = StyleSheet.create({
-  profileImage: {
-    borderWidth: 1,
-    borderColor: Colors.Border,
-    width: wp(25),
-    height: wp(25),
-    borderRadius: wp(25) / 2,
-    alignSelf: 'center',
-    marginBottom: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.5),
-    color:Colors.primary_color,
-    textAlign: 'center',
-    // alignSelf: 'center',
-    flex: 1
-  },
-  fileContainer: {
-    width: wp(90),
-    height: hp(23),
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginVertical: 35,
-    marginBottom: 15,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  description: {
-    color: '#979797',
-    fontFamily: Fonts.Inter_Regular,
-    marginVertical: 10,
-  },
-  rowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // marginBottom: hp(1),
-  },
-  addDate: {
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
 
-  },
-  iconBtn: {
-    position: 'absolute',
-    top: 0,
-    right: 10,
-    borderColor:Colors.primary_color,
-    borderWidth: wp(0.3),
-    backgroundColor: Colors.secondary_color,
-    borderRadius: wp(20)
-  }
-
-});

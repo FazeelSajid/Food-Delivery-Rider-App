@@ -1,24 +1,33 @@
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React from 'react';
-import {Colors, Fonts} from '../../../../constants';
+import { Fonts} from '../../../../constants';
 import StackHeader from '../../../../components/Header/StackHeader';
-import {RFPercentage} from 'react-native-responsive-fontsize';
-import {WebView} from 'react-native-webview';
-
 import {
-  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { useSelector } from 'react-redux';
 
 const PrivacyPolicy = () => {
+  const {Colors} = useSelector(store => store.auth)
+  const styles = StyleSheet.create({
+    textContainer: {
+      flex: 1,
+      paddingHorizontal: 25,
+      marginTop: hp(1.5),
+      paddingBottom: 20,
+    },
+    text: {
+      color: Colors.secondary_text,
+      fontFamily: Fonts.PlusJakartaSans_Regular,
+      fontSize: RFPercentage(1.5),
+      lineHeight: 25,
+    },
+  });
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: Colors.White}}>
     <StackHeader title={'Privacy Policy'} headerStyle={{paddingBottom: 10}} />
-
-    {/* <WebView
-      source={{uri: 'https://mtechub.org/privacy/'}}
-      style={{flex: 1, height: hp(90), width: wp(100)}}
-    /> */}
 
     <View style={styles.textContainer}>
       <Text style={styles.text}>
@@ -30,17 +39,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-const styles = StyleSheet.create({
-  textContainer: {
-    flex: 1,
-    paddingHorizontal: 25,
-    marginTop: hp(1.5),
-    paddingBottom: 20,
-  },
-  text: {
-    color: Colors.secondary_text,
-    fontFamily: Fonts.PlusJakartaSans_Regular,
-    fontSize: RFPercentage(1.5),
-    lineHeight: 25,
-  },
-});

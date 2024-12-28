@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, FlatList, RefreshControl, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {Colors, Fonts, Icons, Images} from '../../../constants';
+import { Fonts, Icons, Images} from '../../../constants';
 import StackHeader from '../../../components/Header/StackHeader';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {
@@ -20,7 +20,7 @@ import api from '../../../constants/api';
 import { setUpdatedOrder } from '../../../redux/OrderSlice';
 
 const Notification = ({navigation, route}) => {
-  const { rider_id } = useSelector(store => store.auth)
+  const { rider_id ,Colors,} = useSelector(store => store.auth)
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
@@ -2554,6 +2554,56 @@ const Notification = ({navigation, route}) => {
     dispatch(setUpdatedOrder(item))
 }
 
+const styles = StyleSheet.create({
+  card: {flexDirection: 'row', alignItems: 'center', paddingHorizontal: 22},
+  iconContainer: {
+    height: 50,
+    width: 50,
+    borderRadius: 50 / 2,
+    backgroundColor: `${Colors.primary_color}50`,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rowViewSB: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontFamily: Fonts.Inter_SemiBold,
+    color: Colors.primary_text,
+    fontSize: RFPercentage(1.7),
+    lineHeight: 30,
+  },
+  timeText: {
+    fontFamily: Fonts.Inter_Medium,
+    color: Colors.secondary_text,
+    fontSize: RFPercentage(1.5),
+  },
+  description: {
+    fontFamily: Fonts.Inter_Regular,
+    color: Colors.secondary_text,
+    fontSize: RFPercentage(1.5),
+    opacity: 0.7,
+  },
+  ListEmptyComponent:{
+   //  backgroundColor: 'blue',
+   //  flex:1, 
+   //  alignSelf:'center',
+    paddingTop: hp(8),
+    alignItems: 'center',
+    justifyContent: 'center'
+
+ },
+ ListEmptyComponentText: {
+   fontSize: RFPercentage(2.5),
+   color: Colors.primary_text,
+   fontFamily: Fonts.PlusJakartaSans_SemiBold,
+   paddingTop: hp(3)
+ }
+});
+
+
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
@@ -2646,52 +2696,3 @@ const Notification = ({navigation, route}) => {
 };
 
 export default Notification;
-
-const styles = StyleSheet.create({
-  card: {flexDirection: 'row', alignItems: 'center', paddingHorizontal: 22},
-  iconContainer: {
-    height: 50,
-    width: 50,
-    borderRadius: 50 / 2,
-    backgroundColor: '#FF572233',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowViewSB: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontFamily: Fonts.Inter_SemiBold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(1.7),
-    lineHeight: 30,
-  },
-  timeText: {
-    fontFamily: Fonts.Inter_Medium,
-    color: '#595959',
-    fontSize: RFPercentage(1.5),
-  },
-  description: {
-    fontFamily: Fonts.Inter_Regular,
-    color: '#595959',
-    fontSize: RFPercentage(1.5),
-    opacity: 0.7,
-  },
-  ListEmptyComponent:{
-   //  backgroundColor: 'blue',
-   //  flex:1, 
-   //  alignSelf:'center',
-    paddingTop: hp(8),
-    alignItems: 'center',
-    justifyContent: 'center'
-
- },
- ListEmptyComponentText: {
-   fontSize: RFPercentage(2.5),
-   color: Colors.primary_text,
-   fontFamily: Fonts.PlusJakartaSans_SemiBold,
-   paddingTop: hp(3)
- }
-});

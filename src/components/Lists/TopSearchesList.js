@@ -1,15 +1,14 @@
 import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import ItemSeparator from '../Separator/ItemSeparator';
-import {Fonts, Icons, Colors, Images} from '../../constants';
+import {Fonts, Icons, Images} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
 
 const TopSearchesList = ({data, onRemove, onPress, text}) => {
   // console.log({data});
-  const { searchOrders, rider_id } = useSelector(store => store.auth);
+  const { searchOrders, Colors} = useSelector(store => store.auth);
   
-  console.log(searchOrders);
   
   
   return (

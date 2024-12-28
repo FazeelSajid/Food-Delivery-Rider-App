@@ -14,7 +14,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {useNavigation} from '@react-navigation/native';
-import {Colors, Fonts, Icons} from '../../constants';
+import {Fonts, Icons} from '../../constants';
+import { useSelector } from 'react-redux';
 
 const StackHeader = ({
   title,
@@ -33,6 +34,45 @@ const StackHeader = ({
   iconContainerStyle,
 }) => {
   const navigation = useNavigation();
+  const  {Colors} = useSelector(store => store.auth)
+
+  const styles = StyleSheet.create({
+    header: {
+      justifyContent: 'center',
+      paddingVertical: 15,
+      paddingBottom: hp(4),
+    },
+    headerView: {
+      width: wp(100),
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    iconContainer: {
+      width: wp(20),
+      justifyContent: 'center',
+      alignItems: 'center',
+      // flex: 0.2,
+      // marginRight: 30,
+    },
+    iconContainer1: {
+      // width: wp(20),
+      justifyContent: 'center',
+      alignItems: 'center',
+      // flex: 0.2,
+      marginRight: 30,
+      minWidth: 35,
+    },
+    headerTextContainer: {
+      flex: 1,
+    },
+    mainText: {
+      color: Colors.primary_color,
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      // fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(2.4),
+      textAlign: 'center',
+    },
+  });
   return (
     <View style={{...styles.header, ...headerStyle}}>
       {enableStatusBar == false ? null : (
@@ -86,40 +126,4 @@ const StackHeader = ({
 
 export default StackHeader;
 
-const styles = StyleSheet.create({
-  header: {
-    justifyContent: 'center',
-    paddingVertical: 15,
-    paddingBottom: hp(4),
-  },
-  headerView: {
-    width: wp(100),
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    width: wp(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 0.2,
-    // marginRight: 30,
-  },
-  iconContainer1: {
-    // width: wp(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 0.2,
-    marginRight: 30,
-    minWidth: 35,
-  },
-  headerTextContainer: {
-    flex: 1,
-  },
-  mainText: {
-    color: Colors.primary_color,
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    // fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.4),
-    textAlign: 'center',
-  },
-});
+

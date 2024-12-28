@@ -1,8 +1,9 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {Colors} from '../../constants';
+import { useSelector } from 'react-redux';
 
 const Chip = ({title, onPress, selected, icon}) => {
+        const  {Colors } = useSelector(store => store.auth)
   return (
     <TouchableOpacity
       onPress={onPress}

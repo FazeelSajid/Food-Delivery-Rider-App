@@ -15,7 +15,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import PopUp from '../../../../components/Popup/PopUp';
-import { Colors, Fonts, Icons } from '../../../../constants';
+import { Fonts, Icons } from '../../../../constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
@@ -37,7 +37,7 @@ import MonthPicker from 'react-native-month-year-picker';
 
 
 const Dashboard = ({ navigation, route }) => {
-  const { rider_details, userAppOpenLocation, totalWalletAmount, rider_id, contacts, } = useSelector(store => store.auth)
+  const { rider_details, userAppOpenLocation, totalWalletAmount, rider_id, contacts, Colors } = useSelector(store => store.auth)
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
   const [riderInfo, setRiderInfo] = useState(null);
   const [showDorpDown, setShowDropDown] = useState(false)
@@ -45,74 +45,8 @@ const Dashboard = ({ navigation, route }) => {
   const [index, setIndex] = React.useState(0);
   const layout = useWindowDimensions();
   const [totalEarning, setTotalEarning] = useState(0)
-  const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
-  // const Colors
-
-  console.log(userAppOpenLocation);
-
-  // console.log({ selectedDate });
-
-
-
-
-
-
-
-
-
-
-
-  // const getData = async () => {
-  //   try {
-  //     let data = await GetNearestOrders();
-  //     if (data?.length > 2) {
-  //       const slicedArray = data.slice(0, 2);
-  //       // setOrderRequests(slicedArray);
-  //       dispatch(setOrderRequests(slicedArray));
-  //     } else {
-  //       // setOrderRequests(data);
-  //       dispatch(setOrderRequests(data));
-  //     }
-  //     // getting assigned orders
-  //     let data1 = await GetAssignedOrders();
-  //     if (data1?.length > 2) {
-  //       const slicedArray = data1.slice(0, 2);
-  //       // setAssignedOrders(slicedArray);
-  //       dispatch(setAssignedOrders(slicedArray));
-  //     } else {
-  //       // setAssignedOrders(data1);
-  //       dispatch(setAssignedOrders(data1));
-  //     }
-
-  //     // getting order history
-  //     let data2 = await GetRiderOrders();
-  //     if (data2?.length > 2) {
-  //       const slicedArray = data2.slice(0, 2);
-  //       // setOrderHistory(slicedArray);
-  //       dispatch(setOrderHistory(slicedArray));
-  //     } else {
-  //       // setOrderHistory(data2);
-  //       dispatch(setOrderHistory(data2));
-  //     }
-
-  //     setLoading(false);
-  //     setRefreshing(false);
-  //     console.log('set refresh to false');
-  //   } catch (error) {
-  //     setLoading(false);
-  //     setRefreshing(false);
-  //   }
-  // };
-
-  // console.log(rider_details.email);
-
-  // useFocusEffect(
-  //   React.useCallback(async () => {
-  //     setRiderInfo(rider_details)
-  //   }, []),
-  // );
 
   const renderScene = SceneMap({
     first: Requests,
@@ -132,24 +66,12 @@ const Dashboard = ({ navigation, route }) => {
     setShowModal(true)
   }
 
-  // const func = async ()=> {
-  //   const fcmToken = await messaging().getToken();
-  //   console.log(fcmToken, 'token');
-  // }
+
 
   useEffect(() => {
     setRiderInfo(rider_details)
     // func()
   }, []);
-
-
-
-  // const dateString = new Date()
-  // const date = moment(dateString);
-
-  // const year = date.year();
-  // const month = date.month() + 1;
-  // const day = date.date();
 
   const fetchPayments = async () => {
 
@@ -225,14 +147,122 @@ const Dashboard = ({ navigation, route }) => {
       
   };
 
-  // console.log(rider_details);
-
-  // console.log({ showModal });
-
-
   useEffect(() => {
     fetchPayments()
   }, [])
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: Colors.secondary_color, paddingHorizontal: 20 },
+    headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 20,
+    },
+    headerLocation: {
+      color: Colors.primary_text,
+      width: wp(60),
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+      textAlign: "center",
+      fontSize: RFPercentage(2),
+      alignSelf: 'center'
+    },
+    welcomeText: {
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2.4),
+      letterSpacing: 0.5,
+      marginBottom: 6,
+    },
+    EarningText: {
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2.2),
+      letterSpacing: 0.5,
+      marginBottom: 6,
+    },
+    amountText: {
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(3.3),
+      letterSpacing: 0.5,
+      marginBottom: 6,
+    },
+    nameText: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2.6),
+      letterSpacing: 1,
+    },
+    headerTextView: {
+      height: hp(4),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    },
+    headerText: {
+      color: Colors.primary_text,
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(1.9),
+      letterSpacing: 0.45,
+    },
+    rowView: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      // backgroundColor: 'green'
+    },
+    DropDownBtn: {
+      backgroundColor: Colors.button.primary_button,
+      paddingHorizontal: wp(4),
+      paddingVertical: hp(1.2),
+      borderRadius: wp(10),
+      flexDirection: 'row',
+      alignItems: 'center',
+      elevation: 6,
+      width: wp(25)
+    },
+    DropDownBtnText: {
+      color: Colors.button.primary_button_text,
+      marginRight: wp(2)
+    },
+    DropDownContainer: {
+      backgroundColor: Colors.secondary_color,
+      borderRadius: wp(3),
+      borderColor: Colors.secondary_text,
+      borderWidth: wp(0.1),
+      marginTop: hp(0.5),
+      paddingBottom: wp(1),
+      position: 'absolute',
+      top: 40,
+      zIndex: 1000,
+      paddingHorizontal: wp(5),
+      width: wp(25)
+  
+    },
+    DropDownOptionText: {
+      fontFamily: Fonts.PlusJakartaSans_Regular,
+      color: Colors.secondary_text,
+      fontSize: RFPercentage(1.8),
+      textAlign: 'center',
+      marginVertical: 4,
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent black for the backdrop
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContentContainer: {
+      backgroundColor: Colors.White,
+      padding: 20, // Adjust padding as needed
+      borderRadius: 10, // Optional for rounded corners
+      width: '80%', // Adjust width as needed
+      // alignItems: 'center',
+    },
+  
+    filterHeading: { color: Colors.primary_text, fontFamily: Fonts.PlusJakartaSans_SemiBold, fontSize: RFPercentage(2.5), textAlign: 'center' }
+  });
 
 
 
@@ -400,115 +430,4 @@ const Dashboard = ({ navigation, route }) => {
 
 export default Dashboard;
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.secondary_color, paddingHorizontal: 20 },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  },
-  headerLocation: {
-    color: Colors.primary_text,
-    width: wp(60),
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    textAlign: "center",
-    fontSize: RFPercentage(2),
-    alignSelf: 'center'
-  },
-  welcomeText: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2.4),
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  EarningText: {
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2.2),
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  amountText: {
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(3.3),
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  nameText: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2.6),
-    letterSpacing: 1,
-  },
-  headerTextView: {
-    height: hp(4),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  headerText: {
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(1.9),
-    letterSpacing: 0.45,
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // backgroundColor: 'green'
-  },
-  DropDownBtn: {
-    backgroundColor: Colors.button.primary_button,
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.2),
-    borderRadius: wp(10),
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 6,
-    width: wp(25)
-  },
-  DropDownBtnText: {
-    color: Colors.button.primary_button_text,
-    marginRight: wp(2)
-  },
-  DropDownContainer: {
-    backgroundColor: Colors.secondary_color,
-    borderRadius: wp(3),
-    borderColor: Colors.secondary_text,
-    borderWidth: wp(0.1),
-    marginTop: hp(0.5),
-    paddingBottom: wp(1),
-    position: 'absolute',
-    top: 40,
-    zIndex: 1000,
-    paddingHorizontal: wp(5),
-    width: wp(25)
 
-  },
-  DropDownOptionText: {
-    fontFamily: Fonts.PlusJakartaSans_Regular,
-    color: Colors.secondary_text,
-    fontSize: RFPercentage(1.8),
-    textAlign: 'center',
-    marginVertical: 4,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent black for the backdrop
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContentContainer: {
-    backgroundColor: Colors.White,
-    padding: 20, // Adjust padding as needed
-    borderRadius: 10, // Optional for rounded corners
-    width: '80%', // Adjust width as needed
-    // alignItems: 'center',
-  },
-
-  filterHeading: { color: Colors.primary_text, fontFamily: Fonts.PlusJakartaSans_SemiBold, fontSize: RFPercentage(2.5), textAlign: 'center' }
-});

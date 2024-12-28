@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
-import {Colors, Fonts, Icons, Images} from '../../constants';
+import { Images} from '../../constants';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,7 +17,7 @@ import {RFPercentage} from 'react-native-responsive-fontsize';
 import CInput from '../../components/TextInput/CInput';
 import Feather from 'react-native-vector-icons/Feather';
 import CButton from '../../components/Buttons/CButton';
-import STYLE from './STYLE';
+import { getStyles } from './STYLE';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
 import {getUserFcmToken} from '../../utils/helpers';
 import api from '../../constants/api';
@@ -37,16 +37,14 @@ import { handlePopup } from '../../utils/helpers/orderApis';
 const SignUp = ({navigation, route}) => {
   const dispatch = useDispatch();
 
-  // const [showPopUp, setShowPopUp] = useState(false)
-  // const [popUpColor, setPopUpColor] = useState(false)
-  // const [PopUpMesage, setPopUpMesage] = useState('')
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
 
 
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
-  const { signUpWith } = useSelector(store => store.store)
+  const { Colors } = useSelector(store => store.auth)
   const [userName, setUserName] = useState('');
+  const STYLE = getStyles(Colors)
 
   // const SignUpWithPhone = signUpWith === 'email'
   // const signUpWithPhone = signUpWith === 'phone'

@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Colors, Fonts, Images} from '../../constants';
 import Lottie from 'lottie-react-native';
 import CButton from '../Buttons/CButton';
+import { useSelector } from 'react-redux';
 const RBSheetSuccess = ({
   refRBSheet,
   content,
@@ -28,6 +29,7 @@ const RBSheetSuccess = ({
   titleStyle,
 }) => {
   const navigation = useNavigation();
+    const  {Colors } = useSelector(store => store.auth)
   return (
     <View style={{flex: 1}}>
       <RBSheet

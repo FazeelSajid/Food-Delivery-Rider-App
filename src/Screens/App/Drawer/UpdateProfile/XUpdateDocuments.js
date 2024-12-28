@@ -8,14 +8,13 @@ import {
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import StackHeader from '../../../../components/Header/StackHeader';
-import {Colors, Images, Fonts, Icons} from '../../../../constants';
+import { Images, Fonts,} from '../../../../constants';
 import CButton from '../../../../components/Buttons/CButton';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {
-  chooseImageFromCamera,
   showAlert,
   uploadImage,
 } from '../../../../utils/helpers';
@@ -25,10 +24,11 @@ import api from '../../../../constants/api';
 import Loader from '../../../../components/Loader';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import CameraBottomSheet from '../../../../components/BottomSheet/CameraBottomSheet';
+import { useSelector } from 'react-redux';
 
 const UpdateDocuments = ({navigation, route}) => {
   const cameraSheet_ref = useRef();
-
+  const { Colors } = useSelector(store => store.auth)
   const [frontIDCard, setFrontIDCard] = useState(null);
   const [backIDCard, setBackIDCard] = useState(null);
   const [drivingLicense, setDrivingLicense] = useState(null);
@@ -159,21 +159,7 @@ const UpdateDocuments = ({navigation, route}) => {
     } else {
       setDrivingLicense(img);
     }
-    // chooseImageFromCamera()
-    //   .then(res => {
-    //     if (res) {
-    //       if (type == 'front') {
-    //         setFrontIDCard(res);
-    //       } else if (type == 'back') {
-    //         setBackIDCard(res);
-    //       } else {
-    //         setDrivingLicense(res);
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log('err : ', err);
-    //   });
+  
   };
 
   const getData = async () => {
@@ -204,6 +190,50 @@ const UpdateDocuments = ({navigation, route}) => {
   useEffect(() => {
     getData();
   }, []);
+
+  const styles = StyleSheet.create({
+    description: {
+      color: Colors.secondary_text,
+      fontFamily: Fonts.Inter_Regular,
+      marginVertical: 10,
+    },
+    fileContainer: {
+      width: wp(90),
+      height: hp(23),
+      // flex: 1,
+      borderWidth: 1,
+      borderColor:Colors.Border,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // marginVertical: 35,
+      // marginBottom: 15,
+      overflow: 'hidden',
+      alignSelf: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+    },
+    imageTitle: {
+      textAlign: 'center',
+      color: Colors.primary_text,
+      fontFamily: Fonts.Inter_Bold,
+      fontSize: RFPercentage(1.5),
+      letterSpacing: 0.5,
+      marginVertical: 12,
+    },
+    btn: {
+      position: 'absolute',
+      right: 5,
+      top: -15,
+    },
+    btnText: {
+      textTransform: 'capitalize',
+    },
+  });
+  
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
@@ -339,45 +369,3 @@ const UpdateDocuments = ({navigation, route}) => {
 
 export default UpdateDocuments;
 
-const styles = StyleSheet.create({
-  description: {
-    color: '#979797',
-    fontFamily: Fonts.Inter_Regular,
-    marginVertical: 10,
-  },
-  fileContainer: {
-    width: wp(90),
-    height: hp(23),
-    // flex: 1,
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginVertical: 35,
-    // marginBottom: 15,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  imageTitle: {
-    textAlign: 'center',
-    color: '#191A26',
-    fontFamily: Fonts.Inter_Bold,
-    fontSize: RFPercentage(1.5),
-    letterSpacing: 0.5,
-    marginVertical: 12,
-  },
-  btn: {
-    position: 'absolute',
-    right: 5,
-    top: -15,
-  },
-  btnText: {
-    textTransform: 'capitalize',
-  },
-});

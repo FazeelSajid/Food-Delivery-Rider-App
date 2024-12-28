@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
-import {Colors, Fonts, Icons, Images} from '../../constants';
+import { Fonts, Icons, Images} from '../../constants';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -18,7 +18,7 @@ import {RFPercentage} from 'react-native-responsive-fontsize';
 import CInput from '../../components/TextInput/CInput';
 import Feather from 'react-native-vector-icons/Feather';
 import CButton from '../../components/Buttons/CButton';
-import STYLE from './STYLE';
+import {getStyles} from './STYLE';
 import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
 import {getUserFcmToken, showAlert} from '../../utils/helpers';
@@ -38,11 +38,12 @@ const SignIn = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
   // const btmSheetRef = useRef()
-  const { signUpWith } = useSelector(store => store.auth)
+  const { signUpWith, Colors } = useSelector(store => store.auth)
   const dispatch = useDispatch();
   const [showPopUp, setShowPopUp] = useState(false)
   const [popUpColor, setPopUpColor] = useState('')
   const [PopUpMesage, setPopUpMesage] = useState('')
+  const STYLE = getStyles(Colors)
 
   // const showBtmSheet = () => {
   //   btmSheetRef?.current?.open()
@@ -484,8 +485,8 @@ const SignIn = ({navigation, route}) => {
             transparent={true}
             width={wp(88)}
             leftIcon={<Google  />}
-            borderColor={Colors.borderGray}
-            color={Colors.primary_text}
+            // borderColor={Colors.borderGray}
+            // color={Colors.primary_text}
             onPress={() => handleGoogleSignUp()}
           />
           </View>
@@ -497,7 +498,7 @@ const SignIn = ({navigation, route}) => {
         title={
           'Your Documents are being checked we will notify you about result'
         }
-        textColor={'#68686E'}
+        textColor={Colors.secondry_text}
         titleStyle={{
           fontSize: RFPercentage(2.2),
           width: wp(80),

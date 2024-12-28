@@ -1,8 +1,9 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {memo} from 'react';
 import {Avatar} from 'react-native-paper';
-import {Fonts, Icons, Colors} from '../../constants';
+import {Fonts, Icons} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
+import { useSelector } from 'react-redux';
 
 const CustomerCard = ({
   profile,
@@ -30,6 +31,55 @@ const CustomerCard = ({
     }
   };
 
+      const  {Colors } = useSelector(store => store.auth) 
+      
+      const styles = StyleSheet.create({
+        itemContainer: {
+          marginVertical: 10,
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: Colors.secondary_color ,
+          paddingVertical: 10,
+          paddingHorizontal: 10,
+          borderRadius: 10,
+          overflow: 'hidden',
+          alignSelf: 'center',
+        },
+        textContainer: {
+          marginLeft: 10,
+          flex: 1,
+        },
+        title: {
+          fontFamily: Fonts.Inter_Medium,
+          color: Colors.primary_text,
+          fontSize: RFPercentage(2),
+          lineHeight: 25,
+        },
+        description: {
+          fontFamily: Fonts.Inter_Regular,
+          color: Colors.secondary_text,
+          fontSize: RFPercentage(1.5),
+          lineHeight: 25,
+          marginLeft: 10,
+        },
+        description1: {
+          fontFamily: Fonts.PlusJakartaSans_Medium,
+          color: Colors.secondary_text,
+          fontSize: RFPercentage(1.5),
+          // lineHeight: 25,
+          marginLeft: 10,
+        },
+        rowView: {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        rowViewSB: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
+      });
+      
   return (
     <TouchableOpacity
       disabled={disabled ? disabled : false}
@@ -110,49 +160,3 @@ const CustomerCard = ({
 
 export default memo(CustomerCard);
 
-const styles = StyleSheet.create({
-  itemContainer: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F6F6F6',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  textContainer: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  title: {
-    fontFamily: Fonts.Inter_Medium,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
-    lineHeight: 25,
-  },
-  description: {
-    fontFamily: Fonts.Inter_Regular,
-    color: Colors.secondary_text,
-    fontSize: RFPercentage(1.5),
-    lineHeight: 25,
-    marginLeft: 10,
-  },
-  description1: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: Colors.secondary_text,
-    fontSize: RFPercentage(1.5),
-    // lineHeight: 25,
-    marginLeft: 10,
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowViewSB: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-});

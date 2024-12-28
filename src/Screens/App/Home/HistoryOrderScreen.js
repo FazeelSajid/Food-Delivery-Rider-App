@@ -4,18 +4,15 @@ import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { googleMapKey } from '../../../utils/globalVariables';
-import { Colors, Fonts } from '../../../constants';
 import Feather from 'react-native-vector-icons/Feather';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { Fonts } from '../../../constants';
 
 const HistoryOrderDetailScreen = ({route, navigation}) => {
     const [orderDetails, setOrderDetails] = useState(null);
+    const {Colors } = useSelector(store => store.auth)
     const mapRef = useRef()
-
-
-
-
-
     const pickupLocation = {
         latitude: orderDetails?.restaurantData?.latitude, // Replace with destination latitude
         longitude: orderDetails?.restaurantData?.longitude, // Replace with origin longitude
@@ -25,16 +22,9 @@ const HistoryOrderDetailScreen = ({route, navigation}) => {
         longitude: orderDetails?.locationData?.longitude, // Replace with destination longitude
     };
 
-
-
-
     useEffect(() => {
         setOrderDetails(route?.params?.item)
-        // setOrderStatus(route?.params?.item?.order_status)
-        // setAccepted(route.params?.item?.accepted_by_rider)
-
     }, [])
-console.log(orderDetails?.comments);
 
 
     useEffect(() => {
@@ -48,6 +38,104 @@ console.log(orderDetails?.comments);
         }
 
     }, [pickupLocation, dropoffLocation]);
+
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    backgroundColor:Colors.secondary_color,
+    paddingVertical: wp(5),
+
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: hp(2),
+    flexDirection : 'row', justifyContent:'space-between',
+    paddingHorizontal: wp(3)
+  },
+  
+  backButtonText: {
+    fontSize: wp(5),
+    color: Colors.button.primary_button,
+  },
+  orderTitle: {
+    fontSize: wp(4),
+   
+    color: Colors.primary_text,
+    fontFamily: Fonts.PlusJakartaSans_Bold
+
+  },
+  orderDate: {
+    fontSize: wp(3.5),
+    color: Colors.secondary_text,
+  },
+  statusBadge: {
+   
+    borderRadius: wp(2),
+    paddingVertical: hp(0.5),
+    paddingHorizontal: wp(3),
+    marginTop: hp(1),
+  },
+  statusText: {
+    fontFamily: Fonts.PlusJakartaSans_SemiBold ,
+    fontSize: wp(3.5),
+
+    // fontWeight: '600',
+  },
+  mapView: {
+    width: '100%',
+    height: hp(28),
+    borderRadius: 8,
+    marginBottom: hp(1),
+},
+  infoContainer: {
+    backgroundColor: '#F7E8E3FF',
+    padding: wp(4),
+    borderRadius: wp(2),
+    marginVertical: hp(1),
+    marginHorizontal: wp(4)
+  },
+  sectionTitle: {
+    fontSize: wp(4),
+    color: Colors.primary_text,
+    marginBottom: hp(0.3),
+    fontFamily: Fonts.PlusJakartaSans_SemiBold
+  },
+  subTitle: {
+    fontSize: wp(4),
+    fontFamily: Fonts.PlusJakartaSans_SemiBold,
+    color: Colors.primary_text
+  },
+  addressText: {
+    fontSize: wp(3.5),
+    color: Colors.secondary_text,
+    marginVertical: hp(0.5),
+    fontFamily: Fonts.PlusJakartaSans_Regular,
+    marginBottom: hp(1.5)
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: hp(0.5),
+  },
+  detailLabel: {
+    fontSize: wp(3.5),
+    color: Colors.secondary_text,
+  },
+  detailValue: {
+    fontSize: wp(3.5),
+    fontFamily: Fonts.PlusJakartaSans_Bold,
+    color: Colors.primary_text,
+  },
+  feedbackText: {
+    fontSize: wp(3.5),
+    color: Colors.secondary_text,
+    marginBottom: hp(0.8),
+    fontFamily: Fonts.PlusJakartaSans_Regular
+  },
+});
+
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -56,7 +144,7 @@ console.log(orderDetails?.comments);
         <Feather
                         name={'chevron-left'}
                         size={25}
-                        color={Colors.Orange}
+                        color={Colors.primary_color}
                     />
         </TouchableOpacity>
         <View>
@@ -97,7 +185,7 @@ console.log(orderDetails?.comments);
                             destination={dropoffLocation}
                             apikey={googleMapKey}
                             strokeWidth={3}
-                            strokeColor={Colors.Orange}
+                            strokeColor={Colors.primary_color}
                         />
                     </MapView>
                     </TouchableOpacity>
@@ -169,102 +257,5 @@ console.log(orderDetails?.comments);
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#F9F9F9',
-    paddingVertical: wp(5),
-
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: hp(2),
-    flexDirection : 'row', justifyContent:'space-between',
-    paddingHorizontal: wp(3)
-  },
-  backButton: {
-    // position: 'absolute',
-    // left: 0,
-    // top: hp(1),
-  },
-  backButtonText: {
-    fontSize: wp(5),
-    color: '#FF6D3F',
-  },
-  orderTitle: {
-    fontSize: wp(4),
-   
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Bold
-
-  },
-  orderDate: {
-    fontSize: wp(3.5),
-    color: '#888',
-  },
-  statusBadge: {
-   
-    borderRadius: wp(2),
-    paddingVertical: hp(0.5),
-    paddingHorizontal: wp(3),
-    marginTop: hp(1),
-  },
-  statusText: {
-    fontFamily: Fonts.PlusJakartaSans_SemiBold ,
-    fontSize: wp(3.5),
-    // fontWeight: '600',
-  },
-  mapView: {
-    width: '100%',
-    height: hp(28),
-    borderRadius: 8,
-    marginBottom: hp(1),
-},
-  infoContainer: {
-    backgroundColor: '#F7E8E3FF',
-    padding: wp(4),
-    borderRadius: wp(2),
-    marginVertical: hp(1),
-    marginHorizontal: wp(4)
-  },
-  sectionTitle: {
-    fontSize: wp(4),
-    color: Colors.primary_text,
-    marginBottom: hp(0.3),
-    fontFamily: Fonts.PlusJakartaSans_SemiBold
-  },
-  subTitle: {
-    fontSize: wp(4),
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.primary_text
-  },
-  addressText: {
-    fontSize: wp(3.5),
-    color: Colors.secondary_text,
-    marginVertical: hp(0.5),
-    fontFamily: Fonts.PlusJakartaSans_Regular,
-    marginBottom: hp(1.5)
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: hp(0.5),
-  },
-  detailLabel: {
-    fontSize: wp(3.5),
-    color: Colors.secondary_text,
-  },
-  detailValue: {
-    fontSize: wp(3.5),
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.primary_text,
-  },
-  feedbackText: {
-    fontSize: wp(3.5),
-    color: Colors.secondary_text,
-    marginBottom: hp(0.8),
-    fontFamily: Fonts.PlusJakartaSans_Regular
-  },
-});
 
 export default HistoryOrderDetailScreen;

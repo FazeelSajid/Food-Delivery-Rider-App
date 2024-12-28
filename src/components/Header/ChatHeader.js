@@ -14,8 +14,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {useNavigation} from '@react-navigation/native';
-import {Colors, Fonts, Icons} from '../../constants';
+import {Fonts, Icons} from '../../constants';
 import {Avatar} from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 const ChatHeader = ({title, profile, rightIcon}) => {
   const navigation = useNavigation();
@@ -27,6 +28,33 @@ const ChatHeader = ({title, profile, rightIcon}) => {
       return '';
     }
   };
+
+          const  {Colors } = useSelector(store => store.auth)
+
+          const styles = StyleSheet.create({
+            header: {
+              justifyContent: 'center',
+              paddingVertical: 15,
+            },
+            headerView: {
+              width: wp(100),
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+            iconContainer: {
+              paddingLeft: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            headerTextContainer: {
+              flex: 1,
+            },
+            mainText: {
+              color: Colors.primary_text,
+              fontFamily: Fonts.PlusJakartaSans_Bold,
+              fontSize: RFPercentage(2.2),
+            },
+          });
   return (
     <View style={styles.header}>
       <StatusBar
@@ -67,29 +95,4 @@ const ChatHeader = ({title, profile, rightIcon}) => {
 
 export default ChatHeader;
 
-const styles = StyleSheet.create({
-  header: {
-    justifyContent: 'center',
-    paddingVertical: 15,
-    // paddingBottom: hp(4),
-  },
-  headerView: {
-    width: wp(100),
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    // marginLeft: wp(6),
-    paddingLeft: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTextContainer: {
-    flex: 1,
-  },
-  mainText: {
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.2),
-  },
-});
+

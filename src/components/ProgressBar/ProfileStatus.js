@@ -9,12 +9,14 @@ import {
   } from 'react-native-responsive-screen';
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 
 
 const ProfileStatus = ({ profile }) => {
   const [completion, setCompletion] = useState(0);
   const navigation = useNavigation();
+      const { Colors} = useSelector(store => store.auth);
 
   useEffect(() => {
     // Calculate profile completion based on the filled fields
@@ -47,6 +49,31 @@ const ProfileStatus = ({ profile }) => {
     setCompletion(completionPercentage);
   }, [profile]);
 
+  const styles = StyleSheet.create({
+    Pcontainer: {
+      padding: 16,
+    },
+    Pheader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    Ptitle: {
+      fontSize:  RFPercentage(2),
+      fontWeight: 'bold',
+      color: Colors.primary_text,
+    },
+    percentage: {
+      fontSize: RFPercentage(2),
+      color: Colors.secondary_text,
+      marginTop: hp(1)
+    },
+    progressBar: {
+      height: 8,
+      borderRadius: 4,
+    },
+  });
+  
   return (
     <View style={styles.Pcontainer}>
       <View style={styles.Pheader}>
@@ -65,29 +92,6 @@ const ProfileStatus = ({ profile }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  Pcontainer: {
-    padding: 16,
-  },
-  Pheader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  Ptitle: {
-    fontSize:  RFPercentage(2),
-    fontWeight: 'bold',
-    color: Colors.primary_text,
-  },
-  percentage: {
-    fontSize: RFPercentage(2),
-    color: Colors.secondary_text,
-    marginTop: hp(1)
-  },
-  progressBar: {
-    height: 8,
-    borderRadius: 4,
-  },
-});
+
 
 export default ProfileStatus;

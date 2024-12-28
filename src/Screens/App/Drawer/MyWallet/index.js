@@ -1,22 +1,18 @@
 import { StyleSheet, Text, View, FlatList, ScrollView, RefreshControl, TouchableOpacity, Alert } from 'react-native';
 import React, { useState, useRef } from 'react';
-import { Colors, Icons, Images, Fonts } from '../../../../constants';
+import { Fonts } from '../../../../constants';
 import StackHeader from '../../../../components/Header/StackHeader';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
 import { useFocusEffect } from '@react-navigation/native';
 import api from '../../../../constants/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetWalletAmount } from '../../../../utils/helpers/walletApis';
-import { BASE_URL, BASE_URL_IMAGE, STRIPE_PUBLISH_KEY } from '../../../../utils/globalVariables';
-import Loader from '../../../../components/Loader';
+import { BASE_URL, STRIPE_PUBLISH_KEY } from '../../../../utils/globalVariables';
 import NoDataFound from '../../../../components/NotFound/NoDataFound';
 import CButton from '../../../../components/Buttons/CButton';
-import PaymentCard from '../../../../components/Cards/PaymentCard';
 import CRBSheetComponent from '../../../../components/BottomSheet/CRBSheetComponent';
 import CInput from '../../../../components/TextInput/CInput';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +22,6 @@ import PopUp from '../../../../components/Popup/PopUp';
 import { AddPaymentToRiderWallet, fetchApis, GetCustomerStripeId } from '../../../../utils/helpers';
 import {
   initStripe,
-  useConfirmPayment,
   useStripe,
 } from '@stripe/stripe-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -37,7 +32,7 @@ import WebView from 'react-native-webview';
 const MYWallet = ({ navigation, route }) => {
   const ref_RBTopUpSheet = useRef();
   const ref_RBWithdrawSheet = useRef();
-  const { rider_id, totalWalletAmount } = useSelector(store => store.auth)
+  const { rider_id, totalWalletAmount, Colors } = useSelector(store => store.auth)
   const [transactions, setTrasactions] = useState([])
   const [accountLinkUrl, setAccountLinkUrl] = useState(null); 
   const dispatch = useDispatch()
@@ -240,7 +235,6 @@ const MYWallet = ({ navigation, route }) => {
       // Assuming the responseData contains the fields: paymentIntent, ephemeralKey, and customer
       const { paymentIntent, ephemeralKey, customer } = responseData;
 
-      // console.log('Fetched Payment Params:', { paymentIntent, ephemeralKey, customer });
 
       return {
         paymentIntent,
@@ -435,18 +429,13 @@ const MYWallet = ({ navigation, route }) => {
     if (error) {
       console.log(error);
 
-      // Alert.alert(`Error code: ${error.code}`, error.message);
       if (error.code == 'Canceled') {
-        // user cancel payment
-        // for now we do nothing...
       } else {
         showAlertLongLength(error.message);
         handlePopup(dispatch, error.message, 'red')
       }
     } else {
-      // handle success
       console.log('Success', 'Top-Up is confirmed!');
-      // dispatch(setWalletTotalAmount(parseInt(totalWalletAmount) + parseInt(topUpAmount)))
 
       await AddPaymentToRiderWallet(topUpAmount, rider_id)
         .then(response => {
@@ -454,10 +443,6 @@ const MYWallet = ({ navigation, route }) => {
           handlePopup(dispatch, 'Payment added successfully', 'green')
 
           dispatch(setWalletTotalAmount(response?.result?.available_amount))
-          // setTimeout(() => {
-          //   showAlertLongLength('Payment added successfully', 'green');
-          // }, 300);
-          // setTotalAmount(response?.result?.available_amount);
 
           setTopUpAmount('');
         })
@@ -525,7 +510,6 @@ const MYWallet = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       getTransactions();
-      // setAccountLinkUrl(null)
 
     }, []),
   );
@@ -535,7 +519,6 @@ const MYWallet = ({ navigation, route }) => {
     console.log(navState.url, 'hvhvh');
     
     if (navState.url.includes('https://food-delivery-restaurant-portal.netlify.app/wallet')) {
-      // WithDrawPayment(connectedAccountId)
       console.log('vhg');
       setAccountLinkUrl(null)
 
@@ -547,15 +530,6 @@ const MYWallet = ({ navigation, route }) => {
       WithDrawPayment(connectedAccountId)
     }
   };
-
-
-  
-// console.log(accountLinkUrl);
-
-//   const SUCCESS_URL = "http://192.168.100.199:8081/account-setup-complete"; // Page to redirect to after successful onboarding
-// const REFRESH_URL = "http://192.168.100.199:8081/account-setup-refresh"; 
-
-// console.log({rider_id});
 
 const handleNavigationStateChangePaypal = async (navState) => {
   console.log('Navigated URL:', navState.url);
@@ -615,6 +589,75 @@ const handleNavigationStateChangePaypal = async (navState) => {
   }
 };
 
+
+const styles = StyleSheet.create({
+  heading1: {
+    color: Colors.primary_color,
+    fontFamily: Fonts.PlusJakartaSans_Bold,
+    fontSize: RFPercentage(2.3),
+    marginHorizontal: 20,
+    marginTop: hp(3),
+    marginBottom: hp(1.4),
+  },
+  headerContainer: { backgroundColor: Colors.primary_color, height: hp(23) },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 20,
+  },
+  totalAmount: {
+    fontFamily: Fonts.PlusJakartaSans_Medium,
+    color: Colors.secondary_color,
+    fontSize: RFPercentage(1.5),
+    opacity: 0.95,
+  },
+  rbSheetHeading: {
+    color: Colors.primary_text,
+    fontFamily: Fonts.PlusJakartaSans_Bold,
+    fontSize: RFPercentage(2),
+  },
+  rowViewSB1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  rowView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  transactionsContianer:{
+    borderColor: Colors.secondary_text,
+    borderWidth: wp(0.1),
+    borderRadius: 10,
+    marginHorizontal: wp(5),
+    marginVertical: hp(0),
+    flexGrow: 1,
+    padding: hp(1),
+    height: '10%'
+
+  },
+  transactionId:{
+    color: Colors.primary_text,
+    fontFamily: Fonts.PlusJakartaSans_SemiBold,
+    fontSize: RFPercentage(1.8),
+    marginLeft: 10,
+  },
+  transactionType:{
+    color: Colors.secondary_text,
+    fontFamily: Fonts.PlusJakartaSans_Medium,
+    fontSize: RFPercentage(1.7),
+    marginLeft: 10,
+  },
+  transactionsAmount:{
+    color: '#FF212E',
+    fontFamily: Fonts.PlusJakartaSans_SemiBold,
+    fontSize: RFPercentage(2),
+    marginRight: 10,
+  },
+});
   return (
 
     
@@ -947,77 +990,3 @@ const handleNavigationStateChangePaypal = async (navState) => {
 
 export default MYWallet;
 
-const styles = StyleSheet.create({
-  heading1: {
-    color: Colors.primary_color,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.3),
-    marginHorizontal: 20,
-    marginTop: hp(3),
-    marginBottom: hp(1.4),
-  },
-  headerContainer: { backgroundColor: Colors.primary_color, height: hp(23) },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 20,
-  },
-  // priceText: {
-  //   fontFamily: Fonts.Inter_SemiBold,
-  //   color: Colors.White,
-  //   fontSize: RFPercentage(4),
-  //   lineHeight: 45,
-  // },
-  totalAmount: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: Colors.secondary_color,
-    fontSize: RFPercentage(1.5),
-    opacity: 0.95,
-  },
-  rbSheetHeading: {
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2),
-  },
-  rowViewSB1: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  transactionsContianer:{
-    borderColor: Colors.secondary_text,
-    borderWidth: wp(0.1),
-    borderRadius: 10,
-    marginHorizontal: wp(5),
-    marginVertical: hp(0),
-    flexGrow: 1,
-    padding: hp(1),
-    height: '10%'
-
-  },
-  transactionId:{
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    fontSize: RFPercentage(1.8),
-    marginLeft: 10,
-  },
-  transactionType:{
-    color: Colors.secondary_text,
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    fontSize: RFPercentage(1.7),
-    marginLeft: 10,
-  },
-  transactionsAmount:{
-    color: '#FF212E',
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    fontSize: RFPercentage(2),
-    marginRight: 10,
-  },
-});

@@ -7,36 +7,16 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Colors, Fonts} from '../../constants';
+import { Fonts} from '../../constants';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { uploadImage } from '../../utils/helpers';
 import { Icons } from '../../constants';
+import { useSelector } from 'react-redux';
 
 const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick, obj}) => {
   const navigation = useNavigation();
+  const  {Colors } = useSelector(store => store.auth)
 
-
-  // const handleUploadProfileImage = (img) => {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       let image = {
-  //         uri: img?.path,
-  //         name: img?.name,
-  //         type: img?.mime,
-  //       };
-  //       console.log('image :  ', image);
-  //       let filePath = await uploadImage(image);
-  //       if (filePath) {
-  //         resolve(filePath);
-  //       } else {
-  //         resolve('');
-  //       }
-  //     } catch (error) {
-  //       console.log('error handleUploadProfileImage :  ', error);
-  //       resolve('');
-  //     }
-  //   });
-  // };
 
   const takePhotoFromCamera = async () => {
     var options = {
@@ -74,13 +54,8 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick
               ...image1
             })
           }
-          // setImage(image1);
           onCameraPick &&  onCameraPick(image1);
           onImagePick && onImagePick(image1);
-          // let image_url = await handleUploadProfileImage(image1);
-          // onCameraPick({url: image_url});
-
-          
         }
       })
       .catch(err => {
@@ -123,7 +98,6 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick
               ...image1
             })
           }
-          // setImage(image1);
           onGalleryPick && onGalleryPick(image1);
           onImagePick && onImagePick(image1);
         }
@@ -132,6 +106,36 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick
         console.log('error  :  ', err);
       });
   };
+
+  const styles = StyleSheet.create({
+    bottomtext: {
+      color:Colors.primary_text,
+      textAlign: 'center',
+      fontFamily: Fonts.Inter_Bold,
+      fontSize: hp(3),
+    },
+    optiontext: {
+      fontSize: hp(1.7),
+      color:Colors.primary_text,
+      fontFamily: Fonts.PlusJakartaSans_Regular,
+      marginLeft: wp(4),
+    },
+    maintext: {
+      fontSize: hp(2),
+      color:Colors.primary_text,
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+    },
+    modaltextview: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      width: wp(90),
+      borderRadius: 25,
+      // backgroundColor: Colors.AppBckGround_color,
+      paddingHorizontal: wp(10),
+    },
+  });
+  
 
   return (
     <RBSheet
@@ -212,31 +216,3 @@ const CameraBottomSheet = ({refRBSheet, onCameraPick, onGalleryPick, onImagePick
 
 export default CameraBottomSheet;
 
-const styles = StyleSheet.create({
-  bottomtext: {
-    color:Colors.primary_text,
-    textAlign: 'center',
-    fontFamily: Fonts.Inter_Bold,
-    fontSize: hp(3),
-  },
-  optiontext: {
-    fontSize: hp(1.7),
-    color:Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Regular,
-    marginLeft: wp(4),
-  },
-  maintext: {
-    fontSize: hp(2),
-    color:Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-  },
-  modaltextview: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: wp(90),
-    borderRadius: 25,
-    // backgroundColor: Colors.AppBckGround_color,
-    paddingHorizontal: wp(10),
-  },
-});

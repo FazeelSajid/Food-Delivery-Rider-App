@@ -7,7 +7,9 @@ import {
 } from 'react-native-responsive-screen';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 
-export default STYLE = StyleSheet.create({
+
+export const getStyles = (Colors) =>
+StyleSheet.create({
   container: {flex: 1, backgroundColor: Colors.secondary_color},
   authBGContainer: {position: 'relative', left: -wp(4)},
   authBGImage: {

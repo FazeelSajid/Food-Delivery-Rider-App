@@ -1,14 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {SelectCountry, Dropdown} from 'react-native-element-dropdown';
-import {Colors, Fonts, Images, Icons} from '../../constants';
+import { Fonts, Images, Icons} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { useSelector } from 'react-redux';
 
 const CDropDown = ({heading, data, value, setValue, placeholder}) => {
+          const  {Colors } = useSelector(store => store.auth)
+  
   return (
     <View>
       {heading && (

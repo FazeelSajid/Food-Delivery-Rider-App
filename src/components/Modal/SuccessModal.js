@@ -9,9 +9,12 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CButton from '../Buttons/CButton';
-import {Colors, Fonts, Images, Icons} from '../../constants';
+import { Fonts, Images, Icons} from '../../constants';
+import { useSelector } from 'react-redux';
 
 const SuccessModal = ({visible, setVisible, onOK, title, description}) => {
+  const { Colors} = useSelector(store => store.auth);
+
   return (
     <Modal
       visible={visible}

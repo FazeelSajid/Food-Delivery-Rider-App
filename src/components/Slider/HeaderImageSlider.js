@@ -6,7 +6,6 @@ import {
   StatusBar,
 } from 'react-native';
 import React, {memo} from 'react';
-import {Colors} from '../../constants';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -15,6 +14,7 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {BASE_URL_IMAGE} from '../../utils/globalVariables';
+import { useSelector } from 'react-redux';
 
 const HeaderImageSlider = ({
   data,
@@ -22,6 +22,8 @@ const HeaderImageSlider = ({
   backIconColor,
   onBackPress,
 }) => {
+  
+      const { Colors} = useSelector(store => store.auth);
   const navigation = useNavigation();
   const dotSize = wp(2.2);
   const styles = StyleSheet.create({

@@ -13,7 +13,7 @@ import haversine from "haversine";
 import { googleMapKey } from "../../../utils/globalVariables";
 import Geolocation from "@react-native-community/geolocation";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors, Fonts } from "../../../constants";
+import {  Fonts } from "../../../constants";
 import RBSheetConfirmation from "../../../components/BottomSheet/RBSheetConfirmation";
 import { handelAcceptRejectOrder, updateOrderDeliveryStatus } from "../../../utils/helpers/orderApis";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -23,17 +23,13 @@ const LONGITUDE_DELTA = 0.009;
 const ARRIVAL_THRESHOLD = 0.5; // 50 meters in km for haversine function
 
 const OrderMapScreen = ({ navigation, route }) => {
-  const { rider_id, userAppOpenLocation } = useSelector((store) => store.auth);
+  const { rider_id, userAppOpenLocation,Colors } = useSelector((store) => store.auth);
   const { isOrderUpdate, updatedOrder } = useSelector(store => store.order);
   const [userCurrentLocation, setUserCurrentLocation] = useState({
     latitude: userAppOpenLocation.latitude,
     longitude: userAppOpenLocation.longitude,
   });
-  // const [routeCoordinates, setRouteCoordinates] = useState([]);
-  // const [distanceTravelled, setDistanceTravelled] = useState(0);
-  // const [hasArrivedAtPickup, setHasArrivedAtPickup] = useState(updatedOrder.order_status === 'out_for_delivery');
-  // const [deliveryStartTime, setDeliveryStartTime] = useState(null); // For delivery time calculation
-  // const [deliveryDuration, setDeliveryDuration] = useState(null); // Store the total delivery time
+ 
   const [atPickup, setAtPickup] = useState(updatedOrder.order_status === 'out_for_delivery');
 
   const ref_RBSheet = useRef()
@@ -53,15 +49,6 @@ const OrderMapScreen = ({ navigation, route }) => {
     setBtmSheetValues(obj)
 
   }
-  // console.log({ hasArrivedAtPickup });
-
-
-
-  // const isOutForDelivery = updatedOrder.order_status === 'out_for_delivery'
-  // const isdelivered = updatedOrder.order_status === 'delivered'
-  // console.log(isOutForDelivery, );
-
-
 
   const dispatch = useDispatch();
 
@@ -85,56 +72,6 @@ const OrderMapScreen = ({ navigation, route }) => {
     })
   ).current;
 
-  // useEffect(() => {
-
-  //       if (Platform.OS === "android" && markerRef.current) {
-  //         markerRef.current.animateMarkerToCoordinate({
-  //   latitude: userAppOpenLocation.latitude,
-  //   longitude: userAppOpenLocation.longitude,
-  // }, 500);
-  //       } else {
-  //         coordinate.timing({
-  //   latitude: userAppOpenLocation.latitude,
-  //   longitude: userAppOpenLocation.longitude,
-  // }).start();
-  //       }
-
-  //       setRouteCoordinates((prev) => [...prev, {
-  //   latitude: userAppOpenLocation.latitude,
-  //   longitude: userAppOpenLocation.longitude,
-  // }]);
-  //       // setDistanceTravelled((prev) => prev + haversine(prev, newCoordinate) || 0);
-  //       // setUserCurrentLocation(newCoordinate);
-
-  //       // Start timing if it's the first move
-  //       if (!deliveryStartTime) setDeliveryStartTime(Date.now());
-
-  //       // Check if user has arrived at pickup or drop-off
-  //       if (!hasArrivedAtPickup) {
-  //         checkArrival(userAppOpenLocation.latitude, userAppOpenLocation.longitude, pickupLocation, ()=> setHasArrivedAtPickup(true));
-  //       } else {
-  //         checkArrival(userAppOpenLocation.latitude, userAppOpenLocation.longitude, dropOffLocation, () => {
-  //           const duration = ((Date.now() - deliveryStartTime) / 1000 / 60).toFixed(2);
-  //           setDeliveryDuration(duration); // Set total time in minutes
-  //           // Alert.alert("Delivery Complete", `Delivery took ${duration} minutes.`);
-  //           console.log('Delivery Complete');
-
-  //         });
-  //       }
-
-  //   console.log({
-  //   latitude: userAppOpenLocation.latitude,
-  //   longitude: userAppOpenLocation.longitude,
-  // });
-
-
-  //   return () => {
-  //     // Geolocation.clearWatch(watchID);
-  //   };
-  // }, [userAppOpenLocation]);
-
-  // console.log({hasArrivedAtPickup});
-
 const [hasLeftPickup, setHasLeftPickup] = useState(false);
 
 useEffect(() => {
@@ -156,13 +93,13 @@ useEffect(() => {
     console.log("Rider has reached the drop-off location.");
   }
 
-  console.log({
-    // currentLocation: userAppOpenLocation,
-    distanceToPickup,
-    distanceToDropOff,
-    atPickup,
-    hasLeftPickup,
-  });
+  // console.log({
+  //   // currentLocation: userAppOpenLocation,
+  //   distanceToPickup,
+  //   distanceToDropOff,
+  //   atPickup,
+  //   hasLeftPickup,
+  // });
 }, [userAppOpenLocation, atPickup, hasLeftPickup, pickupLocation, dropOffLocation]);
 
 
@@ -264,9 +201,71 @@ useEffect(() => {
     actions[status]?.();
   };
 
-  console.log({atPickup});
   
-
+  const styles = StyleSheet.create({
+    container: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: "flex-end",
+      alignItems: "center",
+    },
+    map: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    durationContainer: {
+      position: "absolute",
+      top: 20,
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      padding: 10,
+      borderRadius: 10,
+      zIndex: 10,
+    },
+    btncontainer: {
+      backgroundColor: Colors.secondary_color, // Background color of the container
+      borderTopRightRadius: wp(10), // Rounded corners for the container
+      borderTopLeftRadius: wp(10), // Rounded corners for the container
+      paddingVertical: hp(2), // Vertical padding inside the container
+      paddingHorizontal: wp(8), // Horizontal padding inside the container
+      // alignItems: 'center', // Center align items
+      shadowColor: '#000', // Shadow color for iOS
+      shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
+      shadowOpacity: 2, // Shadow opacity for iOS
+      shadowRadius: 15, // Shadow radius for iOS
+      elevation: 10, // Shadow for Android
+      // alignSelf : 
+      // marginHorizontal: wp(5), // Horizontal margin around the container
+      bottom: 2,
+      position: 'absolute'
+    },
+    acceptButton: {
+      backgroundColor: Colors.primary_color,
+      paddingVertical: hp(1.5),
+      paddingHorizontal: wp(25),
+      borderRadius: wp(5),
+      marginBottom: hp(1),
+    },
+    rejectButton: {
+      borderColor: Colors.primary_color,
+      borderWidth: 2,
+      paddingVertical: hp(1.5),
+      paddingHorizontal: wp(25),
+      borderRadius: wp(5),
+    },
+    buttonText: {
+      color: Colors.secondary_color,
+      fontSize: wp(4),
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      textAlign: 'center',
+      width: '100%',
+      // backgroundColor: 'green'
+    },
+    rejectButtonText: {
+      color: Colors.primary_color,
+      fontSize: wp(4),
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+  
+  });
 
   return (
     <View style={styles.container}>
@@ -519,69 +518,6 @@ useEffect(() => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  durationContainer: {
-    position: "absolute",
-    top: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    padding: 10,
-    borderRadius: 10,
-    zIndex: 10,
-  },
-  btncontainer: {
-    backgroundColor: Colors.secondary_color, // Background color of the container
-    borderTopRightRadius: wp(10), // Rounded corners for the container
-    borderTopLeftRadius: wp(10), // Rounded corners for the container
-    paddingVertical: hp(2), // Vertical padding inside the container
-    paddingHorizontal: wp(8), // Horizontal padding inside the container
-    // alignItems: 'center', // Center align items
-    shadowColor: '#000', // Shadow color for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset for iOS
-    shadowOpacity: 2, // Shadow opacity for iOS
-    shadowRadius: 15, // Shadow radius for iOS
-    elevation: 10, // Shadow for Android
-    // alignSelf : 
-    // marginHorizontal: wp(5), // Horizontal margin around the container
-    bottom: 2,
-    position: 'absolute'
-  },
-  acceptButton: {
-    backgroundColor: Colors.primary_color,
-    paddingVertical: hp(1.5),
-    paddingHorizontal: wp(25),
-    borderRadius: wp(5),
-    marginBottom: hp(1),
-  },
-  rejectButton: {
-    borderColor: Colors.primary_color,
-    borderWidth: 2,
-    paddingVertical: hp(1.5),
-    paddingHorizontal: wp(25),
-    borderRadius: wp(5),
-  },
-  buttonText: {
-    color: Colors.secondary_color,
-    fontSize: wp(4),
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    textAlign: 'center',
-    width: '100%',
-    // backgroundColor: 'green'
-  },
-  rejectButtonText: {
-    color: Colors.primary_color,
-    fontSize: wp(4),
-    fontWeight: '600',
-    textAlign: 'center',
-  },
 
-});
 
 export default OrderMapScreen;

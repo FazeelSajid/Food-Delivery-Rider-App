@@ -10,11 +10,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Colors, Fonts, Images} from '../../constants';
+import { Fonts, Images} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useSelector } from 'react-redux';
+
 
 const CInput = props => {
+    const { Colors} = useSelector(store => store.auth);
   let showPass = true;
   return (
     <View style={{width: wp(90), alignSelf: 'center'}}>

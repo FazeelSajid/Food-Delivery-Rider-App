@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {Colors, Fonts, Icons, Images} from '../../../../constants';
+import {Fonts, Icons, Images} from '../../../../constants';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -17,28 +16,20 @@ import {
 import {Avatar} from 'react-native-paper';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import ItemSeparator from '../../../../components/Separator/ItemSeparator';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import CustomStatusBar from '../../../../components/CustomStatusBar';
 import api from '../../../../constants/api';
 import {showAlert} from '../../../../utils/helpers';
-import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import {useDispatch, useSelector} from 'react-redux';
 import {setRiderDetails} from '../../../../redux/AuthSlice';
 import Loader from '../../../../components/Loader';
-import {TextInput} from 'react-native-paper';
-import ProfileStatus from '../../../../components/ProgressBar/ProfileStatus';
 import moment from 'moment';
 import Feather from 'react-native-vector-icons/Feather';
 import { ProgressBar } from 'react-native-paper'; // Use any progress bar component or install react-native-paper
 
 const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
-  // const [rider_details, setrider_details] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const {rider_id, rider_details} = useSelector(store => store.auth)
+  const {rider_id, rider_details, Colors} = useSelector(store => store.auth)
 
-  // console.log(rider_id);
   
   
 
@@ -46,7 +37,6 @@ const Profile = ({navigation, route}) => {
   const [completion, setCompletion] = useState(0);
 
   useEffect(() => {
-    // Calculate profile completion based on the filled fields
     const requiredFields = [
       'name',
       'photo',
@@ -84,7 +74,6 @@ const Profile = ({navigation, route}) => {
         console.log({response});
         
         if (response?.error == false) {
-          // setrider_details(response?.result);
           dispatch(setRiderDetails(response?.result));
         } else {
           showAlert(response?.message);
@@ -94,30 +83,100 @@ const Profile = ({navigation, route}) => {
         console.log('error : ', err);
         showAlert('Something went wrong');
       })
-      .finally(() => setIsRefreshing(false), setLoading(false));
-  };
-  
-  
-  // console.log(rider_details?.address);
-  
-
-  const onRefresh = async () => {
-    // setIsRefreshing(true);
-    // getData();
+      .finally(() =>setLoading(false));
   };
 
-  useEffect(() => {
-    // setLoading(true);
-    // getData();
-  }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // getData();
-    }, []),
-  );
-
-  // const Colors;;
+  const styles = StyleSheet.create({
+    headerView: {
+      height: hp(15),
+      backgroundColor: Colors.primary_color,
+      padding: 20,
+      paddingLeft: 30,
+      flexDirection :'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start'
+    },
+    userContainer: {
+      alignSelf: 'center',
+      marginTop: -hp(5.2),
+      alignItems: 'center',
+    },
+    contentContainer: {paddingHorizontal: 23},
+    nameText: {
+      color: Colors.primary_color,
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(2.2),
+      textAlign: 'center',
+      letterSpacing: 0.7,
+      marginTop: 4,
+    },
+    section: {
+      marginVertical: 15,
+    },
+    ScrollView: {
+      flexDirection: 'row',
+      marginVertical: 6.5,
+    },
+    rowView: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginVertical: 6.5,
+    },
+    heading1: {
+      color: Colors.primary_text,
+      fontFamily: Fonts.Inter_SemiBold,
+      fontSize: RFPercentage(1.72),
+    },
+    description: {
+      color: Colors.secondary_text,
+      fontFamily: Fonts.Inter_Regular,
+      fontSize: RFPercentage(1.5),
+    },
+    heading: {
+      color: Colors.primary_color,
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(2),
+      marginBottom: 10,
+    },
+    documentContainer: {
+      // borderWidth: 1,
+      borderRadius: 10,
+      width: wp(28),
+      height: hp(8.5),
+      overflow: 'hidden',
+      alignItems: 'center',
+      marginRight: wp(2)
+    },
+    documentImage: {
+      height: '100%',
+      width: '97%',
+      resizeMode: 'cover',
+    },
+    Pcontainer: {
+      padding: 16,
+    },
+    Pheader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    Ptitle: {
+      fontSize:  RFPercentage(2),
+      fontWeight: 'bold',
+      color: Colors.primary_text,
+    },
+    percentage: {
+      fontSize: RFPercentage(2),
+      color: Colors.secondary_text,
+      marginTop: hp(1)
+    },
+    progressBar: {
+      height: 8,
+      borderRadius: 4,
+    },
+  });
   
   return (
     <ScrollView
@@ -129,88 +188,7 @@ const Profile = ({navigation, route}) => {
         barStyle={'light-content'}
       />
 
-      {/* <View style={{alignSelf: 'center'}}>
-        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
-          {' '}
-          Dummy initial value{' '}
-        </Text>
-        <TextInput
-          mode="outlined"
-          label="Add Banner link"
-          value="dummy value"
-          onChangeText={text => setAddBannerLink(text)}
-          //multiline={true} // Enable multiline input
-          //numberOfLines={3} // Set the initial number of lines
-          style={{
-            marginTop: '5%',
-            width: 300,
-            backgroundColor: 'white',
-            fontSize: wp(4),
-            paddingLeft: '2%',
-            borderRadius: 10,
-            marginVertical: 20,
-          }} // Adjust the height as needed
-          outlineColor="#0000001F"
-          placeholderTextColor="#646464"
-          activeOutlineColor="#FACA4E"
-          autoCapitalize="none"
-          // onFocus={handleFocusAddBanner}
-          // onBlur={handleBlurAddBanner}
-        />
-        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
-          Placeholder
-        </Text>
-        <TextInput
-          mode="outlined"
-          label="dummy placeholder"
-          value=""
-          onChangeText={text => setAddBannerLink(text)}
-          //multiline={true} // Enable multiline input
-          //numberOfLines={3} // Set the initial number of lines
-          style={{
-            marginTop: '5%',
-            width: 300,
-            backgroundColor: 'white',
-            fontSize: wp(4),
-            paddingLeft: '2%',
-            borderRadius: 10,
-            marginVertical: 20,
-          }} // Adjust the height as needed
-          outlineColor="#0000001F"
-          placeholderTextColor="#646464"
-          activeOutlineColor="#FACA4E"
-          autoCapitalize="none"
-          // onFocus={handleFocusAddBanner}
-          // onBlur={handleBlurAddBanner}
-        />
-
-        <Text style={{marginTop: 15, color: '#000', fontWeight: '500'}}>
-          When user type
-        </Text>
-        <TextInput
-          mode="outlined"
-          label="Add Banner link"
-          value=""
-          onChangeText={text => setAddBannerLink(text)}
-          //multiline={true} // Enable multiline input
-          //numberOfLines={3} // Set the initial number of lines
-          style={{
-            marginTop: '5%',
-            width: 300,
-            backgroundColor: 'white',
-            fontSize: wp(4),
-            paddingLeft: '2%',
-            borderRadius: 10,
-            marginVertical: 20,
-          }} // Adjust the height as needed
-          outlineColor="#0000001F"
-          placeholderTextColor="#646464"
-          activeOutlineColor="#FACA4E"
-          autoCapitalize="none"
-          // onFocus={handleFocusAddBanner}
-          // onBlur={handleBlurAddBanner}
-        />
-      </View> */}
+     
 
       <View style={styles.headerView}>
         <TouchableOpacity onPress={() => navigation?.openDrawer()}>
@@ -341,93 +319,4 @@ const Profile = ({navigation, route}) => {
 
 export default Profile;
 
-const styles = StyleSheet.create({
-  headerView: {
-    height: hp(15),
-    backgroundColor: Colors.primary_color,
-    padding: 20,
-    paddingLeft: 30,
-    flexDirection :'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start'
-  },
-  userContainer: {
-    alignSelf: 'center',
-    marginTop: -hp(5.2),
-    alignItems: 'center',
-  },
-  contentContainer: {paddingHorizontal: 23},
-  nameText: {
-    color: Colors.primary_color,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.2),
-    textAlign: 'center',
-    letterSpacing: 0.7,
-    marginTop: 4,
-  },
-  section: {
-    marginVertical: 15,
-  },
-  ScrollView: {
-    flexDirection: 'row',
-    marginVertical: 6.5,
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 6.5,
-  },
-  heading1: {
-    color: Colors.primary_text,
-    fontFamily: Fonts.Inter_SemiBold,
-    fontSize: RFPercentage(1.72),
-  },
-  description: {
-    color: Colors.secondary_text,
-    fontFamily: Fonts.Inter_Regular,
-    fontSize: RFPercentage(1.5),
-  },
-  heading: {
-    color: Colors.primary_color,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2),
-    marginBottom: 10,
-  },
-  documentContainer: {
-    // borderWidth: 1,
-    borderRadius: 10,
-    width: wp(28),
-    height: hp(8.5),
-    overflow: 'hidden',
-    alignItems: 'center',
-    marginRight: wp(2)
-  },
-  documentImage: {
-    height: '100%',
-    width: '97%',
-    resizeMode: 'cover',
-  },
-  Pcontainer: {
-    padding: 16,
-  },
-  Pheader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  Ptitle: {
-    fontSize:  RFPercentage(2),
-    fontWeight: 'bold',
-    color: Colors.primary_text,
-  },
-  percentage: {
-    fontSize: RFPercentage(2),
-    color: Colors.secondary_text,
-    marginTop: hp(1)
-  },
-  progressBar: {
-    height: 8,
-    borderRadius: 4,
-  },
-});
+

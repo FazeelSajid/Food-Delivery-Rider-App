@@ -14,7 +14,7 @@ import {
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import CButton from '../../../../components/Buttons/CButton';
 import SuccessModal from '../../../../components/Modal/SuccessModal';
-import {Colors, Fonts, Images, Icons} from '../../../../constants';
+import { Colors,Fonts, Icons} from '../../../../constants';
 import CustomerCard from '../../../../components/Cards/CustomerCard';
 import HeaderImageSlider from '../../../../components/Slider/HeaderImageSlider';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,46 +36,14 @@ import ItemSeparator from '../../../../components/Separator/ItemSeparator';
 const MyOrdersDetail = ({navigation, route}) => {
   const dispatch = useDispatch();
   let {isOrderUpdate} = useSelector(store => store.order);
-
+  // const { Colors} = useSelector(store => store.auth);
   const [selected, setSelected] = useState(0);
   const [modalText, setModalText] = useState('');
   const [visible, setVisible] = useState(false);
-
-  const [data, setData] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
   const [fistCartItemDetail, setFistCartItemDetail] = useState(null);
   const [itemImages, setItemImages] = useState([]);
-
-  // useEffect(() => {
-  //   getSliderImages();
-  // }, []);
-
-  // const getSliderImages = useCallback(() => {
-  //   setData([
-  //     {
-  //       id: 0,
-  //       image: Images.food8,
-  //     },
-  //     {
-  //       id: 1,
-  //       image: Images.shake,
-  //     },
-  //     {
-  //       id: 2,
-  //       image: Images.pasta,
-  //     },
-  //     {
-  //       id: 3,
-  //       image: Images.chinese,
-  //     },
-  //     {
-  //       id: 4,
-  //       image: Images.biryani,
-  //     },
-  //   ]);
-  // }, [data]);
 
   const handelAcceptRejectOrder = async status => {
     // setVisible(true);
@@ -115,13 +83,7 @@ const MyOrdersDetail = ({navigation, route}) => {
   };
 
   const handleOrderDelivered = async () => {
-    // console.log('handleOrderDelivered   called.....');
-    // let title = 'Order Delivered';
-    // let text = 'Your Order is delivered successfully!';
-    // //send notification to customer when order is delivered
-    // //Note: send notification to restaurant that your order is completed
-    // handleSendPushNotification(text, title);
-
+   
     setLoading(true);
     let data = {
       order_id: route?.params?.id,
@@ -279,6 +241,189 @@ const MyOrdersDetail = ({navigation, route}) => {
     return subTotal;
   };
 
+  const styles = StyleSheet.create({
+    heading1: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2.2),
+    },
+    priceText: {
+      fontFamily: Fonts.PlusJakartaSans_ExtraBold,
+      color:Colors.primary_color,
+      fontSize: RFPercentage(2.5),
+    },
+    heading: {
+      fontFamily: Fonts.Inter_Bold,
+      color: Colors.primary_text,
+      marginBottom: 2,
+      fontSize: RFPercentage(1.9),
+    },
+    sub_heading: {
+      fontFamily: Fonts.Inter_SemiBold,
+      color: Colors.primary_text,
+      marginVertical: 10,
+      fontSize: RFPercentage(1.9),
+    },
+    description1: {
+      fontFamily: Fonts.Inter_Regular,
+      color: Colors.Border,
+      fontSize: RFPercentage(1.5),
+      lineHeight: 20,
+    },
+  
+    title: {
+      fontFamily: Fonts.Inter_Medium,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2),
+      lineHeight: 25,
+    },
+    description: {
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+      color:Colors.secondary_text,
+      fontSize: RFPercentage(1.5),
+      lineHeight: 25,
+      marginLeft: 10,
+    },
+    rowView: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    rowViewSB: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+  
+    orderCard: {
+      borderWidth: 1,
+      borderColor:Colors.primary_color,
+      backgroundColor:Colors.primary_color,
+      borderRadius: 15,
+      width: wp(15),
+      height: wp(15),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  
+    orderCardText: {
+      color:Colors.primary_color,
+      fontFamily: Fonts.PlusJakartaSans_Medium,
+      fontSize: RFPercentage(1.4),
+      marginTop: 10,
+    },
+    horizontalLine: {
+      height: 1.5,
+      backgroundColor: Colors.Border,
+      flex: 1,
+      marginHorizontal: 8,
+      marginBottom: 20,
+    },
+  
+    location_container: {
+      marginVertical: 15,
+      flex: 1,
+    },
+    circle: {
+      height: 40,
+      width: 40,
+      borderRadius: 40 / 2,
+      backgroundColor: 'red',
+      marginRight: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  
+    verticalDottedLine: {
+      // height: 45,
+      minHeight: 45,
+      flex: 1,
+      borderWidth: 1,
+      borderColor:Colors.primary_color,
+      borderStyle: 'dashed',
+      width: 1,
+      marginLeft: 19,
+    },
+    location_heading: {
+      color:Colors.primary_color,
+      fontFamily: Fonts.Inter_Medium,
+      fontSize: RFPercentage(2),
+    },
+    location_description: {
+      color: Colors.secondary_text,
+      fontFamily: Fonts.Inter_Regular,
+      fontSize: RFPercentage(1.5),
+      width: wp(70),
+    },
+    location_container: {
+      marginVertical: 15,
+    },
+    verticalDottedLine: {
+      minHeight: 47,
+      flex: 1,
+      borderWidth: 1,
+      borderColor:Colors.primary_color,
+      borderStyle: 'dashed',
+      width: 1,
+      marginLeft: 1,
+      position: 'absolute',
+      left: 5.9,
+      top: 13,
+    },
+    location_heading: {
+      color:Colors.primary_color,
+      fontFamily: Fonts.Inter_Medium,
+      fontSize: RFPercentage(2),
+      width: wp(70),
+      marginLeft: 15,
+    },
+    location_description: {
+      color: Colors.secondary_text,
+      fontFamily: Fonts.Inter_Regular,
+      fontSize: RFPercentage(1.5),
+      width: wp(70),
+      marginLeft: 15,
+    },
+    subText2: {
+      color: Colors.primary_text,
+      fontFamily: Fonts.Inter_Regular,
+      fontSize: RFPercentage(2),
+      lineHeight: 30,
+    },
+    total_amountText: {
+      color: Colors.primary_text,
+      fontFamily: Fonts.Inter_Bold,
+      fontSize: RFPercentage(2),
+    },
+    itemView: {
+      marginVertical: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: Colors.secondary_color,
+      padding: 10,
+      paddingHorizontal: 10,
+      borderRadius: 10,
+      overflow: 'hidden',
+    },
+    imageContainer: {
+      width: 50,
+      height: 50,
+      borderRadius: 10,
+      overflow: 'hidden',
+      backgroundColor: '#FF572233',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textContainer: {
+      marginLeft: 10,
+      flex: 1,
+    },
+    image: {
+      height: '100%',
+      width: '100%',
+      resizeMode: 'contain',
+    },
+  });
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <Loader loading={loading} />
@@ -394,7 +539,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                   </Text>
                   <Text
                     style={{
-                      color: '#191A26',
+                      color: Colors.primary_text,
                       fontFamily: Fonts.PlusJakartaSans_Bold,
                       fontSize: RFPercentage(2),
                     }}>
@@ -587,35 +732,7 @@ const MyOrdersDetail = ({navigation, route}) => {
             </View>
           ) : (
             <>
-              {/* <View style={styles.location_container}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View style={styles.circle}>
-                    <Icons.MapMarker />
-                  </View>
-                  <View>
-                    <Text style={styles.location_heading}>Pickup Location</Text>
-                    <Text style={styles.location_description}>
-                     
-                      {orderDetails?.restaurantData?.location}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.verticalDottedLine} />
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View style={styles.circle}>
-                    <Icons.MapMarker />
-                  </View>
-                  <View>
-                    <Text style={styles.location_heading}>
-                      Dropoff Location
-                    </Text>
-                    <Text style={styles.location_description}>
-                      {orderDetails?.locationData?.address}
-                    </Text>
-                  </View>
-                </View>
-              </View> */}
-
+             
               <View style={{marginVertical: 10, marginTop: 5}}>
                 <View style={styles.rowViewSB}>
                   <Text style={{...styles.sub_heading, marginVertical: 5}}>
@@ -628,12 +745,7 @@ const MyOrdersDetail = ({navigation, route}) => {
                       : ''}
                   </Text>
                 </View>
-                {/* <View style={styles.rowViewSB}>
-                  <Text style={{...styles.sub_heading, marginVertical: 5}}>
-                    Rider’s Commission
-                  </Text>
-                  <Text style={styles.description1}>$ 2.05</Text>
-                </View> */}
+              
 
                 <View style={styles.rowViewSB}>
                   <Text style={{...styles.sub_heading, marginVertical: 5}}>
@@ -688,7 +800,6 @@ const MyOrdersDetail = ({navigation, route}) => {
                       ...styles.orderCardText,
                       color: selected == 0 ?Colors.primary_color : Colors.secondary_text,
                     }}>
-                    {/* Order Placed */}
                     Out for Delivery
                   </Text>
                 </TouchableOpacity>
@@ -697,7 +808,6 @@ const MyOrdersDetail = ({navigation, route}) => {
                   disabled={selected == 1 ? true : false}
                   style={{alignItems: 'center'}}
                   onPress={() => {
-                    // setSelected(1);
                     handleOrderStatusUpdate(1);
                   }}>
                   <View
@@ -773,207 +883,4 @@ const MyOrdersDetail = ({navigation, route}) => {
 
 export default MyOrdersDetail;
 
-const styles = StyleSheet.create({
-  heading1: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#191A26',
-    fontSize: RFPercentage(2.2),
-  },
-  priceText: {
-    fontFamily: Fonts.PlusJakartaSans_ExtraBold,
-    color:Colors.primary_color,
-    fontSize: RFPercentage(2.5),
-  },
-  heading: {
-    fontFamily: Fonts.Inter_Bold,
-    color: '#191A26',
-    marginBottom: 2,
-    fontSize: RFPercentage(1.9),
-  },
-  sub_heading: {
-    fontFamily: Fonts.Inter_SemiBold,
-    color: '#191A26',
-    marginVertical: 10,
-    fontSize: RFPercentage(1.9),
-  },
-  description1: {
-    fontFamily: Fonts.Inter_Regular,
-    color: '#808D9E',
-    fontSize: RFPercentage(1.5),
-    lineHeight: 20,
-  },
 
-  title: {
-    fontFamily: Fonts.Inter_Medium,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
-    lineHeight: 25,
-  },
-  description: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: '#7E8CA0',
-    fontSize: RFPercentage(1.5),
-    lineHeight: 25,
-    marginLeft: 10,
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowViewSB: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  orderCard: {
-    borderWidth: 1,
-    borderColor:Colors.primary_color,
-    backgroundColor:Colors.primary_color,
-    borderRadius: 15,
-    width: wp(15),
-    height: wp(15),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  orderCardText: {
-    color:Colors.primary_color,
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    fontSize: RFPercentage(1.4),
-    marginTop: 10,
-  },
-  horizontalLine: {
-    height: 1.5,
-    backgroundColor: '#E5E5E6',
-    flex: 1,
-    marginHorizontal: 8,
-    marginBottom: 20,
-  },
-
-  location_container: {
-    marginVertical: 15,
-    flex: 1,
-  },
-  circle: {
-    height: 40,
-    width: 40,
-    borderRadius: 40 / 2,
-    backgroundColor: 'red',
-    marginRight: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  verticalDottedLine: {
-    // height: 45,
-    minHeight: 45,
-    flex: 1,
-    borderWidth: 1,
-    borderColor:Colors.primary_color,
-    borderStyle: 'dashed',
-    width: 1,
-    marginLeft: 19,
-  },
-  location_heading: {
-    color:Colors.primary_color,
-    fontFamily: Fonts.Inter_Medium,
-    fontSize: RFPercentage(2),
-  },
-  location_description: {
-    color: '#808D9E',
-    fontFamily: Fonts.Inter_Regular,
-    fontSize: RFPercentage(1.5),
-    width: wp(70),
-  },
-
-  //
-
-  location_container: {
-    marginVertical: 15,
-    // flex: 1,
-    // paddingHorizontal: 20,
-  },
-  circle: {
-    // height: 40,
-    // width: 40,
-    // borderRadius: 40 / 2,
-    // // backgroundColor: 'red',
-    // marginRight: 15,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-
-  verticalDottedLine: {
-    // height: 45,
-    minHeight: 47,
-    flex: 1,
-    borderWidth: 1,
-    borderColor:Colors.primary_color,
-    borderStyle: 'dashed',
-    width: 1,
-    // marginLeft: 19,
-    marginLeft: 1,
-    position: 'absolute',
-    left: 5.9,
-    top: 13,
-  },
-  location_heading: {
-    color:Colors.primary_color,
-    fontFamily: Fonts.Inter_Medium,
-    fontSize: RFPercentage(2),
-    width: wp(70),
-    marginLeft: 15,
-  },
-  location_description: {
-    color: '#808D9E',
-    fontFamily: Fonts.Inter_Regular,
-    fontSize: RFPercentage(1.5),
-    width: wp(70),
-    marginLeft: 15,
-  },
-  subText2: {
-    color: '#0C0B0B',
-    fontFamily: Fonts.Inter_Regular,
-    fontSize: RFPercentage(2),
-    lineHeight: 30,
-  },
-  total_amountText: {
-    color: '#292323',
-    fontFamily: Fonts.Inter_Bold,
-    fontSize: RFPercentage(2),
-    // lineHeight: 30,
-  },
-
-  //
-
-  itemView: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    // backgroundColor: '#F6F6F6',
-    backgroundColor: '#F5F6FA',
-    padding: 10,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: '#FF572233',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textContainer: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  image: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-});

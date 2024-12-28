@@ -15,17 +15,15 @@ import Loader from '../../../../components/Loader';
 import api from '../../../../constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux';
-import { Colors } from '../../../../constants';
 
 const UpdatePassword = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
-  const { rider_id } = useSelector(store => store.auth)
+  const { rider_id, Colors } = useSelector(store => store.auth)
 
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd();
-    // scrollViewRef.current?.scrollTo({y: 150});
   }, [keyboardHeight]);
 
   const ref_RBSheet = useRef();
@@ -68,9 +66,7 @@ const UpdatePassword = ({navigation, route}) => {
 
   const handleUpdatePassword = async () => {
     if (validate()) {
-      // let rider_id = await AsyncStorage.getItem('rider_id');
       Keyboard.dismiss();
-      // ref_RBSheet?.current?.open();
       setLoading(true);
       fetch(api.update_password, {
         method: 'PUT',
@@ -112,27 +108,10 @@ const UpdatePassword = ({navigation, route}) => {
         <StackHeader title={'Update Password'} />
         <View
           style={{
-            // height: hp(75),
             flex: 1,
             paddingVertical: 15,
           }}>
-          {/* <CInput
-            width={wp(87)}
-            placeholder="Old Password"
-            value={oldPass}
-            onChangeText={text => setOldPass(text)}
-            secureTextEntry={!visibleOldPass}
-            rightContent={
-              <TouchableOpacity
-                onPress={() => setVisibleOldPass(!visibleOldPass)}>
-                <Feather
-                  name={!visibleOldPass ? 'eye' : 'eye-off'}
-                  size={15}
-                  color={'#B0B0B0'}
-                />
-              </TouchableOpacity>
-            }
-          /> */}
+          
           <CInput
             width={wp(87)}
             placeholder="New Password"

@@ -10,15 +10,17 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {Colors, Fonts, Icons} from '../../constants';
 import StackHeader from '../../components/Header/StackHeader';
 import CButton from '../../components/Buttons/CButton';
-import STYLE from './STYLE';
+import {getStyles} from './STYLE';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
 import api from '../../constants/api';
 import {showAlert} from '../../utils/helpers';
 import Loader from '../../components/Loader';
+import { useSelector } from 'react-redux';
 
 const Verification = ({navigation, route}) => {
   const keyboardHeight = useKeyboard();
   const scrollViewRef = useRef();
+  const { Colors } = useSelector(store => store.auth)
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd();
@@ -45,7 +47,7 @@ const Verification = ({navigation, route}) => {
     }
   };
 
-  console.log(route?.params?.otp)
+  const STYLE = getStyles(Colors)
 
   const handleVerifyCode = async () => {
     if (validate()) {
@@ -60,40 +62,43 @@ const Verification = ({navigation, route}) => {
                   showAlert('Invalid Otp code');
                 }, 500);
       }
-      // navigation.replace('ResetPassword');
-      // setLoading(true);
-      // fetch(api.verify_otp, {
-      //   method: 'POST',
-      //   body: JSON.stringify({
-      //     email: route?.params?.data?.email,
-      //     otp: otpCode,
-      //   }),
-      //   headers: {
-      //     'Content-type': 'application/json; charset=UTF-8',
-      //   },
-      // })
-      //   .then(response => response.json())
-      //   .then(async response => {
-      //     console.log('response  :  ', response);
-      //     if (response?.status == false) {
-      //       setTimeout(() => {
-      //         showAlert('Invalid Otp code');
-      //       }, 500);
-      //     } else {
-      //       navigation?.navigate('ResetPassword', {
-      //         email: route?.params?.data?.email,
-      //         rider_id: route?.params?.rider_id,
-      //       });
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.log('Error in Login :  ', err);
-      //   })
-      //   .finally(() => {
-      //     setLoading(false);
-      //   });
+     
     }
   };
+  const styles = StyleSheet.create({
+    inputContainer: {
+      borderWidth: 1,
+      borderColor:Colors.Border,
+      borderRadius: 35,
+      width: wp(90),
+      marginTop: 50,
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+    },
+    textInput: {
+      paddingHorizontal: 20,
+    },
+    underlineStyleBase: {
+      color: Colors.primary_text,
+      fontSize: 24,
+      fontFamily: Fonts.Inter_Medium,
+      width: 60,
+      height: 50,
+      borderRadius: 30,
+      borderWidth: 0,
+      // borderBottomWidth: 1,
+      borderColor: Colors.Border,
+      marginHorizontal: 5,
+      backgroundColor: Colors.secondary_color,
+    },
+    underlineStyleHighLighted: {
+      borderColor:Colors.primary_color,
+      borderRadius: 30,
+      borderWidth: 1,
+    },
+  });
   return (
     <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
       <StackHeader title={''} backIconColor={'#1D1D20'} />
@@ -159,37 +164,4 @@ const Verification = ({navigation, route}) => {
 
 export default Verification;
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    borderWidth: 1,
-    borderColor: '#DDDDDD',
-    borderRadius: 35,
-    width: wp(90),
-    marginTop: 50,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  textInput: {
-    paddingHorizontal: 20,
-  },
-  underlineStyleBase: {
-    color: Colors.primary_text,
-    fontSize: 24,
-    fontFamily: Fonts.Inter_Medium,
-    width: 60,
-    height: 50,
-    borderRadius: 30,
-    borderWidth: 0,
-    // borderBottomWidth: 1,
-    borderColor: '#DDDDDD',
-    marginHorizontal: 5,
-    backgroundColor: '#F5F6FA',
-  },
-  underlineStyleHighLighted: {
-    borderColor:Colors.primary_color,
-    borderRadius: 30,
-    borderWidth: 1,
-  },
-});
+

@@ -1,9 +1,42 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {Colors, Fonts} from '../../constants';
+import { Fonts} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
+import { useSelector } from 'react-redux';
 
 const PromoCodeCard = ({selected, percentage, expiry_date, code, disabled}) => {
+
+      const  {Colors } = useSelector(store => store.auth)
+      const styles = StyleSheet.create({
+        card: {
+          borderWidth: 1,
+          borderColor: '#DADADA',
+          borderRadius: 10,
+          padding: 15,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 18,
+          // marginHorizontal: 20,
+          width: '100%',
+        },
+        boldText: {
+          fontFamily: Fonts.PlusJakartaSans_Bold,
+          fontSize: RFPercentage(2.2),
+          color: Colors.primary_text,
+        },
+        codeText: {
+          fontFamily: Fonts.PlusJakartaSans_Bold,
+          fontSize: RFPercentage(2.5),
+          color:Colors.primary_color,
+        },
+        description: {
+          color: '#8D93A1',
+          fontFamily: Fonts.PlusJakartaSans_Medium,
+          fontSize: RFPercentage(1.5),
+        },
+      });
   return (
     <TouchableOpacity
       disabled={disabled ? disabled : false}
@@ -23,33 +56,4 @@ const PromoCodeCard = ({selected, percentage, expiry_date, code, disabled}) => {
 
 export default PromoCodeCard;
 
-const styles = StyleSheet.create({
-  card: {
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 10,
-    padding: 15,
-    paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 18,
-    // marginHorizontal: 20,
-    width: '100%',
-  },
-  boldText: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.2),
-    color: Colors.primary_text,
-  },
-  codeText: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.5),
-    color:Colors.primary_color,
-  },
-  description: {
-    color: '#8D93A1',
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    fontSize: RFPercentage(1.5),
-  },
-});
+

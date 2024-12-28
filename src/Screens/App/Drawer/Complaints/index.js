@@ -1,7 +1,6 @@
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import StackHeader from '../../../../components/Header/StackHeader';
-import {Colors, Images} from '../../../../constants';
 import CustomerCard from '../../../../components/Cards/CustomerCard';
 import {
   widthPercentageToDP as wp,
@@ -15,7 +14,7 @@ import { useSelector } from 'react-redux';
 
 const Complaints = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
-  const { rider_id } = useSelector(store => store.auth)
+  const { rider_id, Colors } = useSelector(store => store.auth)
 
   const [data, setData] = useState([
     // {
@@ -87,7 +86,6 @@ const Complaints = ({navigation, route}) => {
   ]);
 
   const getData = async () => {
-    // let rider_id = await AsyncStorage.getItem('rider_id');
     fetch(api.get_all_complaints_by_rider + rider_id)
       .then(response => response.json())
       .then(response => {

@@ -6,76 +6,11 @@ import {useNavigation} from '@react-navigation/native';
 import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
 import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 import NoDataFound from '../../../../components/NotFound/NoDataFound';
+import { useSelector } from 'react-redux';
 
 const AssignedOrders = ({route, data}) => {
   const navigation = useNavigation();
 
-  // const data = [
-  //   {
-  //     id: 0,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Order Placed',
-  //   },
-  //   {
-  //     id: 1,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Preparing',
-  //   },
-  //   {
-  //     id: 2,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Ready to Deliver',
-  //   },
-  //   {
-  //     id: 3,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Out for Delivery',
-  //   },
-  //   {
-  //     id: 4,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Order Placed',
-  //   },
-  //   {
-  //     id: 5,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Order Placed',
-  //   },
-  //   {
-  //     id: 6,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Order Placed',
-  //   },
-  //   {
-  //     id: 7,
-  //     image: Images.food8,
-  //     title: 'Green Salad',
-  //     description: 'Mix fresh real orange',
-  //     price: 13.2,
-  //     status: 'Order Placed',
-  //   },
-  // ];
 
   return (
     <View style={{flex: 1}}>

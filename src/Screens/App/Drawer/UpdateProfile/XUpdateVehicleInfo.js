@@ -1,7 +1,7 @@
 import {StyleSheet, View, ScrollView} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import StackHeader from '../../../../components/Header/StackHeader';
-import {Colors, Fonts, Images, Icons} from '../../../../constants';
+import { Fonts, Images, Icons} from '../../../../constants';
 import CInput from '../../../../components/TextInput/CInput';
 import CButton from '../../../../components/Buttons/CButton';
 import {
@@ -23,7 +23,6 @@ const UpdateVehicleInfo = ({navigation, route}) => {
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd();
-    // scrollViewRef.current?.scrollTo({y: 150});
   }, [keyboardHeight]);
 
   const ref_RBSheet = useRef();

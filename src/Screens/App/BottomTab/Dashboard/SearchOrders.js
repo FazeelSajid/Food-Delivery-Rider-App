@@ -21,14 +21,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ItemSeparator from '../../../../components/Separator/ItemSeparator';
 import TopSearchesList from '../../../../components/Lists/TopSearchesList';
 import { addSearchOrderItem, removeSearchOrderItem, setSearchOrders } from '../../../../redux/AuthSlice';
-// import {
-//   addDealsTopSearch,
-//   addOrderTopSearch,
-//   getDealsTopSearch,
-//   getOrderTopSearch,
-//   removeDealsTopSearch,
-//   removeOrderTopSearch,
-// } from '../../../../utils/helpers/localStorage';
 import { showAlert } from '../../../../utils/helpers';
 import NoDataFound from '../../../../components/NotFound/NoDataFound';
 import api from '../../../../constants/api';
@@ -38,24 +30,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import OrderCard from '../../../../components/Cards/OrderCard';
 
 const SearchOrder = ({ navigation, route }) => {
-  const { searchOrders, rider_id } = useSelector(store => store.auth);
+  const { searchOrders, rider_id, Colors } = useSelector(store => store.auth);
   const dispatch = useDispatch()
   let { assigned_orders, order_requests } = useSelector(store => store.order);
-
-  // console.log({assigned_orders});
-
-  console.log(searchOrders, 'searchedOrders');
-  
-  
-
-
-  const [isSearch, setIsSearch] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [showTopSearches, setShowTopSearches] = useState(true);
   const [isFirst, setIsFirst] = useState(true);
-
   const [data, setData] = useState([
     // {
     //   id: 0,
@@ -135,37 +116,20 @@ const SearchOrder = ({ navigation, route }) => {
     //   rating: 4.5,
     // },
   ]);
-
   const [topSearchesList, setTopSearchesList] = useState(searchOrders);
-
-  // console.log(topSearchesList);
-  
-
-  // const handleSearch = query => {
-  //   setSearchQuery(query);
 
   const handleRemoveTopSearches = async item => {
     const filter = topSearchesList.filter(e => e != item);
     setTopSearchesList(filter);
     dispatch(setSearchOrders(filter))
-    // removeOrderTopSearch(filter); //also remove item from local storage
   };
 
-  // Simulated search API function
   const searchApi = async query => {
     setShowTopSearches(false);
     if (!loading) {
       setLoading(true);
     }
     try {
-      console.log('query :  ', query);
-      //   const filteredData = assigned_orders?.filter(
-      //     item =>
-      //       item?.cart_items_Data?.length > 0 &&
-      //       (item?.cart_items_Data[0]?.itemData?.name === query ||
-      //         item?.cart_items_Data[0]?.itemData?.item_name === query),
-      //   );
-
       const filteredData = [
         ...assigned_orders?.filter(item =>
           item?.order_id?.toString().includes(query)
@@ -174,41 +138,13 @@ const SearchOrder = ({ navigation, route }) => {
           item?.order_id?.toString().includes(query)
         )
       ];
-      // console.log('filteredData :  ', filteredData);
       setData(filteredData);
       if (filteredData?.length > 0) {
         let found = topSearchesList?.some(item => item == query);
         if (!found) {
-          // addOrderTopSearch([...topSearchesList, query]);
           dispatch(setSearchOrders([...topSearchesList, query]))
-
-          // getTopSearches();
         }
       }
-
-      /////////////////////////
-      //   let customer_id = await AsyncStorage.getItem('customer_id');
-      //   let url =
-      //     api.search_order_by_user +
-      //     `?text=${query?.trim()}&customer_id=${customer_id}`;
-      //   console.log('url :  ', url);
-      //   const response = await fetch(url); // Replace with your API endpoint
-      //   if (!response.ok) {
-      //     throw new Error('Network response was not ok');
-      //   }
-      //   const json = await response.json();
-      //   console.log('search api called :  ');
-      //   //   setData(json?.result);
-      //   let list = json?.result ? json?.result : [];
-      //   const filter = list?.filter(item => item?.cart_items_Data?.length > 0);
-      //   setData(filter?.reverse());
-      //   if (filter?.length > 0) {
-      //     let found = topSearchesList?.some(item => item == query);
-      //     if (!found) {
-      //       addOrderTopSearch([...topSearchesList, query]);
-      //       getTopSearches();
-      //     }
-      //   }
     } catch (error) {
       console.log('error in search api : ', error);
       showAlert('Something went wrong');
@@ -224,14 +160,7 @@ const SearchOrder = ({ navigation, route }) => {
     setShowTopSearches(true);
   };
 
-  // const getTopSearches = async () => {
-  //   let list = await getOrderTopSearch();
-  //   console.log('list  :  ', list);
-  //   setTopSearchesList(list);
-  // };
-  // useEffect(() => {
-  //   getTopSearches();
-  // }, []);
+  
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -240,12 +169,10 @@ const SearchOrder = ({ navigation, route }) => {
       } else if (searchQuery?.length == 0) {
         setLoading(false);
         setData([]);
-        // setShowTopSearches(false);
       } else {
         setLoading(true);
         searchApi(searchQuery?.trim());
       }
-      // Send Axios request here
     }, 2000);
 
     return () => clearTimeout(delayDebounceFn);

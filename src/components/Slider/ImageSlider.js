@@ -1,12 +1,12 @@
 import {StyleSheet, View, Image} from 'react-native';
 import React from 'react';
-import {Colors} from '../../constants';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 const ImageSlider = ({data, marginBottom}) => {
+        const { Colors} = useSelector(store => store.auth);
   const styles = StyleSheet.create({
     imageCard: {
       width: wp(90),
@@ -37,7 +37,7 @@ const ImageSlider = ({data, marginBottom}) => {
       width: wp(2.5),
       height: wp(2.5),
       borderRadius: wp(2.5) / 2,
-      backgroundColor: ,
+      backgroundColor: Colors.Border ,
       borderWidth: 1,
       borderColor:Colors.primary_color,
       opacity: 0.7,

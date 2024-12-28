@@ -14,8 +14,66 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {RFPercentage} from 'react-native-responsive-fontsize';
+import { useSelector } from 'react-redux';
 
 const FavoriteItemCard = ({image, title, description, price}) => {
+        const  {Colors } = useSelector(store => store.auth)
+        const styles = StyleSheet.create({
+          itemView: {
+            marginVertical: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor:  Colors.secondary_color,
+            padding: 5,
+            paddingHorizontal: 10,
+            borderRadius: 10,
+          },
+          imageContainer: {
+            width: 80,
+            height: 70,
+            borderRadius: 10,
+            overflow: 'hidden',
+          },
+          image: {
+            height: '100%',
+            width: '100%',
+            resizeMode: 'contain',
+          },
+          textContainer: {
+            marginLeft: 10,
+            flex: 1,
+          },
+          title: {
+            fontFamily: Fonts.PlusJakartaSans_Bold,
+            color: Colors.primary_text,
+            fontSize: RFPercentage(2),
+            lineHeight: 25,
+          },
+          nameText: {
+            fontFamily: Fonts.PlusJakartaSans_Medium,
+            color: Colors.secondary_text,
+            fontSize: RFPercentage(1.5),
+            lineHeight: 25,
+          },
+          ratingText: {
+            fontFamily: Fonts.PlusJakartaSans_Bold,
+            color: Colors.primary_text,
+            fontSize: RFPercentage(2),
+            lineHeight: 25,
+            marginLeft: 5,
+          },
+          rowViewSB: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 1,
+            justifyContent: 'space-between',
+          },
+          rowView: {
+            flexDirection: 'row',
+            alignItems: 'center',
+          },
+        });
+        
   return (
     <View style={styles.itemView}>
       <ImageBackground
@@ -38,58 +96,3 @@ const FavoriteItemCard = ({image, title, description, price}) => {
 
 export default FavoriteItemCard;
 
-const styles = StyleSheet.create({
-  itemView: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F6F6F6',
-    padding: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-  },
-  imageContainer: {
-    width: 80,
-    height: 70,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  image: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-  textContainer: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  title: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
-    lineHeight: 25,
-  },
-  nameText: {
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    color: '#7E8CA0',
-    fontSize: RFPercentage(1.5),
-    lineHeight: 25,
-  },
-  ratingText: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
-    lineHeight: 25,
-    marginLeft: 5,
-  },
-  rowViewSB: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});

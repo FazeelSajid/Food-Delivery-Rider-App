@@ -1,15 +1,9 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {Colors, Fonts, Images} from '../../../../constants';
+import {Fonts, Images} from '../../../../constants';
 import StackHeader from '../../../../components/Header/StackHeader';
 import {Avatar} from 'react-native-paper';
 import {RFPercentage} from 'react-native-responsive-fontsize';
-import FoodCard from '../../../../components/Cards/FoodCard';
-import OrdersCard from '../../../../components/Cards/OrdersCard';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
 import FoodCardWithRating from '../../../../components/Cards/FoodCardWithRating';
 import api from '../../../../constants/api';
 import Loader from '../../../../components/Loader';
@@ -17,9 +11,10 @@ import {BASE_URL_IMAGE} from '../../../../utils/globalVariables';
 
 const ComplaintDetail = ({navigation, route}) => {
   let {detail} = route?.params;
+  const { Colors} = useSelector(store => store.auth);
+  
 
   const [loading, setLoading] = useState(false);
-  const [orderDetails, setOrderDetails] = useState(null);
   const [fistCartItemDetail, setFistCartItemDetail] = useState(null);
   const [itemImages, setItemImages] = useState([]);
   const getFirstTwoLettersOfName = name => {
@@ -38,7 +33,6 @@ const ComplaintDetail = ({navigation, route}) => {
       .then(response => response.json())
       .then(response => {
         if (response.status == true) {
-          setOrderDetails(response.result);
           let cart_item =
             response.result?.cart_items_Data?.length > 0
               ? response.result?.cart_items_Data[0]
@@ -51,7 +45,6 @@ const ComplaintDetail = ({navigation, route}) => {
 
           setFistCartItemDetail(cart_item);
         } else {
-          setOrderDetails(null);
           setItemImages([]);
         }
       })
@@ -62,6 +55,28 @@ const ComplaintDetail = ({navigation, route}) => {
   useEffect(() => {
     getOrderDetail(detail?.order?.order_id);
   }, []);
+  const styles = StyleSheet.create({
+    rowView: {
+      // flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 25,
+    },
+    name: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      color: '#292323',
+      marginLeft: 10,
+      fontSize: RFPercentage(1.9),
+    },
+    description: {
+      fontFamily: Fonts.Inter_Regular,
+      color: '#808D9E',
+      marginVertical: 15,
+      fontSize: RFPercentage(1.5),
+      lineHeight: 20,
+      paddingHorizontal: 25,
+    },
+  });
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.secondary_color}}>
@@ -127,25 +142,4 @@ const ComplaintDetail = ({navigation, route}) => {
 
 export default ComplaintDetail;
 
-const styles = StyleSheet.create({
-  rowView: {
-    // flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 25,
-  },
-  name: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    color: '#292323',
-    marginLeft: 10,
-    fontSize: RFPercentage(1.9),
-  },
-  description: {
-    fontFamily: Fonts.Inter_Regular,
-    color: '#808D9E',
-    marginVertical: 15,
-    fontSize: RFPercentage(1.5),
-    lineHeight: 20,
-    paddingHorizontal: 25,
-  },
-});
+

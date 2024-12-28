@@ -8,26 +8,21 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
-import {Colors, Fonts, Icons, Images} from '../../constants';
 import StackHeader from '../../components/Header/StackHeader';
-import {RFPercentage} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import CButton from '../../components/Buttons/CButton';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
-import SuccessModal from '../../components/Modal/SuccessModal';
 import STYLE from './STYLE';
 import Feather from 'react-native-vector-icons/Feather';
 import CInput from '../../components/TextInput/CInput';
-import CRBSheetComponent from '../../components/BottomSheet/CRBSheetComponent';
-import Lottie from 'lottie-react-native';
 import RBSheetSuccess from '../../components/BottomSheet/RBSheetSuccess';
 import Snackbar from 'react-native-snackbar';
 import {useKeyboard} from '../../utils/UseKeyboardHook';
 import api from '../../constants/api';
 import {showAlert} from '../../utils/helpers';
+import { useSelector } from 'react-redux';
 
 const ResetPassword = ({navigation, route}) => {
   //
@@ -44,6 +39,7 @@ const ResetPassword = ({navigation, route}) => {
   const [showOldPass, setShowOldPass] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { Colors } = useSelector(store => store.auth)
 
   const validatePassword = password => {
     // Regular expression pattern to match passwords
@@ -80,7 +76,6 @@ const ResetPassword = ({navigation, route}) => {
     }
   };
 
-  console.log(route?.params?.rider_id);
   
 
   const handleUpdate = async () => {
@@ -123,7 +118,7 @@ const ResetPassword = ({navigation, route}) => {
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled"
         ref={scrollViewRef}>
-        <StackHeader title={''} backIconColor={'#1D1D20'} />
+        <StackHeader title={''} backIconColor={Colors.button.icon} />
         <View
           style={{
             flex: 1,
@@ -148,7 +143,7 @@ const ResetPassword = ({navigation, route}) => {
                 <Feather
                   name={!showNewPass ? 'eye-off' : 'eye'}
                   size={20}
-                  color={'#39393999'}
+                  color={Colors.secondary_text}
                 />
               </TouchableOpacity>
             }
@@ -164,7 +159,7 @@ const ResetPassword = ({navigation, route}) => {
                 <Feather
                   name={!showOldPass ? 'eye-off' : 'eye'}
                   size={20}
-                  color={'#39393999'}
+                  color={Colors.secondary_text}
                 />
               </TouchableOpacity>
             }
@@ -187,45 +182,7 @@ const ResetPassword = ({navigation, route}) => {
         </View>
       </ScrollView>
 
-      {/* <CRBSheetComponent
-          refRBSheet={ref_RBSheet}
-          content={
-            <View style={{width: wp(87), alignItems: 'center'}}>
-              <View
-                style={{
-                  height: 150,
-                  width: 150,
-                  marginBottom: 10,
-                  //   aspectRatio: 1,
-                }}>
-                <Lottie
-                  source={Images.success_check}
-                  autoPlay
-                  loop={true}
-                  resizeMode="cover"
-                />
-              </View>
-              <Text
-                style={{
-                  color: '#1D1D20',
-                  fontSize: RFPercentage(2.5),
-                  fontFamily: Fonts.PlusJakartaSans_SemiBold,
-                }}>
-                Password Reset Successfully
-              </Text>
-              <CButton
-                title="GO TO SIGN IN"
-                width={wp(85)}
-                height={hp(6)}
-                marginTop={hp(5)}
-                onPress={() => {
-                  ref_RBSheet?.current?.close();
-                  navigation.replace('SignIn');
-                }}
-              />
-            </View>
-          }
-        /> */}
+     
 
       <RBSheetSuccess
         refRBSheet={ref_RBSheet}
@@ -243,38 +200,4 @@ const ResetPassword = ({navigation, route}) => {
 
 export default ResetPassword;
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    borderWidth: 1,
-    borderColor: '#DDDDDD',
-    borderRadius: 35,
-    width: wp(90),
-    // marginVertical: 80,
-    marginTop: 50,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  textInput: {
-    paddingHorizontal: 20,
-  },
-  underlineStyleBase: {
-    color: Colors.primary_text,
-    fontSize: 24,
-    fontFamily: Fonts.Inter_Medium,
-    width: 60,
-    height: 50,
-    borderRadius: 30,
-    borderWidth: 0,
-    // borderBottomWidth: 1,
-    borderColor: '#DDDDDD',
-    marginHorizontal: 5,
-    backgroundColor: '#F5F6FA',
-  },
-  underlineStyleHighLighted: {
-    borderColor:Colors.primary_color,
-    borderRadius: 30,
-    borderWidth: 1,
-  },
-});
+

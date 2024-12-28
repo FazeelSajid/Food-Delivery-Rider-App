@@ -1,6 +1,6 @@
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { Colors, Fonts } from '../../../constants'
+import { Fonts } from '../../../constants'
 import DeliverySucces from '../../../Assets/svg/DeliverySuccess.svg'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -21,7 +21,7 @@ import api from '../../../constants/api';
 const DeliverySuccess = ({ navigation, route }) => {
 
     // console.log(route.params);
-    const { rider_id, totalWalletAmount } = useSelector(store => store.auth)
+    const { rider_id, totalWalletAmount, Colors } = useSelector(store => store.auth)
     const dispatch = useDispatch()
     const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
     const WithDrawBtmSheet = useRef()
@@ -299,6 +299,90 @@ const DeliverySuccess = ({ navigation, route }) => {
     }
 
 
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: Colors.secondary_color
+        },
+        heading: {
+            color: Colors.primary_text,
+            fontSize: RFPercentage(3),
+            fontFamily: Fonts.PlusJakartaSans_SemiBold,
+            textAlign: 'center',
+            width: wp(80),
+            alignSelf: 'center'
+    
+        },
+        contentContainer: {
+            position: 'absolute',
+            // alignSelf: 'center',
+            top: hp(50),
+            width: wp(100),
+    
+        },
+        rowView: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: hp(3),
+            width: wp(80),
+            alignSelf: 'center'
+            // width: 100
+        },
+        label: {
+            color: Colors.secondary_text,
+            fontFamily: Fonts.PlusJakartaSans_SemiBold,
+            fontSize: RFPercentage(2.1),
+    
+        },
+        Value: {
+            color: Colors.primary_text,
+            fontFamily: Fonts.PlusJakartaSans_SemiBold,
+            fontSize: RFPercentage(2),
+    
+        },
+        acceptButton: {
+            backgroundColor:Colors.primary_color,
+            paddingVertical: hp(1.8),
+            // paddingHorizontal: wp(15),
+            borderRadius: wp(10),
+            marginBottom: hp(3),
+            marginHorizontal: wp('5'),
+            marginTop: wp('7'),
+    
+        },
+        buttonText: {
+            color: Colors.secondary_color,
+            fontSize: wp(4),
+            fontFamily: Fonts.PlusJakartaSans_SemiBold,
+            textAlign: 'center',
+            width: '100%',
+            // backgroundColor: 'green'
+        },
+        rowViewSB: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+        },
+        rowViewSB1: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 20,
+            paddingHorizontal: 10,
+        },
+        rbSheetHeading: {
+            color: Colors.primary_text,
+            fontFamily: Fonts.PlusJakartaSans_Bold,
+            fontSize: RFPercentage(1.9),
+        },
+        btmsheettext: {
+            color: Colors.secondary_text,
+            fontFamily: Fonts.PlusJakartaSans_Regular,
+            marginLeft: wp(5),
+            fontSize: RFPercentage(1.9),
+        },
+    })
+
 
     return (
         <View style={styles.container} >
@@ -345,7 +429,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                         <View style={[styles.rowViewSB1, { alignItems: 'flex-end' }]}>
                             <TouchableOpacity
                                 onPress={() => WithDrawBtmSheet?.current?.close()}>
-                                <Ionicons name={'close'} size={22} color={'#1E2022'} />
+                                <Ionicons name={'close'} size={22} color={Colors.primary_text} />
                             </TouchableOpacity>
                         </View>
                         <View style={{ alignItems: 'center' }} >
@@ -399,7 +483,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                             <View style={{ ...styles.rowViewSB, marginBottom: 15 }}>
                                 <Text
                                     style={{
-                                        color: '#0A212B',
+                                        color:Colors.primary_text,
                                         fontFamily: Fonts.PlusJakartaSans_Bold,
                                         fontSize: RFPercentage(2.5),
                                     }}>
@@ -432,15 +516,7 @@ const DeliverySuccess = ({ navigation, route }) => {
                                     value={topUpAmount}
                                     keyboardType="numeric"
                                 />
-                                {/* <Text
-                      style={{
-                        color: '#A2A2A2',
-                        marginTop: -15,
-                        fontSize: RFPercentage(1.5),
-                        marginLeft: 14,
-                      }}>
-                      Enter an amount from $ 100-$1,000
-                    </Text> */}
+                               
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -484,86 +560,3 @@ const DeliverySuccess = ({ navigation, route }) => {
 
 export default DeliverySuccess
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.secondary_color
-    },
-    heading: {
-        color: Colors.primary_text,
-        fontSize: RFPercentage(3),
-        fontFamily: Fonts.PlusJakartaSans_SemiBold,
-        textAlign: 'center',
-        width: wp(80),
-        alignSelf: 'center'
-
-    },
-    contentContainer: {
-        position: 'absolute',
-        // alignSelf: 'center',
-        top: hp(50),
-        width: wp(100),
-
-    },
-    rowView: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: hp(3),
-        width: wp(80),
-        alignSelf: 'center'
-        // width: 100
-    },
-    label: {
-        color: Colors.secondary_text,
-        fontFamily: Fonts.PlusJakartaSans_SemiBold,
-        fontSize: RFPercentage(2.1),
-
-    },
-    Value: {
-        color: Colors.primary_text,
-        fontFamily: Fonts.PlusJakartaSans_SemiBold,
-        fontSize: RFPercentage(2),
-
-    },
-    acceptButton: {
-        backgroundColor:Colors.primary_color,
-        paddingVertical: hp(1.8),
-        // paddingHorizontal: wp(15),
-        borderRadius: wp(10),
-        marginBottom: hp(3),
-        marginHorizontal: wp('5'),
-        marginTop: wp('7'),
-
-    },
-    buttonText: {
-        color: Colors.secondary_color,
-        fontSize: wp(4),
-        fontFamily: Fonts.PlusJakartaSans_SemiBold,
-        textAlign: 'center',
-        width: '100%',
-        // backgroundColor: 'green'
-    },
-    rowViewSB: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    rowViewSB1: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-        paddingHorizontal: 10,
-    },
-    rbSheetHeading: {
-        color: Colors.primary_text,
-        fontFamily: Fonts.PlusJakartaSans_Bold,
-        fontSize: RFPercentage(1.9),
-    },
-    btmsheettext: {
-        color: Colors.secondary_text,
-        fontFamily: Fonts.PlusJakartaSans_Regular,
-        marginLeft: wp(5),
-        fontSize: RFPercentage(1.9),
-    },
-})

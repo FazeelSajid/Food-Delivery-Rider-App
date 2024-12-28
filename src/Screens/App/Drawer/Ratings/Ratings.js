@@ -1,6 +1,5 @@
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import { Colors } from '../../../../constants'
 import StackHeader from '../../../../components/Header/StackHeader'
 import RatingCard from '../../../../components/Cards/RatingCard'
 import { widthPercentageToDP } from 'react-native-responsive-screen'
@@ -16,7 +15,7 @@ import CounterButton from '../../../../components/Buttons/CounterButton'
 const Ratings = () => {
   const [ratings, setRatings] = useState([])
   const dispatch = useDispatch()
-  const rider_id = useSelector(store => store.auth.rider_id)
+  const {rider_id, Colors} = useSelector(store => store.auth)
   const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
   const [loading, setLoading] = useState(false);
 
@@ -52,6 +51,19 @@ const refresh = () => {
       getRatings()
     }, []),
   );
+
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: Colors.secondary_color,
+      paddingHorizontal: widthPercentageToDP(4),
+      justifyContent: 'center',
+  },
+  FlatList:{
+    paddingHorizontal: widthPercentageToDP(3)
+  }
+})
   return (
     <View style={styles.container} >
       <StackHeader title={'Ratings'} />
@@ -75,16 +87,3 @@ const refresh = () => {
 }
 
 export default Ratings
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.secondary_color,
-        paddingHorizontal: widthPercentageToDP(4),
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    FlatList:{
-      paddingHorizontal: widthPercentageToDP(3)
-    }
-})

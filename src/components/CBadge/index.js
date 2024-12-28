@@ -2,8 +2,10 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Badge} from 'react-native-paper';
 import {Colors} from '../../constants';
+import { useSelector } from 'react-redux';
 
 const CBadge = ({text}) => {
+        const  {Colors } = useSelector(store => store.auth)
   return (
     <Badge
       style={{

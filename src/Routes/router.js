@@ -13,14 +13,11 @@ import SignIn from '../Screens/Auth/SignIn';
 import OnBoarding from '../Screens/Auth/OnBoarding';
 import SignUp from '../Screens/Auth/SignUp';
 import RegistrationForm from '../Screens/Auth/RegistrationForm';
-import RegistrationDocuments from '../Screens/Auth/RegistrationDocuments';
 import ForgetPassword from '../Screens/Auth/ForgetPassword';
 import Verification from '../Screens/Auth/Verification';
 import ResetPassword from '../Screens/Auth/ResetPassword';
-import Home from '../Screens/App/Home';
 import Profile from '../Screens/App/BottomTab/Profile';
-import {Colors, Fonts, Icons, Images} from '../constants';
-import MyOrders from '../Screens/App/BottomTab/MyOrders';
+import {Fonts, Icons, Images} from '../constants';
 import Dashboard from '../Screens/App/BottomTab/Dashboard';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {RFPercentage} from 'react-native-responsive-fontsize';
@@ -43,37 +40,28 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Notifications from '../Screens/App/Notifications';
-import MyOrdersDetail from '../Screens/App/BottomTab/MyOrders/MyOrdersDetail';
-import OrderHistory from '../Screens/App/OrderHistory';
-import UpdateDocuments from '../Screens/App/Drawer/UpdateProfile/UpdateDocuments';
-import UpdateVehicleInfo from '../Screens/App/Drawer/UpdateProfile/UpdateVehicleInfo';
 import Conversation from '../Screens/App/Drawer/Messages/Conversation';
 import Splash from '../Screens/Auth/Splash';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Complaints from '../Screens/App/Drawer/Complaints';
 import ComplaintDetail from '../Screens/App/Drawer/Complaints/ComplaintDetail';
-import Languages from '../Screens/App/Drawer/Languages';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import CardForTopUp from '../Screens/App/CardInfo/CardForTopUp';
-import CardForWithdraw from '../Screens/App/CardInfo/CardForWithdraw';
 import { useSelector } from 'react-redux';
 import SearchOrder from '../Screens/App/BottomTab/Dashboard/SearchOrders';
 import OrderDetails from '../Screens/App/Home/OrderDetails';
 import { useDispatch } from 'react-redux';
 import { resetState } from '../redux/AuthSlice';
 import OrderMapScreen from '../Screens/App/Home/OrderMapScreen';
-import HistoryOrderDetailScreen from '../Screens/App/Home/HistoryOrderScreen';
 import DeliverySuccess from '../Screens/App/Home/DeliverySuccess';
 import Ratings from '../Screens/App/Drawer/Ratings/Ratings';
 import Messages from '../Screens/App/Drawer/Messages/Messages';
 import ImageUpload from '../Screens/App/Drawer/Messages/ImageUpload';
+import HistoryOrderDetailScreen from '../Screens/App/Home/HistoryOrderScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function DashboardTabs() {
+      const { Colors } = useSelector(store => store.auth)
+  
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -131,6 +119,22 @@ const CustomDrawerContent = props => {
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
+      const { Colors } = useSelector(store => store.auth)
+      const drawerItemStyles = StyleSheet.create({
+        item: {
+          marginBottom: -5,
+        },
+        label: {
+          color: Colors.primary_text,
+          fontFamily: Fonts.PlusJakartaSans_Medium,
+          marginLeft: -15,
+        },
+        label1: {
+          color:Colors.primary_text,
+          fontFamily: Fonts.PlusJakartaSans_Medium,
+          marginLeft: -6,
+        },
+      });
   return (
     <DrawerContentScrollView
       {...props}
@@ -268,23 +272,11 @@ const CustomDrawerContent = props => {
   );
 };
 
-const drawerItemStyles = StyleSheet.create({
-  item: {
-    marginBottom: -5,
-  },
-  label: {
-    color: Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    marginLeft: -15,
-  },
-  label1: {
-    color:Colors.primary_text,
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    marginLeft: -6,
-  },
-});
+
 
 const DrawerNavigation = () => {
+      const { Colors } = useSelector(store => store.auth)
+  
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -330,27 +322,20 @@ function Router() {
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
-      <Stack.Screen name="RegistrationDocuments"component={RegistrationDocuments}/>
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="Verification" component={Verification} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen name="MyOrdersDetail" component={MyOrdersDetail} />
       <Stack.Screen name="OrdersDetail" component={OrderDetails} />
       <Stack.Screen name="OrderMapScreen" component={OrderMapScreen} />
-      <Stack.Screen name="OrderHistory" component={OrderHistory} />
-      <Stack.Screen name="HistoryOrderDetailScreen" component={HistoryOrderDetailScreen} />
-      <Stack.Screen name="UpdateDocuments" component={UpdateDocuments} />
-      <Stack.Screen name="UpdateVehicleInfo" component={UpdateVehicleInfo} />
       <Stack.Screen name="Conversation" component={Conversation} />
       <Stack.Screen name="DeliverySuccess" component={DeliverySuccess} />
       <Stack.Screen name="Drawer" component={DrawerNavigation} />
       <Stack.Screen name="ComplaintDetail" component={ComplaintDetail} />
       <Stack.Screen name="SearchOrder" component={SearchOrder} />
-      <Stack.Screen name="CardForTopUp" component={CardForTopUp} />
-      <Stack.Screen name="CardForWithdraw" component={CardForWithdraw} />
       <Stack.Screen name="Messages" component={Messages} />
       <Stack.Screen name="ImageUpload" component={ImageUpload} />
+      <Stack.Screen name='HistoryOrderDetailScreen' component={HistoryOrderDetailScreen} />
     </Stack.Navigator>
   );
 }

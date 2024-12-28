@@ -1,8 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Switch} from 'react-native-switch';
-import {Colors} from '../../constants';
+import { useSelector } from 'react-redux';
 const CSwitch = ({value, onValueChange}) => {
+  const { Colors} = useSelector(store => store.auth);
+
   return (
     <Switch
       value={value}

@@ -14,7 +14,8 @@ import {
 } from 'react-native-responsive-screen';
 
 import CountryPicker from 'react-native-country-picker-modal';
-import { Colors, Fonts } from '../../constants';
+import {Fonts } from '../../constants';
+import { useSelector } from 'react-redux';
 
 const CInputWithCountryCode = ({
   phoneNo,
@@ -27,7 +28,32 @@ const CInputWithCountryCode = ({
   //   const [countryCode, setCountryCode] = useState('92');
   const [countryNameCode, setCountryNameCode] = useState('PK');
   //   const [phone_no, setPhone_no] = useState('');
+  const { Colors} = useSelector(store => store.auth);
 
+const styles = StyleSheet.create({
+  TextFieldView: {
+    borderRadius: 25,
+    width: wp(90),
+    alignSelf: 'center',
+    paddingRight: 15,
+    paddingLeft: 10,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F6FA',
+  },
+  TextField: {
+    // fontSize: hp(1.6),
+    marginHorizontal: wp(0),
+    color: Colors.primary_text,
+    flex: 1,
+    fontFamily: Fonts.PlusJakartaSans_Regular,
+    // width: wp(20),
+    width: wp(60),
+    paddingLeft: 10,
+    // backgroundColor: 'red',
+  },
+});
   return (
     <>
       {/* {CountryPickerView == true ? ( */}
@@ -82,27 +108,3 @@ const CInputWithCountryCode = ({
 
 export default CInputWithCountryCode;
 
-const styles = StyleSheet.create({
-  TextFieldView: {
-    borderRadius: 25,
-    width: wp(90),
-    alignSelf: 'center',
-    paddingRight: 15,
-    paddingLeft: 10,
-    marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F6FA',
-  },
-  TextField: {
-    // fontSize: hp(1.6),
-    marginHorizontal: wp(0),
-    color: Colors.primary_text,
-    flex: 1,
-    fontFamily: Fonts.PlusJakartaSans_Regular,
-    // width: wp(20),
-    width: wp(60),
-    paddingLeft: 10,
-    // backgroundColor: 'red',
-  },
-});

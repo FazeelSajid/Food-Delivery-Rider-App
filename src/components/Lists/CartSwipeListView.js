@@ -9,15 +9,98 @@ import {
   FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {Colors, Icons, Images, Fonts} from '../../constants';
+import { Icons, Images, Fonts} from '../../constants';
 import {RFPercentage} from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import { useSelector } from 'react-redux';
 
 const CartSwipeListView = ({data, onDecrement, onIncrement, onDelete}) => {
+              const  {Colors} = useSelector(store => store.auth)
+
+
+              const styles = StyleSheet.create({
+                itemView: {
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: '#F6F6F6',
+                  padding: 10,
+                  paddingHorizontal: 10,
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                },
+                imageContainer: {
+                  width: 60,
+                  height: 60,
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                  backgroundColor: '#FF572233',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+                textContainer: {
+                  marginLeft: 15,
+                  flex: 1,
+                },
+                image: {
+                  height: '100%',
+                  width: '100%',
+                  resizeMode: 'contain',
+                },
+                subText: {
+                  color: '#8D93A1',
+                  fontFamily: Fonts.PlusJakartaSans_Medium,
+                  fontSize: RFPercentage(2),
+                },
+                title: {
+                  color: '#191A26',
+                  fontSize: RFPercentage(2.5),
+                  fontFamily: Fonts.PlusJakartaSans_Bold,
+                },
+              
+                rowViewSB: {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                },
+                rowView: {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                },
+                countText: {
+                  color: Colors.primary_text,
+                  marginHorizontal: 8,
+                  fontFamily: Fonts.PlusJakartaSans_Bold,
+                },
+              
+                //swipe list view
+                rowBack: {
+                  alignItems: 'center',
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginHorizontal: wp(1),
+                },
+                backRightBtn: {
+                  alignItems: 'center',
+                  // bottom: 0,
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  // top: 0,
+                  width: wp(15),
+                  height: hp(6.7),
+                  borderRadius: wp(2),
+                  // backgroundColor: '#ffbdbd',
+                },
+                backRightBtnRight: {
+                  right: 0,
+                },
+              });
+              
   return (
     <SwipeListView
       scrollEnabled={false}
@@ -74,81 +157,3 @@ const CartSwipeListView = ({data, onDecrement, onIncrement, onDelete}) => {
 
 export default CartSwipeListView;
 
-const styles = StyleSheet.create({
-  itemView: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F6F6F6',
-    padding: 10,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: '#FF572233',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textContainer: {
-    marginLeft: 15,
-    flex: 1,
-  },
-  image: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-  subText: {
-    color: '#8D93A1',
-    fontFamily: Fonts.PlusJakartaSans_Medium,
-    fontSize: RFPercentage(2),
-  },
-  title: {
-    color: '#191A26',
-    fontSize: RFPercentage(2.5),
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-  },
-
-  rowViewSB: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  countText: {
-    color: Colors.primary_text,
-    marginHorizontal: 8,
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-  },
-
-  //swipe list view
-  rowBack: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: wp(1),
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    // bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    // top: 0,
-    width: wp(15),
-    height: hp(6.7),
-    borderRadius: wp(2),
-    // backgroundColor: '#ffbdbd',
-  },
-  backRightBtnRight: {
-    right: 0,
-  },
-});

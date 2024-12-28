@@ -6,7 +6,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { useSelector } from 'react-redux';
 const ImageSliderCircle = ({data, marginBottom}) => {
+  const { Colors} = useSelector(store => store.auth);
   const styles = StyleSheet.create({
     imageCard: {
       width: wp(52),

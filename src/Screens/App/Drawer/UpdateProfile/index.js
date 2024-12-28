@@ -18,7 +18,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Avatar } from 'react-native-paper';
 import {
-  showAlert,
+  
   uploadImage,
 } from '../../../../utils/helpers';
 
@@ -34,8 +34,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../../constants/api';
 import { setRiderDetails, setRiderId } from '../../../../redux/AuthSlice';
 import PopUp from '../../../../components/Popup/PopUp';
-import { useFocusEffect } from '@react-navigation/native';
 import { setPopUpColor, setPopUpMesage, setShowPopUp } from '../../../../redux/MySlice';
+import { handlePopup } from '../../../../utils/helpers/orderApis';
 
 
 
@@ -49,15 +49,10 @@ const UpdateProfile = ({ navigation }) => {
   const closeBtmSheet = () => {
     datePicker_ref?.current?.close()
   }
-
-  const { rider_id, rider_details } = useSelector(store => store.auth)
-  const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
-
-
-
-  const ref_RBSheet = useRef();
+      const { showPopUp, popUpColor, PopUpMesage } = useSelector(store => store.store)
+  
+  const { rider_id, rider_details, Colors } = useSelector(store => store.auth)
   const textInput_HEIGHT = 45;
-
   const [index, setIndex] = useState(0); //0 for other and 1 for vehicle info
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState();
@@ -71,8 +66,6 @@ const UpdateProfile = ({ navigation }) => {
   const [gender, setGender] = useState(rider_details ? rider_details.gender : null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedImageType, setSelectedImageType] = useState('');
-
-
   const [vehicle, setVehicle] = useState({
     ownerName: null,
     reg:  null,
@@ -80,11 +73,69 @@ const UpdateProfile = ({ navigation }) => {
     name:  null,
   });
 
-  useFocusEffect(
-    React.useCallback(() => {
-     
-    }, []),
-  );
+  const styles = StyleSheet.create({
+    profileImage: {
+      borderWidth: 1,
+      borderColor: Colors.Border,
+      width: wp(25),
+      height: wp(25),
+      borderRadius: wp(25) / 2,
+      alignSelf: 'center',
+      marginBottom: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    header: {
+      fontFamily: Fonts.PlusJakartaSans_Bold,
+      fontSize: RFPercentage(2.5),
+      color: Colors.primary_color,
+      textAlign: 'center',
+      // alignSelf: 'center',
+      flex: 1
+    },
+    fileContainer: {
+      width: wp(90),
+      height: hp(23),
+      flex: 1,
+      borderWidth: 1,
+      borderColor:Colors.Border,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // marginVertical: 35,
+      marginBottom: 15,
+      overflow: 'hidden',
+      alignSelf: 'center',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+    },
+  
+    rowView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      // marginBottom: hp(1),
+    },
+    addDate: {
+      fontFamily: Fonts.PlusJakartaSans_SemiBold,
+      color: Colors.primary_text,
+      fontSize: RFPercentage(2),
+  
+    },
+    iconBtn: {
+      position: 'absolute',
+      top: 0,
+      right: 10,
+      borderColor: Colors.primary_color,
+      borderWidth: wp(0.3),
+      backgroundColor: Colors.secondary_color,
+      borderRadius: wp(20)
+    }
+  
+  });
+  
 
 
   const clearData = () => {
@@ -127,21 +178,11 @@ const UpdateProfile = ({ navigation }) => {
 
     navigation.addListener('beforeRemove', clearData);
 
-        // Remove listener on cleanup to prevent memory leaks
         return () => {
             navigation.removeListener('beforeRemove', clearData);
         };
     
   },[navigation])
-
-
-  // console.log(rider_details, 'DOB');
-
-  // console.log(profileImage);
-  
-  
-  
-
 
   const handleUploadImage = async img => {
     // console.log('image :  ', img);
@@ -169,65 +210,40 @@ const UpdateProfile = ({ navigation }) => {
       setDOB(selectedDate);
     }
   };
-
-  // const handleUploadProfileImage = (img) => {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       let image = {
-  //         uri: img?.path,
-  //         name: img?.name,
-  //         type: img?.mime,
-  //       };
-  //       // console.log('image :  ', image);
-  //       let filePath = await uploadImage(image);
-  //       if (filePath) {
-  //         resolve(filePath);
-  //       } else {
-  //         resolve('');
-  //       }
-  //     } catch (error) {
-  //       console.log('error handleUploadProfileImage :  ', error);
-  //       resolve('');
-  //     }
-  //   });
-  // };
-
-
-
   const validate = () => {
     if (profileImage == null) {
-      showAlert('Please Upload Profile Image');
+      handlePopup(dispatch,'Please Upload Profile Image','red');
       return false;
     }
     // else if (email.length == 0) {
-    //   showAlert('Please Enter email address');
+    //   handlePopup(dispatch,'Please Enter email address');
     //   return false;
     // } 
     else if (CNIC.length == 0) {
-      showAlert('Please Enter CNIC');
+      handlePopup(dispatch,'Please Enter CNIC','red');
       return false;
     }
     // else if (country.length == 0) {
-    //   showAlert('Please Enter Country');
+    //   handlePopup(dispatch,'Please Enter Country');
     //   return false;
     // } 
     else if (address.length == 0) {
-      showAlert('Please Enter Address');
+      handlePopup(dispatch,'Please Enter Address','red');
       return false;
     }
     else if (DOB.length == 0) {
-      showAlert('Please Select Date Of Birth');
+      handlePopup(dispatch,'Please Select Date Of Birth','red');
       return false;
     } else if (gender.length == 0) {
-      showAlert('Please Enter Gender');
+      handlePopup(dispatch,'Please Enter Gender','red');
       return false;
     }
     else if (FrontIDImage == null) {
-      showAlert('Please Upload Front ID Card Image');
+      handlePopup(dispatch,'Please Upload Front ID Card Image','red');
       return false;
     }
     else if (BackIDImage == null) {
-      showAlert('Please Upload Front ID Card Image');
+      handlePopup(dispatch,'Please Upload Front ID Card Image','red');
       return false;
     }
 
@@ -238,26 +254,26 @@ const UpdateProfile = ({ navigation }) => {
 
   const validate2 = () => {
     if (vehicle?.reg?.length == 0) {
-      showAlert('Please Enter Registration Number');
+      handlePopup(dispatch,'Please Enter Registration Number','red');
       return false;
     } else if (vehicle?.ownerName?.length == 0) {
-      showAlert('Please Enter Vehicle Model');
+      handlePopup(dispatch,'Please Enter Vehicle Model','red');
       return false;
     }
     else if (vehicle?.modal?.length == 0) {
-      showAlert('Please Enter Vehicle Model');
+      handlePopup(dispatch,'Please Enter Vehicle Model','red');
       return false;
     }
     else if (vehicle?.name?.length == 0) {
-      showAlert('Please Enter Vehicle Name');
+      handlePopup(dispatch,'Please Enter Vehicle Name','red');
       return false;
     }
     else if (FrontLicenseImage === null) {
-      showAlert('Please Upload Front License Image');
+      handlePopup(dispatch,'Please Upload Front License Image','red');
       return false;
     }
     else if (BackLicenseImage === null) {
-      showAlert('Please Upload Back License Image');
+      handlePopup(dispatch,'Please Upload Back License Image','red');
       return false;
     }
     else {
@@ -497,13 +513,8 @@ const UpdateProfile = ({ navigation }) => {
         })
         .catch(err => {
           console.log('Error in Login :  ', err);
-          // showAlert('Something went wrong');
-          dispatch(setShowPopUp(true))
-          dispatch(setPopUpColor('red'))
-          dispatch(setPopUpMesage('Something went wrong'))
-          setTimeout(() => {
-            dispatch(setShowPopUp(false))
-          }, 1000)
+          handlePopup(dispatch,'Something went wrong', 'red');
+          
         })
         .finally(() => {
           setLoading(false);
@@ -514,22 +525,6 @@ const UpdateProfile = ({ navigation }) => {
     }
   };
 
-  function isValidDateFormat(DOB) {
-    // Check if DOB is a valid date
-    const dobDate = new Date(DOB);
-
-    // isNaN check will confirm it's a real date and not an invalid one
-    if (isNaN(dobDate)) {
-        return false;
-    }
-
-    // Format check: comparing the string representation of DOB to the default Date format
-    const dobFormatted = dobDate.toDateString();
-    const newDateFormatted = new Date().toDateString();
-
-    return dobFormatted === newDateFormatted;
-}
-  
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.secondary_color, }}>
@@ -551,18 +546,11 @@ const UpdateProfile = ({ navigation }) => {
             /></TouchableOpacity>
 
       <Text style={styles.header} >{index == 1 ? 'Vehicle Details' : 'Update Profile'}</Text>
-
-
-
         </View>
-
-
-
         {index == 1 ? (
           <View style={{ flex: 1, paddingBottom: hp(3) }}>
             <CInput
-              // heading={'Vehicle Ownership'}
-              // headingStyle={styles.headingStyle}
+              
               placeholder="Registration No."
               value={vehicle.reg}
               onChangeText={text => setVehicle({ ...vehicle, reg: text })}
@@ -570,24 +558,21 @@ const UpdateProfile = ({ navigation }) => {
               keyboardType='numeric'
             />
             <CInput
-              // heading={'Vehicle Ownership'}
-              // headingStyle={styles.headingStyle}
+             
               placeholder="Vehicle Owner Name"
               value={vehicle.ownerName}
               onChangeText={text => setVehicle({ ...vehicle, ownerName: text })}
               height={textInput_HEIGHT}
             />
             <CInput
-              // heading={'Vehicle Model'}
-              // headingStyle={styles.headingStyle}
+             
               placeholder="Vehicle Model"
               value={vehicle.modal}
               onChangeText={text => setVehicle({ ...vehicle, modal: text })}
               height={textInput_HEIGHT}
             />
             <CInput
-              // heading={'Vehicle Name'}
-              // headingStyle={styles.headingStyle}
+            
               placeholder="Vehicle Name"
               value={vehicle.name}
               onChangeText={text => setVehicle({ ...vehicle, name: text })}
@@ -810,7 +795,7 @@ const UpdateProfile = ({ navigation }) => {
             /></TouchableOpacity>
         </View>
 
-        <DatePicker mode="date" theme='light' date={DOB} onDateChange={setDOB} dividerColor={Colors.Orange} style={{}} />
+        <DatePicker mode="date" theme='light' date={DOB} onDateChange={setDOB} dividerColor={Colors.primary_color} style={{}} />
         <CButton
           title="Confirm"
           height={hp(6.2)}
@@ -828,65 +813,3 @@ const UpdateProfile = ({ navigation }) => {
 
 export default UpdateProfile;
 
-const styles = StyleSheet.create({
-  profileImage: {
-    borderWidth: 1,
-    borderColor: Colors.Border,
-    width: wp(25),
-    height: wp(25),
-    borderRadius: wp(25) / 2,
-    alignSelf: 'center',
-    marginBottom: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    fontFamily: Fonts.PlusJakartaSans_Bold,
-    fontSize: RFPercentage(2.5),
-    color: Colors.primary_color,
-    textAlign: 'center',
-    // alignSelf: 'center',
-    flex: 1
-  },
-  fileContainer: {
-    width: wp(90),
-    height: hp(23),
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#DADADA',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginVertical: 35,
-    marginBottom: 15,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-
-  rowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // marginBottom: hp(1),
-  },
-  addDate: {
-    fontFamily: Fonts.PlusJakartaSans_SemiBold,
-    color: Colors.primary_text,
-    fontSize: RFPercentage(2),
-
-  },
-  iconBtn: {
-    position: 'absolute',
-    top: 0,
-    right: 10,
-    borderColor: Colors.primary_color,
-    borderWidth: wp(0.3),
-    backgroundColor: Colors.secondary_color,
-    borderRadius: wp(20)
-  }
-
-});
